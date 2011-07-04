@@ -42,7 +42,7 @@
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">
-                    <h3><%=organization.getProperty("name")%>
+                    <h3><%=organization.getProperty("name" ,"")%>
                     </h3>
                     <ul>
                         <%
