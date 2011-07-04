@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="kurs" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="description" value="subreport"/>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["144"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO" class="org.neo4j.graphdb.GraphDatabaseService" isForPrompting="false"/>
+	<parameter name="NEO_SEARCH" class="se.codemate.neo4j.NeoSearch" isForPrompting="false"/>
+	<parameter name="NEO_URL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["http://fairview.codemate.se:8080"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_USERNAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_PASSWORD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["secret"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[_startNodeID:$P{id} AND _relType:"HAS_CERTIFICATION"]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="_id" class="java.lang.Long"/>
+	<field name="_type" class="java.lang.String"/>
+	<field name="date" class="java.util.Date"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="nodeClass" class="java.lang.String"/>
+	<title>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="5" width="171" height="31" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kurser, påbyggnad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="247" y="5" width="245" height="31" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<text><![CDATA[Slutförd den]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="45">
+			<textField>
+				<reportElement x="0" y="0" width="247" height="20" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement positionType="Float" x="247" y="0" width="337" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

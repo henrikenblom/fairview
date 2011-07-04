@@ -1,0 +1,20 @@
+<aspectj>
+
+    <weaver options="-verbose">
+        <include within="com.fairviewiq.spring..*"/>
+        <include within="org.neo4j..*"/>
+        <include within="se.codemate.neo4j..*"/>
+    </weaver>
+
+    <aspects>
+        <aspect name="se.codemate.spring.aspects.UniquePropertyAspect"/>
+        <aspect name="se.codemate.spring.aspects.NeoIndexingAspect"/>
+        <aspect name="se.codemate.spring.aspects.NeoAjaxCometAspect"/>
+        <aspect name="se.codemate.spring.aspects.NeoAjaxExceptionAspect"/>
+        <aspect name="se.codemate.spring.aspects.NeoUUIDAspect"/>
+        <aspect name="se.codemate.spring.aspects.NeoTimestampAspect"/>
+        <aspect name="se.codemate.spring.aspects.NeoObjectMappingAspect"/>
+        <aspect name="com.fairviewiq.spring.aspects.SignatureNotificationAspect"/>
+    </aspects>
+
+</aspectj>

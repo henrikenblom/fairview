@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ålder och könsfördelning personal" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="description" value="Statistik över ålder och könsfördelning"/>
+	<parameter name="NEO" class="org.neo4j.graphdb.GraphDatabaseService" isForPrompting="false"/>
+	<parameter name="NEO_SEARCH" class="se.codemate.neo4j.NeoSearch" isForPrompting="false"/>
+	<parameter name="NEO_URL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["http://fairview.codemate.se:8080"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_USERNAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_PASSWORD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["secret"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[nodeClass:employee NOT nodeClass:dialogue]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="_id" class="java.lang.Long"/>
+	<field name="_type" class="java.lang.String"/>
+	<field name="birthday" class="java.util.Date"/>
+	<field name="cell" class="java.lang.String"/>
+	<field name="cell_private" class="java.lang.String"/>
+	<field name="drivers_license#A" class="java.lang.Boolean"/>
+	<field name="drivers_license#B" class="java.lang.Boolean"/>
+	<field name="drivers_license#C" class="java.lang.Boolean"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="employmentid" class="java.lang.String"/>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
+	<field name="nationality" class="java.lang.String"/>
+	<field name="nodeClass" class="java.lang.String"/>
+	<field name="password" class="java.lang.String"/>
+	<field name="persnr4" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="phone_private" class="java.lang.String"/>
+	<field name="username" class="java.lang.String"/>
+	<sortField name="gender"/>
+	<sortField name="birthday" order="Descending"/>
+	<variable name="Age" class="java.lang.Integer" resetType="None">
+		<variableExpression><![CDATA[se.codemate.reporting.jasperreports.ReportHelper.convertDateToAge($F{birthday})]]></variableExpression>
+	</variable>
+	<variable name="Age5" class="java.lang.Integer" resetType="None">
+		<variableExpression><![CDATA[new Integer(5 * ($V{Age}.intValue() / 5))]]></variableExpression>
+	</variable>
+	<variable name="RetireCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$V{Age}.intValue() >= 64 ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
+	<group name="GenderGroup">
+		<groupExpression><![CDATA[$F{gender}]]></groupExpression>
+		<groupFooter>
+			<band height="23">
+				<textField>
+					<reportElement x="410" y="0" width="145" height="20" forecolor="#0000FF"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{GenderGroup_COUNT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="AgeGroup">
+		<groupExpression><![CDATA[$V{Age5}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<textField>
+					<reportElement x="410" y="0" width="145" height="20" forecolor="#00FF00"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{AgeGroup_COUNT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="79">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" forecolor="#003366"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="30"/>
+				</textElement>
+				<text><![CDATA[Åldersfördelning]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35">
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="0" y="0" width="555" height="35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="22">
+			<textField>
+				<reportElement x="0" y="0" width="59" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{gender}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="59" y="0" width="78" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{birthday}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="0" width="51" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Age}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="188" y="0" width="53" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Age5}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="576">
+			<barChart>
+				<chart isShowLegend="true" theme="aegean">
+					<reportElement x="0" y="0" width="555" height="260"/>
+					<chartTitle position="Top"/>
+					<chartSubtitle/>
+					<chartLegend position="Right"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{gender}.equals("F") ? "Kvinna" : "Man"]]></seriesExpression>
+						<categoryExpression><![CDATA[$V{Age5} + "-" + new Integer($V{Age5}.intValue() + 4)]]></categoryExpression>
+						<valueExpression><![CDATA[$V{AgeGroup_COUNT}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true" isShowTickLabels="true" isShowTickMarks="true">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0" labelRotation="0.0">
+						<seriesColor seriesOrder="0" color="#FF3366"/>
+						<seriesColor seriesOrder="1" color="#9900CC"/>
+						<seriesColor seriesOrder="2" color="#33FF00"/>
+					</plot>
+					<categoryAxisLabelExpression><![CDATA["Ålder"]]></categoryAxisLabelExpression>
+					<categoryAxisFormat>
+						<axisFormat>
+							<labelFont/>
+							<tickLabelFont/>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA["Antal"]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat tickLabelMask="0.0">
+							<labelFont/>
+							<tickLabelFont/>
+						</axisFormat>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<textField>
+				<reportElement x="0" y="523" width="555" height="51"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{RetireCount} + " anställda kommer att uppnå pensionsåldern inom 12 månader"]]></textFieldExpression>
+			</textField>
+			<pieChart>
+				<chart isShowLegend="true">
+					<reportElement x="0" y="260" width="555" height="263"/>
+					<chartTitle position="Top"/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{gender}]]></keyExpression>
+					<valueExpression><![CDATA[$V{GenderGroup_COUNT}]]></valueExpression>
+				</pieDataset>
+				<piePlot isCircular="true">
+					<plot backgroundAlpha="1.0" foregroundAlpha="1.0" labelRotation="0.0"/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Chefspolicy" pageWidth="650" pageHeight="842" columnWidth="610" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
+	<property name="description" value="Policydokument:Hämta hem Chefspolicy"/>
+	<parameter name="NEO" class="org.neo4j.graphdb.GraphDatabaseService" isForPrompting="false"/>
+	<parameter name="NEO_SEARCH" class="se.codemate.neo4j.NeoSearch" isForPrompting="false"/>
+	<parameter name="NEO_URL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["http://fairview.codemate.se:8080"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_USERNAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_PASSWORD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["secret"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[nodeClass:employee NOT nodeClass:dialogue]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="_id" class="java.lang.Long"/>
+	<field name="_type" class="java.lang.String"/>
+	<field name="birthday" class="java.util.Date"/>
+	<field name="cell" class="java.lang.String"/>
+	<field name="drivers_license#A" class="java.lang.Boolean"/>
+	<field name="drivers_license#B" class="java.lang.Boolean"/>
+	<field name="drivers_license#C" class="java.lang.Boolean"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="employmentid" class="java.lang.String"/>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
+	<field name="nationality" class="java.lang.String"/>
+	<field name="nodeClass" class="java.lang.String"/>
+	<field name="persnr4" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="phone_private" class="java.lang.String"/>
+	<sortField name="lastname"/>
+	<sortField name="firstname"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="89">
+			<staticText>
+				<reportElement x="0" y="0" width="178" height="26" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Chefspolicy]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="38" width="137" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image hyperlinkType="Reference">
+				<reportElement x="416" y="1" width="159" height="85"/>
+				<imageExpression class="java.lang.String"><![CDATA["http://files.getdropbox.com/u/866271/personal.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20">
+			<rectangle>
+				<reportElement x="0" y="7" width="535" height="4" backcolor="#003366"/>
+			</rectangle>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="442">
+			<staticText>
+				<reportElement x="0" y="9" width="535" height="28" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vad ingår i en chefs personalansvar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="414" width="575" height="28" forecolor="#990033"/>
+				<textElement>
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<text><![CDATA[Och så vidare... Valfri information som rör företagets Chefspolicy!]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="37" width="535" height="152" forecolor="#000000"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[I det operativa personalansvaret för varje chef finns följande ansvarsområden definierade i befattningsbeskrivningarna:
+- Leda personalmöten.
+- Rekrytering och introduktion av nyanställda
+- Lönesättning, lönerevision i samarbete med personalchefen.
+- PU samtal och lönesamtal.
+- Individuella kompetensutvecklingsplaner.
+- Beviljande av semester och ledighet.
+- Betyg.
+- Rehabiliteringsfrågor i samarbete med personalchefen.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="217" width="535" height="28" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Personalmöten]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="245" width="575" height="32" forecolor="#000000"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Personalmöten ska genomföras i anslutning till ledningsgruppsmöten den sista fredagen i varje månad.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="336" width="575" height="57" forecolor="#000000"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Varje chef är ansvarig för att bevaka behovet av ny kompetens och nya medarbetare i sin grupp. Beslut om rekrytering tas av VD. Arbetet med att ta fram en kravprofil för befattningen samt genomföra själva rekryteringen sker i samarbete mellan chef och Personalchef.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="308" width="535" height="28" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rekrytering och introduktion av nya medarbetare]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24"/>
+	</detail>
+	<columnFooter>
+		<band height="17"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="21"/>
+	</pageFooter>
+	<summary>
+		<band height="21"/>
+	</summary>
+</jasperReport>

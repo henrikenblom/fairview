@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <comment>Text Messages</comment>
+
+    <!-- Navigation / Login -->
+    <entry key="login">Logga in</entry>
+    <entry key="login.required">Du är ej inloggad</entry>
+    <entry key="logout">Logga ut</entry>
+    <entry key="username">Användarnamn</entry>
+    <entry key="password">Lösenord</entry>
+    <entry key="remember_me">Kom ihåg lösenordet i två veckor</entry>
+    <entry key="bad_credentials">Inloggningen misslyckades. Kontrollera dina uppgifer.</entry>
+
+    <!-- Navigation / Layout -->
+    <entry key="label.home">Hem</entry>
+    <entry key="label.reports">Rapporter</entry>
+    <entry key="label.administration">Administration</entry>
+    <entry key="label.shell">Terminal</entry>
+    <entry key="label.copyright">All innehåll &amp;copy; copyright 1999-2009 Fairview International Inc.</entry>
+
+    <entry key="label.organization">Organisation</entry>
+    <entry key="label.employees">Personal</entry>
+    <entry key="label.functions">Funktioner</entry>
+
+    <!-- Generic -->
+    <entry key="label.edit">Redigera</entry>
+    <entry key="label.save">Spara</entry>
+    <entry key="label.add">Lägg till</entry>
+    <entry key="label.delete">Radera</entry>
+    <entry key="label.saving">sparar ändringar...</entry>
+    <entry key="label.saving_ok"><![CDATA[sparar ändringar...<strong>OK!</strong>]]></entry>
+    <entry key="label.load">Hämta</entry>
+    <entry key="label.actions">Val</entry>
+    <entry key="label.date">Datum</entry>
+    <entry key="label.Yes">Ja</entry>
+    <entry key="label.No">Nej</entry>
+
+    <!-- Data tables -->
+    <entry key="table.sProcessing">Behandlar...</entry>
+    <entry key="table.sLengthMenu">Visa _MENU_ poster</entry>
+    <entry key="table.sZeroRecords">Inga matchande poster</entry>
+    <entry key="table.sInfo">Visar _START_ till _END_ av _TOTAL_ poster</entry>
+    <entry key="table.sInfoEmtpy">Visar 0 till 0 av 0 poster</entry>
+    <entry key="table.sInfoFiltered">(urval ifrån _MAX_ poster)</entry>
+    <entry key="table.sSearch">Sök</entry>
+    <entry key="table.oPaginate.sFirst">Första</entry>
+    <entry key="table.oPaginate.sPrevious">Föregående</entry>
+    <entry key="table.oPaginate.sNext">Nästa</entry>
+    <entry key="table.oPaginate.sLast">Sista</entry>
+
+    <!-- Graph Legends -->
+    <entry key="legend.M"><![CDATA[M&auml;n]]></entry>
+    <entry key="legend.F">Kvinnor</entry>
+
+    <!-- Administration / Company -->
+    <entry key="label.name">Namn</entry>
+    <entry key="label.phone">Telefon</entry>
+    <entry key="label.fax">Fax</entry>
+    <entry key="label.email">E-Post</entry>
+    <entry key="label.regnr">Orgnr.</entry>
+    <entry key="label.web">Hemsida</entry>
+    <entry key="label.logo_url">Logo URL</entry>
+
+    <!-- Administration / Employees -->
+    <entry key="label.employee">Anställd</entry>
+    <entry key="label.employment">Anställning</entry>
+    <entry key="label.most_recent_employment">Senaste Anställning</entry>
+    <entry key="label.firstname">Förnamn</entry>
+    <entry key="label.lastname">Efternamn</entry>
+    <entry key="label.cell">Mobiltelefon</entry>
+    <entry key="label.general">Allmänt</entry>
+    <entry key="label.cv">CV</entry>
+    <entry key="label.health">Hälsa</entry>
+    <entry key="label.personal_development">Personlig Utveckling</entry>
+    <entry key="label.salary_negotiation">Lönesamtal</entry>
+    <entry key="label.termination">Avslutad Anställning</entry>
+    <entry key="label.position">Befattning</entry>
+    <entry key="label.start">Från datum</entry>
+    <entry key="label.finish">Till datum</entry>
+
+    <!-- Administration / Employee -->
+    <entry key="label.credentials">Loginuppgifter</entry>
+    <entry key="label.username">Användarnamn</entry>
+    <entry key="label.password_confirm_1">Lösenord</entry>
+    <entry key="label.password_confirm_2">Bekräfta Lösenord</entry>
+    <entry key="label.role">Rättigheter</entry>
+    <entry key="role.manager">Chef</entry>
+    <entry key="role.hr">HR</entry>
+    <entry key="role.employee">Anställd</entry>
+
+    <entry key="label.nationality">Nationalitet</entry>
+    <entry key="label.gender">Kön</entry>
+    <entry key="label.Male">Man</entry>
+    <entry key="label.Female">Kvinna</entry>
+    <entry key="label.BELONGS_TO_UNIT">Enhet</entry>
+    <entry key="label.birthday">Födelsedag</entry>
+    <entry key="label.persnr">Personnr.</entry>
+    <entry key="label.employmentid">Anställningsnr.</entry>
+    <entry key="label.phone_private">Telefon bostad</entry>
+    <entry key="label.cell_private">Privat mobil</entry>
+    <entry key="label.email_private">Privat e-post</entry>
+    <entry key="label.drivers_license">Körkort</entry>
+    <entry key="label.important_information">Viktig personlig information</entry>
+
+    <entry key="label.relatives">Anhöriga</entry>
+    <entry key="label.relative">Anhörig</entry>
+    <entry key="label.relation">Relation</entry>
+    <entry key="label.Spouse">Maka/Make/Sammanboende </entry>
+    <entry key="label.Parent">Förälder</entry>
+    <entry key="label.Child">Barn</entry>
+    <entry key="label.Sybling">Syskon</entry>
+    <entry key="label.Other">Annat</entry>
+    <entry key="label.emergency_contact">Nödkontakt</entry>
+    <entry key="label.birthyear">Födelseår</entry>
+
+    <!-- Component / Address -->
+    <entry key="label.addresses">Adresser</entry>
+    <entry key="label.address">Adress</entry>
+    <entry key="label.postalcode">Postnummer</entry>
+    <entry key="label.city">Stad</entry>
+    <entry key="label.country">Land</entry>
+    <entry key="label.description">Beskrivning</entry>
+
+    <!-- Component / Unit -->
+    <entry key="label.units">Enheter</entry>
+    <entry key="label.unit">Enhet</entry>
+
+    <!-- CV -->
+    <entry key="label.education_higher">Utbildning högskola</entry>
+    <entry key="label.education">Utbildning</entry>
+    <entry key="label.degree">Omfattning/poäng</entry>
+    <entry key="label.specialization">Inriktning</entry>
+    <entry key="label.certification">Kurs/Behörighet</entry>
+
+    <entry key="label.language">Språk</entry>
+    <entry key="label.written">Skriftlig</entry>
+    <entry key="label.spoken">Muntlig</entry>
+    <entry key="label.Basic">Viss</entry>
+    <entry key="label.Good">God</entry>
+    <entry key="label.Advanced">Avancerad</entry>
+
+    <entry key="label.computer_skill">Allmän datakunskap</entry>
+    <entry key="label.skill">Kunskap</entry>
+    <entry key="label.level">Nivå</entry>
+
+    <entry key="label.military_service">Militartjänst</entry>
+
+    <entry key="label.work_experience">Tidigare Arbetsliv</entry>
+    <entry key="label.company">Företag</entry>
+    <entry key="label.industry">Bransch</entry>
+    <entry key="label.international">Internationell Erfarenhet</entry>
+    <entry key="label.tasks">Uppgifter</entry>
+    <entry key="label.if_manager">Om chefsposition</entry>
+    <entry key="label.staff">Antal medarbetare</entry>
+    <entry key="label.turnover">Omsättning egen verksamhet</entry>
+    <entry key="label.result_responsibility">Eget resultatansvar</entry>
+
+    <entry key="label.other_experience">Övrig erfarenhet</entry>
+    <entry key="label.type">Typ</entry>
+
+    <!-- Health -->
+    <entry key="label.healthcheck">Hälsoundersökning</entry>
+    <entry key="label.next_booking_date">Nästa bokningsdatum</entry>
+    <entry key="label.comment">Kommentar</entry>
+    <entry key="label.completed">Genomförd</entry>
+    <entry key="label.completed_earliest">Genomförd Tidigast</entry>
+    <entry key="label.rehab">Rehabilitering</entry>
+    <entry key="label.reason">Anledning</entry>
+    <entry key="label.vaccination">Vaccination</entry>
+
+    <!-- Personal Development -->
+    <entry key="label.employee_dialogue">Medarbetarsamtal</entry>
+    <entry key="label.next_meeting_date">Nästa möte skall bokas</entry>
+    <entry key="label.training">Utbildning</entry>
+    <entry key="label.organizer">Anordnare</entry>
+    <entry key="label.deadline">Deadline</entry>
+    <entry key="label.personal_goal">Personliga Mål</entry>
+    <entry key="label.followup_interval">Uppföljning, Intervall</entry>
+    <entry key="label.followup_unit">Uppföljning, Enhet</entry>
+    <entry key="label.days">Dagar</entry>
+    <entry key="label.weeks">Veckor</entry>
+    <entry key="label.months">Månader</entry>
+    <entry key="label.years">År</entry>
+    <entry key="label.followup_dialogue">Uppföljningssamtal</entry>
+    <entry key="label.evaluation">Värdering</entry>
+
+    <!-- Salary Negotiation -->
+    <entry key="label.date">Datum</entry>
+    <entry key="label.general_raise">Generellt påslag</entry>
+    <entry key="label.individual_raise">Individuellt påslag</entry>
+    <entry key="label.separate_agreement">Särskilld Överenskommelse</entry>
+
+    <!-- Job Termination -->
+    <entry key="label.job_termination">Avslutad Anställning</entry>
+    <entry key="label.job_announcement">Tjänsten utlyses</entry>
+    <entry key="label.Externally">Externt</entry>
+    <entry key="label.Internally">Internt</entry>
+    <entry key="label.Not_at_all">Inte alls</entry>
+    <entry key="label.vacancy">Vakant tjänst</entry>
+    <entry key="label.termination_dialogue">Avslutssamtal</entry>
+    <entry key="label.summary">Sammanfattning</entry>
+    <entry key="label.agreement">Överenskommelse</entry>
+    <entry key="label.certificate_delivered">Betyg/Intyg Levererat</entry>
+    <entry key="label.initiator">Initiativtagare</entry>
+    <entry key="label.employer">Arbetsgivare</entry>
+    <entry key="label.dialogue_date">Datum genomfört</entry>
+
+    <!-- Employment -->
+    <entry key="label.emp_type">Anställningsform</entry>
+    <entry key="label.emp_type_other">Anställningsform (Annat)</entry>
+    <entry key="label.emp_start">Från datum</entry>
+    <entry key="label.emp_finish">Till datum</entry>
+    <entry key="label.emp_noticeduration">Uppsägningstid (Dagar)</entry>
+    <entry key="label.emp_noticeduration_employee">Uppsägningstid / Anställd</entry>
+    <entry key="label.emp_noticeduration_employer">Uppsägningstid / Arbetsgivare</entry>
+    <entry key="label.emp_extent">Omfattning</entry>
+    <entry key="label.emp_extent_other">Omfattning (Annat)</entry>
+    <entry key="label.emp_workhours">Arbetstider</entry>
+    <entry key="label.emp_workhours_start">Start</entry>
+    <entry key="label.emp_workhours_finish">Stop</entry>
+    <entry key="label.emp_workhours_flex">Flex</entry>
+    <entry key="label.emp_shift">Schema/skift</entry>
+    <entry key="label.emp_standby">Jour/beredskap</entry>
+
+    <entry key="label.REPORTS_TO">Rapporterar Till</entry>
+
+    <entry key="label.conditions">Villkor</entry>
+
+    <entry key="label.emp_salary">Aktuell lön</entry>
+    <entry key="label.salary_after_raise">Ny lön efter påslag</entry>
+    <entry key="label.salary_activation_date">Startdatum för ny lön</entry>
+    <entry key="label.emp_salary_form">Löneform</entry>
+    <entry key="label.emp_vacation_days">Semesterrätt (dagar)</entry>
+    <entry key="label.emp_vacation_rights">Semesterrätt</entry>
+    <entry key="label.emp_overtime">Övertidsersättning</entry>
+    <entry key="label.emp_travelcomp">Restidsersättning</entry>
+    <entry key="label.emp_benefits">Förmåner</entry>
+    <entry key="label.emp_bonus">Bonus</entry>
+    <entry key="label.emp_other_conditions">Andra villkor</entry>
+    <entry key="label.emp_insurance">Pension &amp; försäkringar</entry>
+    <entry key="label.emp_geo_placement">Geografisk Placering</entry>
+    <entry key="label.emp_collective_agreement">Kollektivavtal</entry>
+    <entry key="label.emp_union_affiliation">Facklig Tillhörighet</entry>
+    <entry key="label.emp_company_car">Tjänstebil</entry>
+    <entry key="label.emp_company_car_license">Tjänstebil Regnr.</entry>
+
+    <entry key="label.open_ended_emp">Tillsvidare</entry>
+    <entry key="label.temporary_emp">Viss tid / Vikariat</entry>
+    <entry key="label.project_emp">Projekt</entry>
+    <entry key="label.seasonal_emp">Säsong</entry>
+    <entry key="label.summer_emp">Sommar</entry>
+    <entry key="label.other">Annat</entry>
+    <entry key="label.hourly_emp">Timanställd</entry>
+
+    <entry key="label.function">Funktion</entry>
+    <entry key="label.percent">Procent</entry>
+    <entry key="label.assign">Tilldela</entry>
+    <entry key="label.assignment">Tilldelning</entry>
+
+    <!-- Function -->
+    <entry key="label.primary_responsibility">Huvudsakliga ansvarsområden</entry>
+    <entry key="label.responsibilities">Ansvar och arbetsuppgifter</entry>
+    <entry key="label.leaders_group">Ledningsgrupp</entry>
+    <entry key="label.budget_responsibility">Budgetansvar</entry>
+    <entry key="label.placement">Placering</entry>
+
+    <entry key="label.environment">Arbetsmiljö</entry>
+    <entry key="label.workspace">Lokaler</entry>
+    <entry key="label.protection">Skyddsutrustning</entry>
+    <entry key="label.psychosocial_aspects">Psykosociala förhållanden</entry>
+    <entry key="label.other_work_aspects">Andra arbetsförhållanden</entry>
+    <entry key="label.travel">Resor</entry>
+    <entry key="label.work_environment_other">Annat</entry>
+
+    <entry key="label.educational_requirements">Krav på utbildning</entry>
+
+    <entry key="label.experience">Erfarenhet</entry>
+    <entry key="label.experience_position">Erfarenhet av befattning</entry>
+    <entry key="label.experience_work">Erfarenhet av arbetsuppgifter</entry>
+    <entry key="label.positions_years">Antal år</entry>
+    <entry key="label.responsibility">Ansvarsområden</entry>
+    <entry key="label.position_years">Antal år</entry>
+    <entry key="label.responsibility_years">Antal år</entry>
+    <entry key="label.responsibility_areas">Ansvarsområden</entry>
+    <entry key="label.longterm_goals">Långsiktiga mål</entry>
+
+    <entry key="label.personal_aspects">Personliga aspekter</entry>
+    <entry key="label.personal_aspect">Personlig aspekt</entry>
+    <entry key="label.trait">Egenskap</entry>
+    <entry key="label.traits">Egenskaper</entry>
+    <entry key="label.personal_relationships">Sociala förhållanden</entry>
+    <entry key="label.corporate_culture">Företagskulturella aspekter</entry>
+    <entry key="label.personal_aspect_environment_other">Annat</entry>
+
+    <entry key="label.other_requirements">Ovriga krav</entry>
+    <entry key="label.notes">Anteckningar</entry>
+
+    <entry key="label.goal">Mål</entry>
+    <entry key="label.comment">Kommentar</entry>
+    <entry key="label.duty">Arbetsuppgift</entry>
+    <entry key="label.duties">Arbetsuppgifter</entry>
+    <entry key="label.part_of">Ingår i</entry>
+    <entry key="label.membership">Medlemskap</entry>
+    <entry key="label.task">Uppgift</entry>
+    <entry key="label.extent">Tidsåtgång</entry>
+
+    <entry key="label.function_certification">Kurs/Behörighet</entry>
+
+    <!-- Search -->
+    <entry key="label.employeecount">Antal anställda</entry>
+    <entry key="label.query">Fråga</entry>
+
+    <!-- help -->
+    <entry key="help.company_name">Fyll i företagets/enhetens namn</entry>
+    <entry key="help.company_address">Fyll i företagets/enhetens adress</entry>
+    <entry key="help.company_address_description">Fyll i typ av adress, t ex postadress, besöksadress, leveransadress</entry>
+    <entry key="help.company_add_address">Om du vill lägga till ytterligare adress</entry>
+    <entry key="help.company_add_unit">Om du vill lägga till ytterligare enhet inom organisationen</entry>
+    <entry key="help.company_add_sub_unit">Om du vill lägga till ytterligare enhet inom denna enhet</entry>
+
+    <entry key="help.personal_address_description">Om flera adresser finns, fyll i typ av bostad, t ex sommarbostad</entry>
+
+    <entry key="help.name_education">Skriv in namnet på genomförd utbildning</entry>
+
+    <entry key="help.military_name">Lägg till information om genomförd militärtjänst</entry>
+
+    <entry key="help.language">Lägg till information om dina språkkunskaper</entry>
+    <entry key="help.computer_skill">Lägg till information om relevant övergripande datakunskap</entry>
+
+    <entry key="label.start_year">Från år</entry>
+    <entry key="label.finish_year">Till år</entry>
+
+    <entry key="help.function">Välj befattning</entry>
+    <entry key="help.percent_function">Välj omfattning</entry>
+    <entry key="help.unit">Välj enhet för befattningen </entry>
+    <entry key="help.percent_unit">Välj omfattning</entry>
+
+    <entry key="label.agreements">Överenskommelser</entry>
+
+    <entry key="help.personal_development_dialogue">Lägg till information om genomförda medarbetarsamtal</entry>
+    <entry key="help.personal_development_training">Lägg till information om planerade/genomförda utbildningar</entry>
+    <entry key="help.personal_development_goal">Lägg till information om personliga mål som ska uppnås</entry>
+
+    <entry key="help.function_general">Mata in ny funktion (befattning).</entry>
+    <entry key="help.function_responsibilities">Mata in övergripande mål resp arbetsuppgifter som hör till funktionen.</entry>
+    <entry key="help.function_membership">Fasta åtaganden/grupperingar som hör till befattningen.</entry>
+    <entry key="help.function_environment">Lägg till information om arbetsmiljö ifall att arbetsuppgifter genomförs under speciella förhållanden.</entry>
+    <entry key="help.function_education">Lägg till informationen om vilka utbildningskrav som ställs på denna befattning</entry>
+    <entry key="help.function_certification">Lägg till kurs/påbyggnad/certifikat</entry>
+    <entry key="help.function_drivers_license">Krävs körkort för denna tjänst?</entry>
+    <entry key="help.function_personal_aspects">Andra kriterier för denna tjänst som rör personliga aspekter.</entry>
+
+    <entry key="label.function_spec">KRAVSPEC FÖR BEFATTNING</entry>
+
+    <entry key="help.function_name">Fyll i namnet på befattningen</entry>
+    <entry key="help.function_goal">Lägg till övergripande mål för befattningen</entry>
+    <entry key="help.function_task">Lägg till övergripande arbetsuppgifter inom befattningen</entry>
+
+    <entry key="help.function_education_name">Vilken utbildning krävs för denna befattning</entry>
+    <entry key="help.function_education_specialization">Fyll i en ev inriktning som krävs för denna befattning</entry>
+    <entry key="help.function_certificate_name">Krävs speciellt certifikat för denna befattning</entry>
+
+    <!-- Reports -->
+    <entry key="label.reports-upload">Rapportuppladdning</entry>
+    <entry key="label.reports-upload-ok">har skickats till servern</entry>
+    <entry key="label.reports-upload-submit">Starta Uppladdning</entry>
+
+    <entry key="label.type.A">Motorcykel</entry>
+    <entry key="label.type.B">Bil</entry>
+    <entry key="label.type.C">Lastbil</entry>
+    <entry key="label.type.D">Buss</entry>
+    <entry key="label.type.BE">Bil - släp</entry>
+    <entry key="label.type.CE">Lastbil - släp</entry>
+    <entry key="label.type.DE">Buss - släp</entry>
+
+    <entry key="label.save_changes">Spara ändringar?</entry>
+    <entry key="label.back">TILLBAKA</entry>
+
+    <entry key="dirtyform.title">Varning: Osparade Ändringar!</entry>
+    <entry key="dirtyform.message"><![CDATA[<br/><p>Du har ändrat i formulären utan att spara. Alla ändringar kommer att förloras.</p><p>Är du säker att du vill lämna sidan?</p>]]></entry>
+    <entry key="dirtyform.proceed">Fortsätt</entry>
+    <entry key="dirtyform.cancel">Avbryt</entry>
+
+</properties>

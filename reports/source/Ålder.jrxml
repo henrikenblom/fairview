@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Åldersfördelning personal" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
+	<property name="description" value="En lista över anställdas åldersfördelning"/>
+	<parameter name="NEO_CONNECTION" class="java.lang.String" isForPrompting="false">
+		<property name="url" value="http://fairview.codemate.se:8080"/>
+		<property name="username" value="admin"/>
+		<property name="password" value="secret"/>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[nodeClass:employee NOT nodeClass:dialogue]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="birthday" class="java.util.Date"/>
+	<field name="cell" class="java.lang.String"/>
+	<field name="drivers_license#A" class="java.lang.Boolean"/>
+	<field name="drivers_license#B" class="java.lang.Boolean"/>
+	<field name="drivers_license#C" class="java.lang.Boolean"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="employmentid" class="java.lang.String"/>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
+	<field name="nationality" class="java.lang.String"/>
+	<field name="nodeClass" class="java.lang.String"/>
+	<field name="persnr4" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="phone_private" class="java.lang.String"/>
+	<sortField name="birthday"/>
+	<sortField name="lastname"/>
+	<sortField name="firstname"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="79">
+			<staticText>
+				<reportElement x="0" y="24" width="168" height="25" forecolor="#003366"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Åldersfördelning]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="59" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20">
+			<line>
+				<reportElement x="0" y="19" width="535" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="43">
+			<staticText>
+				<reportElement x="151" y="23" width="100" height="20" forecolor="#003366"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Efternamn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="23" width="100" height="20" forecolor="#003366"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Förnamn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="23" width="100" height="20" forecolor="#003366"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ålder]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37">
+			<textField isBlankWhenNull="true">
+				<reportElement x="151" y="10" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{lastname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="314" y="10" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{firstname}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement x="0" y="10" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{birthday}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54"/>
+	</pageFooter>
+	<summary>
+		<band height="42"/>
+	</summary>
+</jasperReport>

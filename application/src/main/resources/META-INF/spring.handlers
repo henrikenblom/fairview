@@ -1,0 +1,1 @@
+http\://www.fairviewiq.com/schema/integration/cometd=com.fairviewiq.spring.integration.adapter.cometd.config.CometdNamespaceHandler

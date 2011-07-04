@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CV" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="description" value="Elisabeth Ljung"/>
+	<parameter name="NEO_CONNECTION" class="java.lang.String" isForPrompting="false">
+		<property name="url" value="http://fairview.codemate.se:8080"/>
+		<property name="username" value="admin"/>
+		<property name="password" value="secret"/>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[nodeClass:employment
+]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="emp_collective_agreement" class="java.lang.String"/>
+	<field name="emp_company_car" class="java.lang.String"/>
+	<field name="emp_company_car_license" class="java.lang.String"/>
+	<field name="emp_extent" class="java.lang.String"/>
+	<field name="emp_extent_other" class="java.lang.String"/>
+	<field name="emp_finish" class="java.util.Date"/>
+	<field name="emp_geo_placement" class="java.lang.String"/>
+	<field name="emp_insurance" class="java.lang.String"/>
+	<field name="emp_overtime" class="java.lang.Boolean"/>
+	<field name="emp_salary" class="java.lang.String"/>
+	<field name="emp_salary_form" class="java.lang.String"/>
+	<field name="emp_shift" class="java.lang.String"/>
+	<field name="emp_start" class="java.util.Date"/>
+	<field name="emp_travelcomp" class="java.lang.Boolean"/>
+	<field name="emp_type" class="java.lang.String"/>
+	<field name="emp_type_other" class="java.lang.String"/>
+	<field name="emp_vacation_days" class="java.lang.Integer"/>
+	<field name="emp_workhours_flex" class="java.lang.String"/>
+	<field name="nodeClass" class="java.lang.String"/>
+	<field name="position" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="34"/>
+	</title>
+	<pageHeader>
+		<band height="53">
+			<staticText>
+				<reportElement x="0" y="0" width="216" height="20"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[CV]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22"/>
+	</columnHeader>
+	<detail>
+		<band height="183">
+			<textField>
+				<reportElement x="0" y="10" width="223" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{position}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54"/>
+	</pageFooter>
+	<summary>
+		<band height="42"/>
+	</summary>
+</jasperReport>

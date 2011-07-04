@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Anställning" pageWidth="595" pageHeight="900" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true">
+	<property name="description" value="Personal:Hämta hem anställning"/>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["144"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO" class="org.neo4j.graphdb.GraphDatabaseService" isForPrompting="false"/>
+	<parameter name="NEO_SEARCH" class="se.codemate.neo4j.NeoSearch" isForPrompting="false"/>
+	<parameter name="NEO_URL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["http://fairview.codemate.se:8080"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_USERNAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_PASSWORD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["secret"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[_nodeID:$P{id}]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="_id" class="java.lang.Long"/>
+	<field name="_type" class="java.lang.String"/>
+	<field name="birthday" class="java.util.Date"/>
+	<field name="cell" class="java.lang.String"/>
+	<field name="drivers_license#A" class="java.lang.Boolean"/>
+	<field name="drivers_license#B" class="java.lang.Boolean"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="employmentid" class="java.lang.String"/>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
+	<field name="nationality" class="java.lang.String"/>
+	<field name="nodeClass" class="java.lang.String"/>
+	<field name="persnr4" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="phone_private" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="25"/>
+	</title>
+	<pageHeader>
+		<band height="74">
+			<staticText>
+				<reportElement x="0" y="12" width="287" height="33" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Anställning]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="0" y="45" width="275" height="20" isPrintInFirstWholeBand="true" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{firstname}+" "+$F{lastname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="8"/>
+	</columnHeader>
+	<detail>
+		<band height="566">
+			<staticText>
+				<reportElement x="0" y="66" width="100" height="20" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<text><![CDATA[Mobil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="24" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<text><![CDATA[Bostad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="45" width="100" height="20" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<text><![CDATA[Telefon]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="171" y="45" width="288" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="171" y="85" width="288" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="171" y="65" width="288" height="20"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{cell}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="false">
+				<reportElement x="171" y="0" width="288" height="24"/>
+				<subreportParameter name="NEO">
+					<subreportParameterExpression><![CDATA[$P{NEO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_PASSWORD">
+					<subreportParameterExpression><![CDATA[$P{NEO_PASSWORD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_URL">
+					<subreportParameterExpression><![CDATA[$P{NEO_URL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_SEARCH">
+					<subreportParameterExpression><![CDATA[$P{NEO_SEARCH}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_USERNAME">
+					<subreportParameterExpression><![CDATA[$P{NEO_USERNAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "address.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement positionType="Float" x="0" y="126" width="497" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineColor="#003366"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="86" width="100" height="20" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<text><![CDATA[Epostadress]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="105" width="100" height="20" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<text><![CDATA[Födelseår]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="171" y="105" width="288" height="21"/>
+				<textElement>
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{birthday}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="203" width="497" height="100"/>
+				<subreportParameter name="NEO">
+					<subreportParameterExpression><![CDATA[$P{NEO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_PASSWORD">
+					<subreportParameterExpression><![CDATA[$P{NEO_PASSWORD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_URL">
+					<subreportParameterExpression><![CDATA[$P{NEO_URL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_SEARCH">
+					<subreportParameterExpression><![CDATA[$P{NEO_SEARCH}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_USERNAME">
+					<subreportParameterExpression><![CDATA[$P{NEO_USERNAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "anst.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="135" width="497" height="36" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BEFATTNING OCH ENHET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="171" width="171" height="20" forecolor="#003366"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Enhet]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="171" y="171" width="326" height="20"/>
+				<subreportParameter name="NEO">
+					<subreportParameterExpression><![CDATA[$P{NEO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_PASSWORD">
+					<subreportParameterExpression><![CDATA[$P{NEO_PASSWORD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_URL">
+					<subreportParameterExpression><![CDATA[$P{NEO_URL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_SEARCH">
+					<subreportParameterExpression><![CDATA[$P{NEO_SEARCH}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$P{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NEO_USERNAME">
+					<subreportParameterExpression><![CDATA[$P{NEO_USERNAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "unit.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="21"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17"/>
+	</pageFooter>
+	<summary>
+		<band height="23"/>
+	</summary>
+</jasperReport>

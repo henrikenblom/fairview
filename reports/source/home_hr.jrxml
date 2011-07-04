@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ingångssida HR" pageWidth="800" pageHeight="842" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
+	<property name="description" value="ingangssida"/>
+	<parameter name="NEO" class="org.neo4j.graphdb.GraphDatabaseService" isForPrompting="false"/>
+	<parameter name="NEO_SEARCH" class="se.codemate.neo4j.NeoSearch" isForPrompting="false"/>
+	<parameter name="NEO_URL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["http://fairview.codemate.se:8080"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_USERNAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_PASSWORD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["secret"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["144"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[_nodeID:$P{id}]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="_id" class="java.lang.Long"/>
+	<field name="_type" class="java.lang.String"/>
+	<field name="birthday" class="java.util.Date"/>
+	<field name="cell" class="java.lang.String"/>
+	<field name="drivers_license#A" class="java.lang.Boolean"/>
+	<field name="drivers_license#B" class="java.lang.Boolean"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="employmentid" class="java.lang.String"/>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
+	<field name="nationality" class="java.lang.String"/>
+	<field name="nodeClass" class="java.lang.String"/>
+	<field name="password" class="java.lang.String"/>
+	<field name="persnr4" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="phone_private" class="java.lang.String"/>
+	<field name="username" class="java.lang.String"/>
+	<sortField name="lastname"/>
+	<sortField name="firstname"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="155">
+			<staticText>
+				<reportElement x="283" y="0" width="113" height="26" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Helvetica" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Välkommen]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="117" width="222" height="20" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="260" height="111"/>
+				<imageExpression class="java.lang.String"><![CDATA["http://files.getdropbox.com/u/866271/City.gif"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="306" y="93" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="93" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Kontaktuppgifter anställda"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Kontaktuppgifter"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["kontaktuppgifter.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="73" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Företag"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Foretag"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["foretag.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="306" y="73" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="112" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="113" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Policydokument"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["policy"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["policy.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="284" y="51" width="251" height="18" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Uppgifter företag]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="396" y="0" width="343" height="27" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Helvetica" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{firstname}+" "+$F{lastname}]]></textFieldExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="328" y="134" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Diagram och statistik"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["diagram"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["diagram.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="305" y="133" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="11"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="497">
+			<staticText>
+				<reportElement x="0" y="111" width="167" height="54" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="13"/>
+				</textElement>
+				<text><![CDATA[Box 0101
+131 42 Nacka
+Sverige]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="91" width="167" height="20" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Postadress]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="176" width="167" height="20" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Besöksadress]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="196" width="167" height="51" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="13"/>
+				</textElement>
+				<text><![CDATA[Stubbvägen 15
+132 41 Nacka
+Sverige]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference" hyperlinkTarget="Blank">
+				<reportElement x="0" y="52" width="167" height="20" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="13" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["www.hemsida.se"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Anställningsformer"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["http://www.hemsida.se"]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="21" width="220" height="30" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Helvetica" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Visaea AB]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="46" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CV"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["CV"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["cvs.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="26" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Anställningskontrakt"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Anstallningar"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["anstallningsuppgifter.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="66" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Kompetens"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["kompetens"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["kompetens.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="284" y="2" width="251" height="20" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[All personal]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="229" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Anställningskontrakt"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Anstallningar"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["anstallningsuppgifter-chef.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="269" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Arbetsbeskrivningar"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["arbetsbeskrivningar_chef"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["arbetsbeskrivningar-chef.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="249" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CV"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["CV"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["cvs-chef.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="283" y="204" width="251" height="20" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Min grupp]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="329" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Personliga mål"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["mal"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["mal-chef.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="309" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Medarbetarsamtal"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["medarbetarsamtal"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["medarbetarsamtal-chef.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="86" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Befattningar"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["arbetsbeskrivningar"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["arbetsbeskrivningar.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="126" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Medarbetarsamtal"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["medarbetarsamtal"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["medarbetarsamtal.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="289" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Kompetens"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["kompetens"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["kompetens-chef.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="166" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Hälsa"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["halsa"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["halsa.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="392" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Anställningskontrakt"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Anstallning"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["anstallning.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="284" y="366" width="251" height="20" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Verdana" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Min profil]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="412" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CV"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["CV"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["cv.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="433" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Personliga mål"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["mal"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["mal.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="306" y="45" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="25" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="66" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="145" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="86" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="126" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="166" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="288" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="268" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="328" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="249" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="229" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="308" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="433" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="412" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="392" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="474" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Kompetensutveckling"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["kompetens"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["kompetensutv.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="306" y="474" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="453" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Medarbetarsamtal"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["Medarbetarsamtal"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["medarbetarsamtalet.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<staticText>
+				<reportElement x="306" y="453" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="106" width="18" height="18" forecolor="#999999"/>
+				<textElement>
+					<font fontName="Verdana" size="14"/>
+				</textElement>
+				<text><![CDATA[•]]></text>
+			</staticText>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="106" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Kravprofiler"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["kravprofiler"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["kravprofil.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+			<textField hyperlinkType="Reference">
+				<reportElement x="329" y="146" width="251" height="18" forecolor="#006699"/>
+				<textElement>
+					<font fontName="Verdana" size="12" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Löner"]]></textFieldExpression>
+				<anchorNameExpression><![CDATA["lon"]]></anchorNameExpression>
+				<hyperlinkReferenceExpression><![CDATA["loner.html?id="+$F{_id}]]></hyperlinkReferenceExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15"/>
+	</detail>
+	<columnFooter>
+		<band height="20"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="19"/>
+	</pageFooter>
+	<summary>
+		<band height="17"/>
+	</summary>
+</jasperReport>

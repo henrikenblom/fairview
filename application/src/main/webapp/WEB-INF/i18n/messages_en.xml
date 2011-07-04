@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <comment>Text Messages</comment>
+
+    <!-- Navigation / Layout -->
+    <entry key="label.home">Home</entry>
+    <entry key="label.reports">Reports</entry>
+    <entry key="label.administration">Administration</entry>
+    <entry key="label.shell">Shell</entry>
+    <entry key="label.copyright">All contents &amp;copy; copyright 1999-2009 Fairview International Inc.</entry>
+
+    <entry key="label.organization">Company</entry>
+    <entry key="label.employees">Employees</entry>
+    <entry key="label.functions">Functions</entry>
+
+    <!-- Generic -->
+    <entry key="label.edit">Edit</entry>
+    <entry key="label.save">Save</entry>
+    <entry key="label.add">Add</entry>
+    <entry key="label.delete">Delete</entry>
+    <entry key="label.saving">saving changes...</entry>
+    <entry key="label.saving_ok"><![CDATA[saving changes...<strong>OK!</strong>]]></entry>
+    <entry key="label.load">Load</entry>
+    <entry key="label.actions">Actions</entry>
+    <entry key="label.date">Date</entry>
+    <entry key="label.Yes">Yes</entry>
+    <entry key="label.No">No</entry>
+
+    <!-- Data tables -->
+    <entry key="table.sProcessing">Processing...</entry>
+    <entry key="table.sLengthMenu">Show _MENU_ entries</entry>
+    <entry key="table.sZeroRecords">No matching records found</entry>
+    <entry key="table.sInfo">Showing _START_ to _END_ of _TOTAL_ entries</entry>
+    <entry key="table.sInfoEmtpy">Showing 0 to 0 of 0 entries</entry>
+    <entry key="table.sInfoFiltered">(filtered from _MAX_ total records)</entry>
+    <entry key="table.sSearch">Search</entry>
+    <entry key="table.oPaginate.sFirst">First</entry>
+    <entry key="table.oPaginate.sPrevious">Previous</entry>
+    <entry key="table.oPaginate.sNext">Next</entry>
+    <entry key="table.oPaginate.sLast">Last</entry>
+
+    <!-- Graph Legends -->
+    <entry key="legend.M">Men</entry>
+    <entry key="legend.F">Women</entry>
+
+    <!-- Administration / Company -->
+    <entry key="label.name">Name</entry>
+    <entry key="label.phone">Phone</entry>
+    <entry key="label.fax">Fax</entry>
+    <entry key="label.email">E-Mail</entry>
+    <entry key="label.regnr">Registration No.</entry>
+    <entry key="label.web">Web Site</entry>
+    <entry key="label.logo_url">Logo URL</entry>
+
+    <!-- Administration / Employees -->
+    <entry key="label.employee">Employee</entry>
+    <entry key="label.employment">Employment</entry>
+    <entry key="label.most_recent_employment">Most Recent Employment</entry>
+    <entry key="label.firstname">First Name</entry>
+    <entry key="label.lastname">Last Name</entry>
+    <entry key="label.cell">Cell Phone</entry>
+    <entry key="label.general">General</entry>
+    <entry key="label.cv">CV</entry>
+    <entry key="label.health">Health</entry>
+    <entry key="label.personal_development">Personal Development</entry>
+    <entry key="label.salary_negotiation">Salary Negotiation</entry>
+    <entry key="label.termination">Job Termination</entry>
+    <entry key="label.position">Position</entry>
+    <entry key="label.start">Start Date</entry>
+    <entry key="label.finish">End Date</entry>
+
+    <!-- Administration / Employee -->
+    <entry key="label.credentials">Login Credentials</entry>
+    <entry key="label.username">Username</entry>
+    <entry key="label.password_confirm_1">Password</entry>
+    <entry key="label.password_confirm_2">Confirm Password</entry>
+    <entry key="label.role">Permissions</entry>
+    <entry key="role.manager">Manager</entry>
+    <entry key="role.hr">HR</entry>
+    <entry key="role.employee">Employee</entry>
+
+    <entry key="label.nationality">Nationality</entry>
+    <entry key="label.gender">Gender</entry>
+    <entry key="label.Male">Male</entry>
+    <entry key="label.Female">Female</entry>
+    <entry key="label.BELONGS_TO_UNIT">Unit</entry>
+    <entry key="label.birthday">Birthday</entry>
+    <entry key="label.persnr">Personal ID</entry>
+    <entry key="label.employmentid">Employment ID</entry>
+    <entry key="label.phone_private">Home Phone</entry>
+    <entry key="label.cell_private">Private Cell Phone</entry>
+    <entry key="label.email_private">Private E-Mail</entry>
+    <entry key="label.drivers_license">Driver's License</entry>
+    <entry key="label.important_information">Important Personal Information</entry>
+
+    <entry key="label.relatives">Relatives</entry>
+    <entry key="label.relative">Relative</entry>
+    <entry key="label.relation">Relation</entry>
+    <entry key="label.Spouse">Spouse</entry>
+    <entry key="label.Parent">Parent</entry>
+    <entry key="label.Child">Child</entry>
+    <entry key="label.Sybling">Sybling</entry>
+    <entry key="label.Other">Other</entry>
+    <entry key="label.emergency_contact">Emergency Contact</entry>
+    <entry key="label.birthyear">Year of Birth</entry>
+
+    <!-- Component / Address -->
+    <entry key="label.addresses">Addresses</entry>
+    <entry key="label.address">Address</entry>
+    <entry key="label.postalcode">Postal Code</entry>
+    <entry key="label.city">City</entry>
+    <entry key="label.country">Country</entry>
+    <entry key="label.description">Description</entry>
+
+    <!-- Component / Unit -->
+    <entry key="label.units">Units</entry>
+    <entry key="label.unit">Unit</entry>
+
+    <!-- CV -->
+    <entry key="label.education_higher">Higher Education</entry>
+    <entry key="label.education">Education</entry>
+    <entry key="label.degree">Degree</entry>
+    <entry key="label.specialization">Specialization</entry>
+    <entry key="label.certification">Training/Certification</entry>
+
+    <entry key="label.language">Language</entry>
+    <entry key="label.written">Written</entry>
+    <entry key="label.spoken">Spoken</entry>
+    <entry key="label.Basic">Basic</entry>
+    <entry key="label.Good">Good</entry>
+    <entry key="label.Advanced">Advanced</entry>
+
+    <entry key="label.computer_skill">Computer Skill</entry>
+    <entry key="label.skill">Skill</entry>
+    <entry key="label.level">Level</entry>
+
+    <entry key="label.military_service">Military Service</entry>
+
+    <entry key="label.work_experience">Work Experience</entry>
+    <entry key="label.company">Company</entry>
+    <entry key="label.industry">Industry</entry>
+    <entry key="label.international">International Experience</entry>
+    <entry key="label.tasks">Tasks</entry>
+    <entry key="label.if_manager">If Management Position</entry>
+    <entry key="label.staff">Number of Staff</entry>
+    <entry key="label.turnover">Internal Turnover</entry>
+    <entry key="label.result_responsibility">Responsible for Result</entry>
+
+    <entry key="label.other_experience">Other Experience</entry>
+    <entry key="label.type">Type</entry>
+
+    <!-- Health -->
+    <entry key="label.healthcheck">Health Checkup</entry>
+    <entry key="label.next_booking_date">Next booking date</entry>
+    <entry key="label.comment">Comment</entry>
+    <entry key="label.completed">Completed</entry>
+    <entry key="label.completed_earliest">Completed Earliest</entry>
+    <entry key="label.rehab">Rehabilitation</entry>
+    <entry key="label.reason">Reason</entry>
+    <entry key="label.vaccination">Vaccination</entry>
+
+    <!-- Personal Development -->
+    <entry key="label.employee_dialogue">Development Meeting</entry>
+    <entry key="label.next_meeting_date">Next Booking Date</entry>
+    <entry key="label.training">Training</entry>
+    <entry key="label.organizer">Organizer</entry>
+    <entry key="label.deadline">Deadline</entry>
+    <entry key="label.personal_goal">Personal Goal</entry>
+    <entry key="label.followup_interval">Followup Interval</entry>
+    <entry key="label.followup_unit">Followup Unit</entry>
+    <entry key="label.days">Days</entry>
+    <entry key="label.weeks">Weeks</entry>
+    <entry key="label.months">Months</entry>
+    <entry key="label.years">Years</entry>
+    <entry key="label.followup_dialogue">Followup Meeting</entry>
+
+    <!-- Salary Negotiation -->
+    <entry key="label.general_raise">General Raise</entry>
+    <entry key="label.individual_raise">Individual Raise</entry>
+    <entry key="label.separate_agreement">Separate Agreement</entry>
+
+    <!-- Job Termination -->
+    <entry key="label.job_termination">Job Termination</entry>
+    <entry key="label.job_announcement">Announcement</entry>
+    <entry key="label.Externally">Externally</entry>
+    <entry key="label.Internally">Internally</entry>
+    <entry key="label.vacancy">Vacancy</entry>
+    <entry key="label.Not_at_all">Not at all</entry>
+    <entry key="label.termination_dialogue">Termination Dialog</entry>
+    <entry key="label.summary">Summary</entry>
+    <entry key="label.agreement">Agreement</entry>
+    <entry key="label.certificate_delivered">Certificate Delivered</entry>
+    <entry key="label.initiator">Initiator</entry>
+    <entry key="label.employer">Employer</entry>
+    <entry key="label.dialogue_date">Date</entry>
+
+    <!-- Employment -->
+    <entry key="label.emp_type">Employment Type</entry>
+    <entry key="label.emp_type_other">Employment Type (Other)</entry>
+    <entry key="label.emp_start">Start Date</entry>
+    <entry key="label.emp_finish">End Date</entry>
+    <entry key="label.emp_noticeduration">Notice Duration (days)</entry>
+    <entry key="label.emp_extent">Extent</entry>
+    <entry key="label.emp_extent_other">Extent (Other)</entry>
+    <entry key="label.emp_workhours">Working Hours</entry>
+    <entry key="label.emp_workhours_start">Start</entry>
+    <entry key="label.emp_workhours_finish">Finish</entry>
+    <entry key="label.emp_workhours_flex">Flex</entry>
+    <entry key="label.emp_shift">Shift</entry>
+    <entry key="label.emp_standby">Standby</entry>
+
+    <entry key="label.REPORTS_TO">Reports To</entry>
+
+    <entry key="label.conditions">Conditions</entry>
+
+    <entry key="label.emp_salary">Salary</entry>
+    <entry key="label.salary_after_raise">New Salary After Raise</entry>
+    <entry key="label.emp_salary_form">Salary Type</entry>
+    <entry key="label.emp_vacation_days">Vacation (days)</entry>
+    <entry key="label.emp_overtime">Overtime Compensation</entry>
+    <entry key="label.emp_travelcomp">Travel Compensation</entry>
+    <entry key="label.emp_benefits">Benefits</entry>
+    <entry key="label.emp_bonus">Bonus</entry>
+    <entry key="label.emp_other_conditions">Other Conditions</entry>
+    <entry key="label.emp_insurance">Pension &amp; Insurance</entry>
+    <entry key="label.emp_geo_placement">Geografic Placement</entry>
+    <entry key="label.emp_collective_agreement">Collective Agreement</entry>
+    <entry key="label.emp_union_affiliation">Union Affiliation</entry>
+    <entry key="label.emp_company_car">Company Car</entry>
+    <entry key="label.emp_company_car_license">Company Car Regsitration</entry>
+
+    <entry key="label.open_ended_emp">Open Ended</entry>
+    <entry key="label.temporary_emp">Temporary</entry>
+    <entry key="label.project_emp">Project</entry>
+    <entry key="label.seasonal_emp">Seasonal</entry>
+    <entry key="label.summer_emp">Summer</entry>
+    <entry key="label.other">Other</entry>
+    <entry key="label.hourly_emp">Hourly</entry>
+
+    <entry key="label.function">Function</entry>
+    <entry key="label.percent">Percent</entry>
+    <entry key="label.assign">Assign</entry>
+    <entry key="label.assignment">Assignment</entry>
+
+    <!-- Function -->
+    <entry key="label.primary_responsibility">Primary Responsibilities</entry>
+    <entry key="label.responsibilities">Responsibilities</entry>
+    <entry key="label.leaders_group">Part of Leadership</entry>
+    <entry key="label.budget_responsibility">Responsible for Budget</entry>
+    <entry key="label.placement">Placement</entry>
+
+    <entry key="label.environment">Work Environment</entry>
+    <entry key="label.workspace">Workspace</entry>
+    <entry key="label.protection">Protective Gear</entry>
+    <entry key="label.psychosocial_aspects">Psychosocial Aspects</entry>
+    <entry key="label.other_work_aspects">Other Work Aspects</entry>
+    <entry key="label.travel">Travel</entry>
+    <entry key="label.work_environment_other">Other</entry>
+
+    <entry key="label.educational_requirements">Educational Requirements</entry>
+
+    <entry key="label.experience">Experience</entry>
+    <entry key="label.position_years">Number of Years</entry>
+    <entry key="label.responsibility">Responsibility</entry>
+    <entry key="label.responsibility_years">Number of Years</entry>
+
+    <entry key="label.personal_aspects">Personal Aspects</entry>
+    <entry key="label.personal_aspect">Personal Aspect</entry>
+    <entry key="label.traits">Traits</entry>
+    <entry key="label.trait">Trait</entry>
+    <entry key="label.personal_relationships">Relationships</entry>
+    <entry key="label.corporate_culture">Corporate Culture</entry>
+    <entry key="label.personal_aspect_environment_other">Other</entry>
+
+    <entry key="label.other_requirements">Other Requirements</entry>
+    <entry key="label.notes">Notes</entry>
+
+    <entry key="label.goal">Goal</entry>
+    <entry key="label.comment">Comment</entry>
+    <entry key="label.duty">Duty</entry>
+    <entry key="label.part_of">Part Of</entry>
+    <entry key="label.membership">Membership</entry>
+    <entry key="label.task">Task</entry>
+    <entry key="label.extent">Extent</entry>
+
+    <entry key="label.function_certification">Training/Certification</entry>    
+
+    <!-- Search -->
+    <entry key="label.employeecount">Number of employees</entry>
+    <entry key="label.query">Query</entry>
+
+    <!-- help -->
+    <entry key="help.company_name">Enter the name of the company/the unit</entry>
+    <entry key="help.company_address">Enter the address of the company/the unit</entry>
+    <entry key="help.company_address_description">Enter the kind of address, i e adress, street address, delivery adress</entry>
+    <entry key="help.company_add_address">If you want to add another address</entry>
+    <entry key="help.company_add_unit">If you want to add another unit within the organization</entry>
+    <entry key="help.company_add_sub_unit">If you want to add another unit within this unit</entry>
+
+    <entry key="help.personal_address_description">If there are more than one private adress, please describe the type of adress, e g summer adress</entry>
+
+    <entry key="help.name_education">Enter the name of completed education</entry>
+
+    <entry key="help.military_name">Enter the name of completed military service</entry>
+
+    <entry key="help.language">Enter personal language skills</entry>
+    <entry key="help.computer_skill">Enter personal computer skills</entry>
+
+    <entry key="label.start_year">From year</entry>
+    <entry key="label.finish_year">To year</entry>
+
+    <entry key="help.function">Enter function</entry>
+    <entry key="help.percent_function">Enter extent</entry>
+    <entry key="help.unit">Enter unit for the function</entry>
+    <entry key="help.percent_unit">Enter extent</entry>
+
+    <entry key="label.agreements">Agreements</entry>
+
+    <entry key="help.personal_development_dialogue">Enter information about completed development meetings</entry>
+    <entry key="help.personal_development_training">Enter information about planned/completed training</entry>
+    <entry key="help.personal_development_goal">Enter information about personal goals</entry>
+
+    <entry key="help.function_general">Enter new function.</entry>
+    <entry key="help.function_responsibilities">Enter information about general goals and tasks for the function.</entry>
+    <entry key="help.function_membership">Memberships or permanent commitments for the function.</entry>
+    <entry key="help.function_environment">Enter information about working environment if tasks are performed under special conditions.</entry>
+    <entry key="help.function_education">Enter information about general competence required for the function.</entry>
+    <entry key="help.function_certification">Enter information about course/training/certification</entry>
+    <entry key="help.function_drivers_license">Is a drivers licence required for the function?</entry>
+    <entry key="help.function_personal_aspects">Other personal aspects required?</entry>
+
+    <entry key="label.function_spec">REQUIREMENTS SPECIFICATIONS</entry>
+
+    <entry key="help.function_name">Enter the name of the function</entry>
+    <entry key="help.function_goal">Enter general goals for the function</entry>
+    <entry key="help.function_task">Enter general task for the function</entry>
+
+    <entry key="help.function_education_name">Enter information about education required for the function </entry>
+    <entry key="help.function_education_specialization">Enter information about specialized education required for the function </entry>
+    <entry key="help.function_certificate_name"> Enter information about special certificates required for the function </entry>
+
+    <!-- Reports -->
+    <entry key="label.reports-upload">Upload Report</entry>
+    <entry key="label.reports-upload-ok">has been uploaded to server</entry>
+    <entry key="label.reports-upload-submit">Start Upload</entry>
+
+    <entry key="label.save_changes">Save changes?</entry>
+    <entry key="label.back">BACK</entry>
+
+    <entry key="dirtyform.title">Warning: Unsaved Changes!</entry>
+    <entry key="dirtyform.message"><![CDATA[<br/><p>You have changed form data without saving. All of your changes will be lost.</p><p>Are you sure you want to proceed?</p>]]></entry>
+
+</properties>
