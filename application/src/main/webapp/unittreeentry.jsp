@@ -11,7 +11,7 @@
     EmbeddedGraphDatabase neo = (EmbeddedGraphDatabase) WebApplicationContextUtils.getWebApplicationContext(application).getBean("neo");
     Node unitNode = neo.getNodeById(unitId);
 
-    String unitName = (String) unitNode.getProperty("name", "Namnl&ouml;s enhet");
+    String unitName = (String) unitNode.getProperty("name", "Namnlös enhet");
 
  %>
     <li><%=unitName%>
