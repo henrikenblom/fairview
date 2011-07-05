@@ -20,16 +20,30 @@
     <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript">
+        function openUnitSettingsOnTab(tabnumber){
+          $('#unitsettings-dialog').show(0, function(){
+                $("#unitsettings-tabs").tabs('select', tabnumber);
+            });
+        }
+
         $(document).ready(function() {
 
             adjustViewPort();
             $('#modalizer').fadeOut(500);
 
+            $('#unitsettings-general-tablink').click(function(){
+              openUnitSettingsOnTab(0);
         });
+
         $(function() {
             $("#unitsettings-tabs").tabs();
+        });
+
+
+
         });
     </script>
 </head>
@@ -42,7 +56,7 @@
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">
-                    <h3><%=organization.getProperty("name" ,"")%>
+                <h3 id="unitsettings-general-tablink"><%=organization.getProperty("name" ,"")%>
                     </h3>
                     <ul>
                         <%
@@ -59,9 +73,9 @@
                 </div>
                 <div class="tree-column">
                     <h3>
-                        <button class="imageonly-button"><img src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button"><img src="images/newfunction.png" alt="Ny funktion"></button>
-                        <button class="imageonly-button"><img src="images/newgoal.png" alt="Nytt mål"></button>
+                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(1)"><img src="images/newunit.png" alt="Ny underenhet"></button>
+                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(3)"><img src="images/newfunction.png" alt="Ny funktion"></button>
+                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(2)"><img src="images/newgoal.png" alt="Nytt mål"></button>
                     </h3>
                     <%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
@@ -84,7 +98,7 @@
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>
-<div id="unitsettings-dialog">
+<div id="unitsettings-dialog" style="display: none;">
     <div id="unitsettings-tabs">
         <ul>
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
@@ -93,9 +107,8 @@
             <li><a href="#unitsettings-functions">Funktioner</a></li>
             <li><a href="#unitsettings-persons">Personer</a></li>
         </ul>
-        <div id="unitsettings-general">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat test.
+        <div id="unitsettings-general">
+            <jsp:include page="mainorganization.jsp"/>
         </div>
         <div id="unitsettings-subunits">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel,
             aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.

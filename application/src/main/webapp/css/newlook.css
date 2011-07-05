@@ -606,3 +606,9 @@ fieldset {
 .goals_tasks_dialog_segment {
     margin-right: 10px;
 }
+
+#unitsettings-general-tablink{
+    color: #585c95;
+    cursor: pointer;
+    width: 0px;
+}
