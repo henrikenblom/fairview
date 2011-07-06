@@ -35,31 +35,6 @@
             }
 
         }
-
-        StringBuilder managerSnippet = new StringBuilder();
-
-        for (Node entry : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false)) {
-
-            try {
-
-                if (!entry.getProperty("firstname", "").equals("") || !entry.getProperty("lastname", "").equals("")) {
-
-
-                    managerSnippet.append("<option value=\"");
-                    managerSnippet.append(entry.getId());
-                    managerSnippet.append("\">");
-                    managerSnippet.append(entry.getProperty("lastname", ""));
-                    managerSnippet.append(", ");
-                    managerSnippet.append(entry.getProperty("firstname", ""));
-                    managerSnippet.append("</option>\\\n");
-
-                }
-                    } catch (Exception ex) {
-
-                }
-
-            }
-
     %>
                 <div id="content">
                         <form id="organization_form" action="neo/ajax/update_properties.do" method="post">
