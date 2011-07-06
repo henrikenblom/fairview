@@ -23,28 +23,32 @@
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript">
-        function openUnitSettingsOnTab(tabnumber){
-          $('#unitsettings-dialog').show(0, function(){
-                $("#unitsettings-tabs").tabs('select', tabnumber);
-            });
-        }
+
 
         $(document).ready(function() {
+
+            $("#unitsettings-tabs").tabs();
 
             adjustViewPort();
             $('#modalizer').fadeOut(500);
 
-            $('#unitsettings-general-tablink').click(function(){
-              openUnitSettingsOnTab(0);
+            $('#unitsettings-general-tablink').click(function() {
+                openUnitSettingsOnTab(0);
+            });
+
+            $('#modalizer').click(function(){
+               $('#unitsettings-dialog').hide(0);
+               $('#modalizer').fadeOut(500);
+            });
+
         });
 
-        $(function() {
-            $("#unitsettings-tabs").tabs();
-        });
-
-
-
-        });
+        function openUnitSettingsOnTab(tabnumber) {
+            $('#unitsettings-dialog').show(0, function() {
+                $("#unitsettings-tabs").tabs('select', tabnumber);
+            });
+            $('#modalizer').fadeTo(400, 0.8);
+        }
     </script>
 </head>
 <body onload="onload(<%= organization.getId()%>)" onresize="adjustViewPort()">
@@ -56,7 +60,7 @@
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">
-                <h3 id="unitsettings-general-tablink"><%=organization.getProperty("name" ,"")%>
+                    <h3 id="unitsettings-general-tablink"><%=organization.getProperty("name", "")%>
                     </h3>
                     <ul>
                         <%
@@ -73,9 +77,12 @@
                 </div>
                 <div class="tree-column">
                     <h3>
-                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(1)"><img src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(3)"><img src="images/newfunction.png" alt="Ny funktion"></button>
-                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(2)"><img src="images/newgoal.png" alt="Nytt mål"></button>
+                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(1)"><img
+                                src="images/newunit.png" alt="Ny underenhet"></button>
+                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(3)"><img
+                                src="images/newfunction.png" alt="Ny funktion"></button>
+                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(2)"><img
+                                src="images/newgoal.png" alt="Nytt mål"></button>
                     </h3>
                     <%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
