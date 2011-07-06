@@ -14,7 +14,7 @@
     String unitName = (String) unitNode.getProperty("name", "Namnlös enhet");
 
  %>
-    <li><%=unitName%>
+    <li> <span id="unitsettings-general-tablink" onclick="javascript: openUnitSettingsOnTab(0)"><%=unitName%></span>
 <%
                     for (Relationship entry : unitNode.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
 
