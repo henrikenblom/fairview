@@ -22,19 +22,31 @@ function textInputComponent(labelText, inputId) {
 
 
 function generateOrgUnitForm() {
-    var organizationform = $('<form>', {id: 'organizationform', method:'post'});
+    var organizationForm = $('<form>', {id: 'organization_form', method:'post'});
 
-    var namediv = textInputComponent('Namn','name');
+    var fieldSet = $('<fieldset>');
 
-    var descriptiondiv = fieldBox();
-    var descriptionlabel = fieldLabelBox();
-    descriptionlabel.append('Beskrivning');
-    var descriptioninput = $('<textarea id="description-field" name="description" onchange="" value="">');
-    descriptiondiv.append(descriptionlabel, descriptioninput, $('<br>'));
+    var descriptionDiv = fieldBox();
+    var descriptionLabel = fieldLabelBox();
+    descriptionLabel.append('Beskrivning');
+    var descriptionInput = $('<textarea id="description-field" name="description" onchange="" value="">');
+    descriptionDiv.append(descriptionLabel, descriptionInput, $('<br>'));
 
-    var phonediv = textInputComponent('Telefonnummer','phone');
+    var nameDiv = textInputComponent('Namn','name');
+    var phoneDiv = textInputComponent('Telefonnummer','phone');
+    var faxDiv = textInputComponent('Faxnummer', 'fax');
+    var emailDiv = textInputComponent('E-post', 'e-mail');
+    var webDiv = textInputComponent('Hemsida', 'web');
+    var adressDiv = textInputComponent('Adress', 'adress');
+    var postnummerDiv = textInputComponent('Postnummer', 'postalcode');
+    var cityDiv = textInputComponent('Ort', 'city');
+    var countryDiv = textInputComponent('Land', 'country');
 
-    organizationform.append(namediv,'<br/>' ,descriptiondiv, '<br/>', phonediv);
-    organizationform.appendTo('#content');
+
+    //the order of the elements appended equals the order of the elements displayed on the page
+    fieldSet.append(nameDiv,'<br/>' ,descriptionDiv, '<br/>', phoneDiv,'<br/>', faxDiv, '<br/>',
+    emailDiv,'<br/>',webDiv,'<br/>', adressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv );
+    organizationForm.append(fieldSet);
+    return organizationForm;
 }
 

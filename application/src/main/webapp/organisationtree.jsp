@@ -22,6 +22,7 @@
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
+    <script type="text/javascript" src="orgunitsettings.js"></script>
     <script type="text/javascript">
 
 
@@ -77,7 +78,7 @@
                 </div>
                 <div class="tree-column">
                     <h3>
-                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(1)"><img
+                        <button class="imageonly-button" onclick="javascript: $('#unitsettings-general').append(generateOrgUnitForm()); openUnitSettingsOnTab(1)"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
                         <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(3)"><img
                                 src="images/newfunction.png" alt="Ny funktion"></button>
@@ -114,8 +115,7 @@
             <li><a href="#unitsettings-functions">Funktioner</a></li>
             <li><a href="#unitsettings-persons">Personer</a></li>
         </ul>
-        <div id="unitsettings-general">
-            <jsp:include page="mainorganization.jsp"/>
+        <div class="unitsettings" id="unitsettings-general">
         </div>
         <div id="unitsettings-subunits">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel,
             aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.

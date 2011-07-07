@@ -4,7 +4,6 @@
     Author     : henrik
 */
 
-
 .hidden {
     display: none;
 }
@@ -40,8 +39,8 @@ button {
     text-align: center;
     vertical-align: middle;
     border: 1px solid #404040;
-    margin:0;
-    cursor:pointer;
+    margin: 0;
+    cursor: pointer;
 }
 
 .dialog-button:disabled {
@@ -164,7 +163,7 @@ fieldset {
 
 #content {
     padding-left: 18px;
-    padding-right:18px;
+    padding-right: 18px;
     padding-top: 18px;
     padding-bottom: 0px;
     text-align: left;
@@ -300,7 +299,7 @@ fieldset {
 }
 
 .field-label-box {
-/*    font-variant: small-caps;*/
+    /*    font-variant: small-caps;*/
     padding-left: 0px;
     display: block;
     vertical-align: bottom;
@@ -395,7 +394,7 @@ fieldset {
 }
 
 .header {
-/*    font-variant: small-caps;*/
+    /*    font-variant: small-caps;*/
     font-size: 1.1em;
     position: relative;
     background-color: #e8ecf5;
@@ -427,14 +426,14 @@ fieldset {
 
 .list-entry {
     padding-bottom: 5px;
-    white-space:nowrap;
+    white-space: nowrap;
 }
 
 .list-footer {
     background-color: #e8ecf5;
     padding: 5px;
     margin-bottom: 9px;
-/*    min-height: 21px;*/
+    /*    min-height: 21px;*/
 }
 
 .report {
@@ -503,7 +502,7 @@ fieldset {
     color: #404040;
     width: 460px;
     height: 15px;
-/*    margin: 5px;*/
+    /*    margin: 5px;*/
 }
 
 .digits-3 {
@@ -607,7 +606,16 @@ fieldset {
     margin-right: 10px;
 }
 
-#unitsettings-general-tablink{
+#unitsettings-general-tablink {
     color: #585c95;
     cursor: pointer;
 }
+
+.unitsettings {
+    padding-left: 18px;
+    padding-right: 18px;
+    padding-top: 18px;
+    padding-bottom: 0px;
+    text-align: left;
+}
+
