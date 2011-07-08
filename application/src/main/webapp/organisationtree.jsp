@@ -34,6 +34,7 @@
             $('#modalizer').fadeOut(500);
 
             $('#unitsettings-general-tablink').click(function() {
+                $('#unitsettings-general').append(generateOrgUnitForm(<%= organization.getId()%>));
                 openUnitSettingsOnTab(0);
             });
 
@@ -69,6 +70,7 @@
                         %>
                         <jsp:include page="unittreeentry.jsp">
                             <jsp:param name="unitId" value="<%=entry.getEndNode().getId()%>"></jsp:param>
+                            <jsp:param name="parentId" value="<%=organization.getId()%>"></jsp:param>
                         </jsp:include>
                         <br>
                         <%
@@ -78,7 +80,7 @@
                 </div>
                 <div class="tree-column">
                     <h3>
-                        <button class="imageonly-button" onclick="javascript: $('#unitsettings-general').append(generateOrgUnitForm()); openUnitSettingsOnTab(1)"><img
+                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(1)"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
                         <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(3)"><img
                                 src="images/newfunction.png" alt="Ny funktion"></button>
@@ -90,6 +92,7 @@
                     %>
                     <jsp:include page="unittreecontrol.jsp">
                         <jsp:param name="unitId" value="<%=entry.getEndNode().getId()%>"></jsp:param>
+                        <jsp:param name="parentId" value="<%=organization.getId()%>"></jsp:param>
                     </jsp:include>
                     <br>
                     <br>
