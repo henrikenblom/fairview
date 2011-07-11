@@ -11,7 +11,38 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
+<%
+    Node mainAddressNode = null;
 
+    try {
+
+        mainAddressNode = ((Iterable<Relationship>) organization.getRelationships(SimpleRelationshipType.withName("HAS_ADDRESS"))).iterator().next().getEndNode();
+
+    } catch (Exception ex) {
+
+        Transaction tx = neo.beginTx();
+
+        try {
+
+            mainAddressNode = neo.createNode();
+
+            mainAddressNode.setProperty("mainAddress", "true");
+
+            organization.createRelationshipTo(mainAddressNode, SimpleRelationshipType.withName("HAS_ADDRESS"));
+
+            tx.success();
+
+        } catch (Exception e) {
+
+        } finally {
+
+            tx.finish();
+
+        }
+
+    }
+
+%>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -24,9 +55,8 @@
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript" src="orgunitsettings.js"></script>
     <script type="text/javascript">
-
-
         $(document).ready(function() {
+            var unitId = <%= organization.getId()%>;
 
             $("#unitsettings-tabs").tabs();
 
@@ -34,13 +64,30 @@
             $('#modalizer').fadeOut(500);
 
             $('#unitsettings-general-tablink').click(function() {
-                $('#unitsettings-general').append(generateOrgUnitForm(<%= organization.getId()%>));
+                generateMainOrganizationForm(unitId);
+                generateOrgNrDiv(unitId).insertAfter("#description-field");
                 openUnitSettingsOnTab(0);
             });
 
-            $('#modalizer').click(function(){
-               $('#unitsettings-dialog').hide(0);
-               $('#modalizer').fadeOut(500);
+            $('#modalizer').click(function() {
+                $('#unitsettings-dialog').hide(0);
+                $('#modalizer').fadeOut(500);
+            });
+
+
+            $('#imageonly-buttonAddSubUnit').click(function() {
+                generateCommonForm(unitId);
+                generateOrgNrDiv(unitId).insertAfter("#description-field");
+                openUnitSettingsOnTab(1);
+            });
+            $('#imageonly-buttonAddFunction').click(function() {
+                generateCommonForm(unitId);
+                generateOrgNrDiv(unitId).insertAfter("#description-field");
+                openUnitSettingsOnTab(3);
+            });
+            $('#imageonly-buttonAddGoal').click(function() {
+                generateMainOrganizationForm(unitId);
+                openUnitSettingsOnTab(2);
             });
 
         });
@@ -50,6 +97,30 @@
                 $("#unitsettings-tabs").tabs('select', tabnumber);
             });
             $('#modalizer').fadeTo(400, 0.8);
+        }
+
+        function generateCommonForm(unitId) {
+            $('#unitsettings-general').empty().append(generateBaseForm(unitId));
+        }
+        function generateMainOrganizationForm(unitId) {
+            generateCommonForm(unitId);
+            generateOrgNrDiv(unitId).insertAfter("#description-field");
+
+        <%for (Relationship addressEntry : organization.getRelationships(SimpleRelationshipType.withName("HAS_ADDRESS"))) {%>
+            var addressEntryId = <%=addressEntry.getEndNode().getId()%>;
+            var updateForm = generateUpdateForm('organizationtionForm' + addressEntryId);
+
+            var addressDescriptionDiv = generateMainOrganizationAddressDescription(addressEntryId, 'addressname', '<%=addressEntry.getEndNode().getProperty("description", "")%>')
+            var addressDiv = generateMainOrganizationAddress(addressEntryId, 'streetaddress', '<%=addressEntry.getEndNode().getProperty("address", "")%>')
+
+            updateForm.append(addressDescriptionDiv, '<br/>', addressDiv);
+            $('#unitsettings-general').append(updateForm);
+        <% } %>
+        }
+
+        function generateSubUnitForm(unitId) {
+            generateCommonForm(unitId);
+            generateSubUnitAddressComponent(unitId).insertAfter('#web-field');
         }
     </script>
 </head>
@@ -80,11 +151,11 @@
                 </div>
                 <div class="tree-column">
                     <h3>
-                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(1)"><img
+                        <button class="imageonly-button" id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(3)"><img
+                        <button class="imageonly-button" id="imageonly-buttonAddFunction"><img
                                 src="images/newfunction.png" alt="Ny funktion"></button>
-                        <button class="imageonly-button" onclick="javascript: openUnitSettingsOnTab(2)"><img
+                        <button class="imageonly-button" id="imageonly-buttonAddGoal"><img
                                 src="images/newgoal.png" alt="Nytt mål"></button>
                     </h3>
                     <%

@@ -23,6 +23,8 @@
 
                 mainAddressNode = neo.createNode();
 
+                mainAddressNode.setProperty("mainAddress", "true");
+
                 organization.createRelationshipTo(mainAddressNode, SimpleRelationshipType.withName("HAS_ADDRESS"));
 
                 tx.success();

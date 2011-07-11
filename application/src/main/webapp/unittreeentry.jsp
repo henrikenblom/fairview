@@ -3,7 +3,6 @@
 <%@ page import="org.neo4j.graphdb.Node" %>
 <%@ page import="org.neo4j.graphdb.Relationship" %>
 <%@ page import="se.codemate.neo4j.SimpleRelationshipType" %>
-
 <%
 
     Long unitId = Long.parseLong(request.getParameter("unitId"));
@@ -13,8 +12,9 @@
 
     String unitName = (String) unitNode.getProperty("name", "Namnlös enhet");
 
- %>
-    <li> <span id="unitsettings-general-tablink" onclick="javascript:$('#unitsettings-general').append(generateOrgUnitForm(<%=unitId%>)) ;openUnitSettingsOnTab(0)"><%=unitName%></span>
+%>
+<%--not unobtrusive javascript,  because this is the only place where unitId is known--%>
+    <li> <span id="unitsettings-general-tablink" onclick="generateSubUnitForm(<%=unitId%>); openUnitSettingsOnTab(0);"><%=unitName%></span>
 <%
                     for (Relationship entry : unitNode.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
 
