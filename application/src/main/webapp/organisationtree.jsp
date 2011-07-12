@@ -115,7 +115,7 @@
         <% } %>
         }
         function generateMainOrganizationForm(unitId) {
-            generateCommonForm(unitId);
+            $('#unitsettings-general').empty().append(generateBaseForm(unitId));
             generateOrgNrDiv(unitId).insertAfter("#descriptionDiv");
             generateAdresses();
         }
@@ -147,7 +147,7 @@
             return bossSelectorDiv;
         }
         function generateSubUnitForm(unitId) {
-            generateCommonForm(unitId);
+            $('#unitsettings-general').empty().append(generateBaseForm(unitId));
             generateSubUnitAddressComponent(unitId).insertAfter('#web-field');
             generateBossSelector().insertAfter("#descriptionDiv");
         }
