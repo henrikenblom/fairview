@@ -96,9 +96,6 @@
             $('#modalizer').fadeTo(400, 0.8);
         }
 
-        function generateCommonForm(unitId) {
-            $('#unitsettings-general').empty().append(generateBaseForm(unitId));
-        }
         function generateAdresses() {
         <%for (Relationship addressEntry : organization.getRelationships(SimpleRelationshipType.withName("HAS_ADDRESS"))) {%>
             var addressEntryId = <%=addressEntry.getEndNode().getId()%>;
