@@ -65,7 +65,6 @@
 
             $('#unitsettings-general-tablink').click(function() {
                 generateMainOrganizationForm(unitId);
-                generateOrgNrDiv(unitId).insertAfter("#description-field");
                 openUnitSettingsOnTab(0);
             });
 
@@ -76,13 +75,11 @@
 
 
             $('#imageonly-buttonAddSubUnit').click(function() {
-                generateCommonForm(unitId);
-                generateOrgNrDiv(unitId).insertAfter("#description-field");
+                generateMainOrganizationForm(unitId);
                 openUnitSettingsOnTab(1);
             });
             $('#imageonly-buttonAddFunction').click(function() {
-                generateCommonForm(unitId);
-                generateOrgNrDiv(unitId).insertAfter("#description-field");
+                generateMainOrganizationForm(unitId);g
                 openUnitSettingsOnTab(3);
             });
             $('#imageonly-buttonAddGoal').click(function() {
@@ -102,25 +99,57 @@
         function generateCommonForm(unitId) {
             $('#unitsettings-general').empty().append(generateBaseForm(unitId));
         }
-        function generateMainOrganizationForm(unitId) {
-            generateCommonForm(unitId);
-            generateOrgNrDiv(unitId).insertAfter("#description-field");
-
+        function generateAdresses() {
         <%for (Relationship addressEntry : organization.getRelationships(SimpleRelationshipType.withName("HAS_ADDRESS"))) {%>
             var addressEntryId = <%=addressEntry.getEndNode().getId()%>;
             var updateForm = generateUpdateForm('organizationtionForm' + addressEntryId);
 
-            var addressDescriptionDiv = generateMainOrganizationAddressDescription(addressEntryId, 'addressname', '<%=addressEntry.getEndNode().getProperty("description", "")%>')
-            var addressDiv = generateMainOrganizationAddress(addressEntryId, 'streetaddress', '<%=addressEntry.getEndNode().getProperty("address", "")%>')
+            var addressDescriptionDiv = generateMainOrganizationAddressComponent('Adressbenämning', addressEntryId, 'addressname', '<%=addressEntry.getEndNode().getProperty("description", "")%>');
+            var addressDiv = generateMainOrganizationAddressComponent('Adress', addressEntryId, 'streetaddress', '<%=addressEntry.getEndNode().getProperty("address", "")%>');
+            var postalCodeDiv = generateMainOrganizationAddressComponent('Postnummer', addressEntryId, 'zip', '<%=addressEntry.getEndNode().getProperty("postalcode", "")%>');
+            var cityDiv = generateMainOrganizationAddressComponent('Ort', addressEntryId, 'city', '<%=addressEntry.getEndNode().getProperty("city", "")%>');
+            var countryDiv = generateMainOrganizationAddressComponent('Land', addressEntryId, 'country', '<%=addressEntry.getEndNode().getProperty("country", "")%>');
 
-            updateForm.append(addressDescriptionDiv, '<br/>', addressDiv);
+            updateForm.append(addressDescriptionDiv, '<br/>', addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
+        function generateMainOrganizationForm(unitId) {
+            generateCommonForm(unitId);
+            generateOrgNrDiv(unitId).insertAfter("#descriptionDiv");
+            generateAdresses();
+        }
 
+        function generateBossSelector() {
+            bossSelectorDiv = fieldBox();
+            bossSelectorLabel = fieldLabelBox();
+            bossSelectorLabel.append("Chef");
+
+            bossSelector = $('<select>');
+            bossSelector.attr("id", "manager-selection");
+
+        <%
+         for (Node entry : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false)) {
+
+          try {
+
+          if (!entry.getProperty("firstname", "").equals("") || !entry.getProperty("lastname", "").equals("")) { %>
+            bossOption = $('<option>');
+            bossOption.val(<%=entry.getId()%>);
+            bossOption.append('<%=entry.getProperty("lastname", "")%>' + ", " + '<%=entry.getProperty("firstname", "")%>');
+            bossSelector.append(bossOption);
+        <% }
+                     } catch (Exception ex) {
+                             }
+                     }
+                     %>
+            bossSelectorDiv.append(bossSelectorLabel ,bossSelector);
+            return bossSelectorDiv;
+        }
         function generateSubUnitForm(unitId) {
             generateCommonForm(unitId);
             generateSubUnitAddressComponent(unitId).insertAfter('#web-field');
+            generateBossSelector().insertAfter("#descriptionDiv");
         }
     </script>
 </head>

@@ -8,13 +8,13 @@ function textInputComponent(labelText, inputName, value) {
     var inputDiv = fieldBox();
     var inputLabel = fieldLabelBox();
     inputLabel.append(labelText);
-    var nameinput = $('<input type="text">');
-    nameinput.addClass("text-field");
-    nameinput.attr("id", inputName + "-field");
-    nameinput.attr("name", inputName);
-    nameinput.val(value);
+    var textInput = $('<input type="text">');
+    textInput.addClass("text-field");
+    textInput.attr("id", inputName + "-field");
+    textInput.attr("name", inputName);
+    textInput.val(value);
 
-    inputDiv.append(inputLabel, nameinput);
+    inputDiv.append(inputLabel, textInput);
     return inputDiv;
 }
 function hiddenField(name, value) {
@@ -70,6 +70,7 @@ function generateBaseForm(unitId) {    //components shared between main and sub 
     var hiddenField_username = hiddenField('_username', 'admin');
 
     var descriptionDiv = fieldBox();
+    descriptionDiv.attr("id", "descriptionDiv");
     var descriptionLabel = fieldLabelBox();
     descriptionLabel.append('Beskrivning');
     var descriptionInput = $('<textarea id="description-field" name="description">');
@@ -113,16 +114,11 @@ function generateSubUnitAddressComponent(unitId) {
     return addressDiv;
 }
 
-function generateMainOrganizationAddressDescription(unitId, name, value) {
-    var addressDescriptionDiv = textInputComponent('Adressbenämning', name, value);
-    addressDescriptionDiv.attr("id", name + "-field" + unitId);
+function generateMainOrganizationAddressComponent(labelText, unitId, name, value) {
+    var addressDescriptionDiv = textInputComponent(labelText, name, value);
+    addressDescriptionDiv.children('#' + name + '-field').attr("id", name + "-field" + unitId);
+//    $('#'+name+'-field').attr("id", name + "-field" + unitId);
     return addressDescriptionDiv;
-}
-
-function generateMainOrganizationAddress(unitId, name, value) {
-    var addressDiv = textInputComponent('Adress', name, value);
-    addressDiv.attr("id", name + "-field" + unitId);
-    return addressDiv;
 }
 
 
