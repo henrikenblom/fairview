@@ -79,7 +79,7 @@
                 openUnitSettingsOnTab(1);
             });
             $('#imageonly-buttonAddFunction').click(function() {
-                generateMainOrganizationForm(unitId);g
+                generateMainOrganizationForm(unitId);
                 openUnitSettingsOnTab(3);
             });
             $('#imageonly-buttonAddGoal').click(function() {
@@ -101,16 +101,24 @@
         }
         function generateAdresses() {
         <%for (Relationship addressEntry : organization.getRelationships(SimpleRelationshipType.withName("HAS_ADDRESS"))) {%>
-            var addressEntryId = <%=addressEntry.getEndNode().getId()%>;
-            var updateForm = generateUpdateForm('organizationtionForm' + addressEntryId);
 
-            var addressDescriptionDiv = generateMainOrganizationAddressComponent('Adressbenämning', addressEntryId, 'addressname', '<%=addressEntry.getEndNode().getProperty("description", "")%>');
-            var addressDiv = generateMainOrganizationAddressComponent('Adress', addressEntryId, 'streetaddress', '<%=addressEntry.getEndNode().getProperty("address", "")%>');
-            var postalCodeDiv = generateMainOrganizationAddressComponent('Postnummer', addressEntryId, 'zip', '<%=addressEntry.getEndNode().getProperty("postalcode", "")%>');
-            var cityDiv = generateMainOrganizationAddressComponent('Ort', addressEntryId, 'city', '<%=addressEntry.getEndNode().getProperty("city", "")%>');
-            var countryDiv = generateMainOrganizationAddressComponent('Land', addressEntryId, 'country', '<%=addressEntry.getEndNode().getProperty("country", "")%>');
+            var unitId = <%=addressEntry.getEndNode().getId()%>;
+            var updateForm = generateUpdateForm('organization_address_form' + unitId);
+            var data = getData(unitId);
+            var properties = data.node.properties;
 
-            updateForm.append(addressDescriptionDiv, '<br/>', addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
+            var hiddenField_id = hiddenField('_id', unitId);
+            var hiddenField_type = hiddenField('_type', 'node');
+            var hiddenField_strict = hiddenField('_strict', 'true');
+            var hiddenField_username = hiddenField('_username', 'admin');
+
+            var addressDescriptionDiv = generateMainOrganizationAddressComponent('Adressbenämning', unitId, 'description', propValue(properties.description));
+            var addressDiv = generateMainOrganizationAddressComponent('Adress', unitId, 'address', propValue(properties.address));
+            var postalCodeDiv = generateMainOrganizationAddressComponent('Postnummer', unitId, 'postalcode', propValue(properties.postalcode));
+            var cityDiv = generateMainOrganizationAddressComponent('Ort', unitId, 'city', propValue(properties.city));
+            var countryDiv = generateMainOrganizationAddressComponent('Land', unitId, 'country', propValue(properties.country));
+
+            updateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, '<br/>', addressDescriptionDiv, '<br/>', addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
@@ -143,7 +151,7 @@
                              }
                      }
                      %>
-            bossSelectorDiv.append(bossSelectorLabel ,bossSelector);
+            bossSelectorDiv.append(bossSelectorLabel, bossSelector);
             return bossSelectorDiv;
         }
         function generateSubUnitForm(unitId) {
