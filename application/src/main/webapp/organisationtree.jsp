@@ -144,7 +144,8 @@
                 $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
             });
             bossOption = $('<option>');
-            bossOption.append('Välj...');
+            bossOption.val(-1);
+            bossOption.append('Ingen chef vald');
             bossSelector.append(bossOption);
 
         <%

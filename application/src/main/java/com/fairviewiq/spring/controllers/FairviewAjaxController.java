@@ -427,31 +427,46 @@ public class FairviewAjaxController {
                                       @RequestParam("_endNodeId") Long endNodeId) {
 
         Node unitNode = neo.getNodeById(startNodeId);
+        deleteExistingManagerRelationship(unitNode);
+        if (endNodeId == -1) // No boss selected
+        {
+            ModelAndView mav = new ModelAndView(xstreamView);
+            mav.addObject(XStreamView.XSTREAM_ROOT, "Deleted manager of unit '" + unitNode.getProperty("name") + "'");
+            return mav;
+        } else {
+            Node endNode = getEndNode(endNodeId);
+            Relationship relationship = createManagerRelationship(unitNode, endNode);
 
-        Relationship managerRelationship = null;
-        try {
-            managerRelationship = ((Iterable<Relationship>) unitNode.getRelationships(SimpleRelationshipType.withName("HAS_MANAGER"), Direction.OUTGOING)).iterator().next();
-        } catch (Exception ex) {
-            // managerRelationship didn't exist
+            ModelAndView mav = new ModelAndView(xstreamView);
+            mav.addObject(XStreamView.XSTREAM_ROOT, relationship);
+            return mav;
         }
+    }
 
-        if (managerRelationship != null) {
-            managerRelationship.delete();  //if unit already has a Manager, delete it
-        }
+    private Relationship createManagerRelationship(Node unitNode, Node endNode) {
+        return unitNode.createRelationshipTo(endNode, new SimpleRelationshipType("HAS_MANAGER"));
+    }
+
+    private Node getEndNode(Long endNodeId) {
         Node endNode;
         if (endNodeId == null) {
             endNode = neo.createNode();
         } else {
             endNode = neo.getNodeById(endNodeId);
         }
+        return endNode;
+    }
 
-        Relationship relationship = unitNode.createRelationshipTo(endNode, new SimpleRelationshipType("HAS_MANAGER"));
-
-        ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, relationship);
-
-        return mav;
-
+    private void deleteExistingManagerRelationship(Node unitNode) {
+        Relationship managerRelationship = null;
+        try {
+            managerRelationship = ((Iterable<Relationship>) unitNode.getRelationships(SimpleRelationshipType.withName("HAS_MANAGER"), Direction.OUTGOING)).iterator().next();
+        } catch (Exception ex) {
+            // managerRelationship didn't exist
+        }
+        if (managerRelationship != null) {
+            managerRelationship.delete();  //if unit already has a Manager, delete it
+        }
     }
 
     @RequestMapping(value = {"/fairview/ajax/get_manager.do"})
