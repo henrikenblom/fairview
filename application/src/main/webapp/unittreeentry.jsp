@@ -14,7 +14,7 @@
 
 %>
 <%--not unobtrusive javascript,  because this is the only place where unitId is known--%>
-    <li> <span id="unitsettings-general-tablink" onclick="generateSubUnitForm(<%=unitId%>); openUnitSettingsOnTab(0);"><%=unitName%></span>
+    <li> <span id="unitsettings-general-tablink" name="unitsettings-general-tablink<%=unitId%>" onclick="generateSubUnitForm(<%=unitId%>); openUnitSettingsOnTab(0);"><%=unitName%></span>
 <%
                     for (Relationship entry : unitNode.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
 

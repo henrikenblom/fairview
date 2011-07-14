@@ -63,7 +63,7 @@
             adjustViewPort();
             $('#modalizer').fadeOut(500);
 
-            $('#unitsettings-general-tablink').click(function() {
+            $('#unitsettings-general-tablink[name=unitsettings-general-tablink'+unitId+']').click(function() {
                 generateMainOrganizationForm(unitId);
                 openUnitSettingsOnTab(0);
             });
@@ -119,10 +119,16 @@
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
+        function editHeaderNameOnChange() {
+            $('#name-field').change(function() {
+                $('#header-organization-name').html(this.value);
+            });
+        }
         function generateMainOrganizationForm(unitId) {
             $('#unitsettings-general').empty().append(generateBaseForm(unitId));
             generateOrgNrDiv(unitId).insertAfter("#descriptionDiv");
             generateAdresses();
+            editHeaderNameOnChange();
         }
 
         function generateBossSelector(unitId) {
@@ -181,7 +187,7 @@
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">
-                    <h3 id="unitsettings-general-tablink"><%=organization.getProperty("name", "")%>
+                    <h3 id="unitsettings-general-tablink" name="unitsettings-general-tablink<%=organization.getId()%>"><%=organization.getProperty("name", "")%>
                     </h3>
                     <ul>
                         <%

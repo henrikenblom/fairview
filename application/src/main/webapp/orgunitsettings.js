@@ -61,6 +61,12 @@ function generateDescriptionDiv(properties, formId) {
     descriptionDiv.append(descriptionLabel, descriptionInput, $('<br>'));
     return descriptionDiv;
 }
+function editTreeNamesOnChange(nameDiv, unitId) {
+    var nameInput = nameDiv.children('#name-field');
+    nameInput.change(function() {
+        $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').empty().append(nameInput.val());
+    });
+}
 /**
  * Created by IntelliJ IDEA.
  * User: fairview
@@ -88,6 +94,7 @@ function generateBaseForm(unitId) {    //components shared between main and sub 
     var descriptionDiv = generateDescriptionDiv(properties, formId);
 
     var nameDiv = textInputComponent('Namn', 'name', propValue(properties.name), formId);
+    editTreeNamesOnChange(nameDiv, unitId);
     var phoneDiv = textInputComponent('Telefonnummer', 'phone', propValue(properties.phone), formId);
     var faxDiv = textInputComponent('Faxnummer', 'fax', propValue(properties.fax), formId);
     var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
