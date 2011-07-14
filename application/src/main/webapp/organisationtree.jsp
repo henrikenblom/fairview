@@ -128,13 +128,21 @@
             generateAdresses();
         }
 
-        function generateBossSelector() {
+        function generateBossSelector(unitId) {
+
+
             bossSelectorDiv = fieldBox();
             bossSelectorLabel = fieldLabelBox();
             bossSelectorLabel.append("Chef");
 
             bossSelector = $('<select>');
             bossSelector.attr("id", "manager-selection");
+            bossSelector.change(function() {
+                $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
+            });
+            bossOption = $('<option>');
+            bossOption.append('Välj...');
+            bossSelector.append(bossOption);
 
         <%
          for (Node entry : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false)) {
@@ -142,8 +150,9 @@
           try {
 
           if (!entry.getProperty("firstname", "").equals("") || !entry.getProperty("lastname", "").equals("")) { %>
+            var entryId = <%=entry.getId()%>;
             bossOption = $('<option>');
-            bossOption.val(<%=entry.getId()%>);
+            bossOption.val(entryId);
             bossOption.append('<%=entry.getProperty("lastname", "")%>' + ", " + '<%=entry.getProperty("firstname", "")%>');
             bossSelector.append(bossOption);
         <% }
@@ -151,13 +160,18 @@
                              }
                      }
                      %>
+
+            $.getJSON("fairview/ajax/get_manager.do", {_unitId: unitId}, function(data){
+               bossSelector.val(data.long);
+            })
+
             bossSelectorDiv.append(bossSelectorLabel, bossSelector);
             return bossSelectorDiv;
         }
         function generateSubUnitForm(unitId) {
             $('#unitsettings-general').empty().append(generateBaseForm(unitId));
             generateSubUnitAddressComponent(unitId).insertAfter('#web-field');
-            generateBossSelector().insertAfter("#descriptionDiv");
+            generateBossSelector(unitId).insertAfter("#descriptionDiv");
         }
     </script>
 </head>

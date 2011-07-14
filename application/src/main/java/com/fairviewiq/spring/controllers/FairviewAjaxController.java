@@ -15,7 +15,6 @@ import se.codemate.spring.mvc.XStreamView;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -122,8 +121,8 @@ public class FairviewAjaxController {
 
     @RequestMapping(value = {"/fairview/ajax/assign_unit.do"})
     public ModelAndView assignUnit(@RequestParam("employment") Long employmentId,
-                                       @RequestParam("unit:relationship") Long unitId,
-                                       @RequestParam("percent") int percent) throws IOException {
+                                   @RequestParam("unit:relationship") Long unitId,
+                                   @RequestParam("percent") int percent) throws IOException {
 
         ModelAndView mav = new ModelAndView(xstreamView);
 
@@ -146,7 +145,6 @@ public class FairviewAjaxController {
         return mav;
 
     }
-
 
 
     // Additions made by Henrik Enblom.
@@ -239,11 +237,11 @@ public class FairviewAjaxController {
 
     @RequestMapping(value = {"/fairview/ajax/update_goal.do"})
     public ModelAndView updateGoal(@RequestParam("_nodeId") Long nodeId,
-                                @RequestParam("title") String title,
-                                @RequestParam("description") String description,
-                                @RequestParam("measurement") String measurement,
-                                @RequestParam("focus") String focus,
-                                @RequestParam(value = "super_task", required = false) Long super_task) {
+                                   @RequestParam("title") String title,
+                                   @RequestParam("description") String description,
+                                   @RequestParam("measurement") String measurement,
+                                   @RequestParam("focus") String focus,
+                                   @RequestParam(value = "super_task", required = false) Long super_task) {
 
         Node goalNode = neo.getNodeById(nodeId);
 
@@ -311,9 +309,9 @@ public class FairviewAjaxController {
         }
 
         if (adminRoleNode != null
-            && userNode != null) {
+                && userNode != null) {
 
-           relationship = userNode.createRelationshipTo(adminRoleNode, new SimpleRelationshipType("HAS_ROLE"));
+            relationship = userNode.createRelationshipTo(adminRoleNode, new SimpleRelationshipType("HAS_ROLE"));
 
         }
 
@@ -325,33 +323,33 @@ public class FairviewAjaxController {
     }
 
     @RequestMapping(value = {"/fairview/ajax/is_admin.do"})
-        public ModelAndView isAdmin(@RequestParam("_nodeId") Long nodeId) {
+    public ModelAndView isAdmin(@RequestParam("_nodeId") Long nodeId) {
 
-            Node userNode = neo.getNodeById(nodeId);
-            Boolean isAdmin = false;
+        Node userNode = neo.getNodeById(nodeId);
+        Boolean isAdmin = false;
 
-            for (Relationship relationship : userNode.getRelationships(new SimpleRelationshipType("HAS_ROLE"), Direction.OUTGOING)) {
+        for (Relationship relationship : userNode.getRelationships(new SimpleRelationshipType("HAS_ROLE"), Direction.OUTGOING)) {
 
-                if (relationship.getEndNode().getProperty("authority", "").equals("ROLE_ADMIN")) {
+            if (relationship.getEndNode().getProperty("authority", "").equals("ROLE_ADMIN")) {
 
-                    isAdmin = true;
-                    break;
-
-                }
+                isAdmin = true;
+                break;
 
             }
 
-            ModelAndView mav = new ModelAndView(xstreamView);
-            mav.addObject(XStreamView.XSTREAM_ROOT, isAdmin);
-
-            return mav;
-
         }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, isAdmin);
+
+        return mav;
+
+    }
 
 
     @RequestMapping(value = {"/fairview/ajax/duplicate_function.do"})
     public ModelAndView duplicateNode(@RequestParam("_nodeId") Long nodeId,
-                                        @RequestParam(value = "_destinationName", required = false) String destinationName) {
+                                      @RequestParam(value = "_destinationName", required = false) String destinationName) {
 
         Node sourceNode = neo.getNodeById(nodeId);
         Node destinationNode = neo.createNode();
@@ -424,4 +422,59 @@ public class FairviewAjaxController {
 
     }
 
+    @RequestMapping(value = {"/fairview/ajax/assign_manager.do"})
+    public ModelAndView assignManager(@RequestParam("_startNodeId") Long startNodeId,
+                                      @RequestParam("_endNodeId") Long endNodeId) {
+
+        Node unitNode = neo.getNodeById(startNodeId);
+
+        Relationship managerRelationship = null;
+        try {
+            managerRelationship = ((Iterable<Relationship>) unitNode.getRelationships(SimpleRelationshipType.withName("HAS_MANAGER"), Direction.OUTGOING)).iterator().next();
+        } catch (Exception ex) {
+            // managerRelationship didn't exist
+        }
+
+        if (managerRelationship != null) {
+            managerRelationship.delete();  //if unit already has a Manager, delete it
+        }
+        Node endNode;
+        if (endNodeId == null) {
+            endNode = neo.createNode();
+        } else {
+            endNode = neo.getNodeById(endNodeId);
+        }
+
+        Relationship relationship = unitNode.createRelationshipTo(endNode, new SimpleRelationshipType("HAS_MANAGER"));
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, relationship);
+
+        return mav;
+
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_manager.do"})
+    public ModelAndView getManager(@RequestParam("_unitId") long unitId) {
+
+        Node unitNode = neo.getNodeById(unitId);
+
+        Relationship managerRelationship = null;
+        try {
+            managerRelationship = ((Iterable<Relationship>) unitNode.getRelationships(SimpleRelationshipType.withName("HAS_MANAGER"), Direction.OUTGOING)).iterator().next();
+        } catch (Exception ex) {
+            // managerRelationship didn't exist
+            long noFind = -1;
+            ModelAndView mav = new ModelAndView(xstreamView);
+            mav.addObject(XStreamView.XSTREAM_ROOT, noFind);
+            return mav;
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, managerRelationship.getEndNode().getId());
+
+        return mav;
+    }
+
 }
+
