@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="/Users/fairview/github/fairview/application/src/main/webapp/css/qunit.css"
+          type="text/css"/>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript"
+            src="/Users/fairview/github/fairview/application/src/main/webapp/js/qunit.js"></script>
+    <script type="text/javascript"
+            src="/Users/fairview/github/fairview/application/src/main/webapp/orgunitsettings.js"></script>
+    <script type="text/javascript"
+            src="https://raw.github.com/robdmoore/jquery-mockjax/f837ab421e481010148ac0f174e0214068a6180f/jquery.mockjax.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            module("Regular testing");
+
+            test("Testing divide function", function() {
+                expect(2);
+                equals(divide(4, 2), 2, 'Expected 2 as the result, result was: ' + divide(4, 2));
+                equals(divide(7, 2), 3.5, 'Expected 2 as the result, result was: ' + divide(7, 2));
+            });
+
+            test("Testing fieldBox function", function() {
+                expect(1);
+                var div = $('<div>')
+                div.addClass('field-box');
+                same(fieldBox().html(), div.html(), 'Expected ' + div.html() + ' was: ' + fieldBox().html());
+            });
+
+            module("Testing Mock AJAX-requests with Mockjax");
+
+            test("Testing helloworld-service", function() {
+                expect(1);
+                $.getJSON('/test/helloworld', function(response) {
+                    same(response.say, 'Hello world!', 'Expected Hello world!, was: ' + response.say);
+                });
+            });
+
+
+        });
+
+        $.mockjax({
+            url: '/test/helloworld',
+            dataType: 'json',
+            responseTime: 0,
+            responseText: {
+                say: 'Hello world!'
+            }
+        });
+
+        function divide(numerator, denominator) {
+            return numerator / denominator;
+        }
+
+    </script>
+</head>
+<body>
+<h1 id="qunit-header">InferoQuest Frontend Testing</h1>
+
+<h2 id="qunit-banner"></h2>
+
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests">
+</ol>
+</body>
+</html>
