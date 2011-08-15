@@ -67,6 +67,10 @@ function editTreeNamesOnChange(nameDiv, unitId) {
         $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').empty().append(nameInput.val());
     });
 }
+function getFormId() {
+    var formId = 'organizationForm';
+    return formId;
+}
 /**
  * Created by IntelliJ IDEA.
  * User: fairview
@@ -79,7 +83,7 @@ function editTreeNamesOnChange(nameDiv, unitId) {
 function generateBaseForm(unitId) {    //components shared between main and sub -organizations
 
     var data = getData(unitId);
-    var formId = 'organizationForm';
+    var formId = getFormId();
     var properties = data.node.properties;
 
     generateUpdateForm(formId);
@@ -114,7 +118,7 @@ function generateOrgNrDiv(unitId) {
     var data = getData(unitId);
     var properties = data.node.properties;
 
-    var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', propValue(properties.regnr));
+    var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', propValue(properties.regnr), getFormId());
     return orgnrDiv;
 }
 
@@ -122,10 +126,10 @@ function generateSubUnitAddressComponent(unitId) {
     var data = getData(unitId);
     var properties = data.node.properties;
 
-    var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address));
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', propValue(properties.postalcode));
-    var cityDiv = textInputComponent('Ort', 'city', propValue(properties.city));
-    var countryDiv = textInputComponent('Land', 'country', propValue(properties.country));
+    var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), getFormId());
+    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', propValue(properties.postalcode), getFormId());
+    var cityDiv = textInputComponent('Ort', 'city', propValue(properties.city), getFormId());
+    var countryDiv = textInputComponent('Land', 'country', propValue(properties.country), getFormId());
 
     addressDiv.append(postnummerDiv, cityDiv, countryDiv);
     return addressDiv;
