@@ -55,16 +55,30 @@
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript" src="orgunitsettings.js"></script>
     <script type="text/javascript">
+        function generateSubunitCreationTab(unitId) {
+            $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
+            var submitButton = $('<button>');
+            submitButton.html('Lägg till underavdelning');
+            submitButton.click(function(){
+               var createdSubunit =  getRelationshipData(getNodeData(unitId).node.id);
+               var createdSubunitId = createdSubunit.relationship.endNode;
+               $('#subunitform').children().children('input[name="_id"]').val(createdSubunitId);
+               $('#subunitform').ajaxSubmit(function(){
+                   location.reload();  //reloads the page to make the newly created subunit to be visible in the organization tree
+               });
+            });
+            submitButton.appendTo($('#unitsettings-subunits'));
+        }
         $(document).ready(function() {
             var unitId = <%= organization.getId()%>;
-
             $("#unitsettings-tabs").tabs();
 
             adjustViewPort();
             $('#modalizer').fadeOut(500);
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink'+unitId+']').click(function() {
-                generateMainOrganizationForm(unitId);
+                generateMainOrganizationEditForm(unitId);
+                generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(0);
             });
 
@@ -75,19 +89,34 @@
 
 
             $('#imageonly-buttonAddSubUnit').click(function() {
-                generateMainOrganizationForm(unitId);
+                generateMainOrganizationEditForm(unitId);
+                generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(1);
             });
             $('#imageonly-buttonAddFunction').click(function() {
-                generateMainOrganizationForm(unitId);
+                generateMainOrganizationEditForm(unitId);
+                generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(3);
             });
             $('#imageonly-buttonAddGoal').click(function() {
-                generateMainOrganizationForm(unitId);
+                generateMainOrganizationEditForm(unitId);
+                generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(2);
             });
 
         });
+
+         function generateMainOrganizationEditForm(unitId) {
+            $('#unitsettings-general').empty().append(generateBaseEditForm(unitId));
+            generateOrgNrDiv(unitId).insertAfter("#descriptionDiv");
+            generateAdresses();
+            editHeaderNameOnChange();
+        }
+        function generateSubunitEditForm(unitId) {
+            $('#unitsettings-general').empty().append(generateBaseEditForm(unitId));
+            generateSubUnitAddressComponent(unitId).insertAfter('#web-field');
+            generateBossSelector(unitId).insertAfter("#descriptionDiv");
+        }
 
         function openUnitSettingsOnTab(tabnumber) {
             $('#unitsettings-dialog').show(0, function() {
@@ -101,7 +130,7 @@
 
             var unitId = <%=addressEntry.getEndNode().getId()%>;
             var updateForm = generateUpdateForm('organization_address_form' + unitId);
-            var data = getData(unitId);
+            var data = getNodeData(unitId);
             var properties = data.node.properties;
 
             var hiddenField_id = hiddenField('_id', unitId);
@@ -124,13 +153,6 @@
                 $('#header-organization-name').html(this.value);
             });
         }
-        function generateMainOrganizationForm(unitId) {
-            $('#unitsettings-general').empty().append(generateBaseForm(unitId));
-            generateOrgNrDiv(unitId).insertAfter("#descriptionDiv");
-            generateAdresses();
-            editHeaderNameOnChange();
-        }
-
         function generateBossSelector(unitId) {
 
 
@@ -172,11 +194,7 @@
             bossSelectorDiv.append(bossSelectorLabel, bossSelector);
             return bossSelectorDiv;
         }
-        function generateSubUnitForm(unitId) {
-            $('#unitsettings-general').empty().append(generateBaseForm(unitId));
-            generateSubUnitAddressComponent(unitId).insertAfter('#web-field');
-            generateBossSelector(unitId).insertAfter("#descriptionDiv");
-        }
+
     </script>
 </head>
 <body onload="onload(<%= organization.getId()%>)" onresize="adjustViewPort()">
@@ -239,15 +257,13 @@
     <div id="unitsettings-tabs">
         <ul>
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
-            <li><a href="#unitsettings-subunits">Underavdelningar</a></li>
-            <li><a href="#unitsettings-goals">Mål och uppgifter</a></li>
-            <li><a href="#unitsettings-functions">Funktioner</a></li>
-            <li><a href="#unitsettings-persons">Personer</a></li>
+            <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
+            <li><a href="#unitsettings-goals">Lägg till Mål</a></li>
+            <li><a href="#unitsettings-functions">Lägg till Funktion</a></li>
+            <li><a href="#unitsettings-persons">Lägg till Person</a></li>
         </ul>
-        <div class="unitsettings" id="unitsettings-general">
-        </div>
-        <div id="unitsettings-subunits">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel,
-            aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.
+        <div class="unitsettings" id="unitsettings-general"></div>
+        <div class="unitsettings" id="unitsettings-subunits">
         </div>
         <div id="unitsettings-goals">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi
             urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
