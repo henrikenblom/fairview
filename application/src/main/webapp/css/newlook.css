@@ -90,6 +90,42 @@ fieldset {
     padding: 0;
 }
 
+#helpbox{
+    height: 200px;
+    width: 200px;
+    background-color: white;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #404040;
+    position: fixed;
+    right: 40px;
+    top: 250px;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+}
+
+#helpbox-header{
+    text-align: left;
+    padding: 10px;
+    background-color: #E4E4E4;
+    -webkit-border-radius: 7px 7px 0px 0px;
+    -moz-border-radius: 7px 7px 0px 0px;
+    border-radius: 7px 7px 0px 0px;
+}
+
+#helpbox-content{
+    padding: 5px;
+}
+
+.helpbox-image{
+    padding-right: 5px;
+}
+
+.helpbox-listentry{
+    padding: 5px;
+}
+
 #logo {
     padding-left: 18px;
     padding-top: 18px;

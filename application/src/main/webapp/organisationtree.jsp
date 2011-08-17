@@ -54,6 +54,7 @@
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript" src="orgunitsettings.js"></script>
+    <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript">
         function generateSubunitCreationTab(unitId) {
             $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
@@ -245,6 +246,14 @@
                         }
                     %>
                 </div>
+            </div>
+        </div>
+        <div id="helpbox">
+            <div id="helpbox-header">Hjälpruta</div>
+            <div id="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
+                <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till underenhet <br/></div>
+                <div class="helpbox-listentry"><img src="images/newfunction.png" class="helpbox-image">Lägg till funktion <br/></div>
+                <div class="helpbox-listentry"><img src="images/newgoal.png" class="helpbox-image">Lägg till nytt mål</div>
             </div>
         </div>
 
