@@ -225,11 +225,11 @@
                 </div>
                 <div class="tree-column">
                     <h3>
-                        <button class="imageonly-button" id="imageonly-buttonAddSubUnit"><img
+                        <button class="imageonly-button" title="Lägg till underavdelning" id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button" id="imageonly-buttonAddFunction"><img
+                        <button class="imageonly-button" title="Lägg till funktion" id="imageonly-buttonAddFunction"><img
                                 src="images/newfunction.png" alt="Ny funktion"></button>
-                        <button class="imageonly-button" id="imageonly-buttonAddGoal"><img
+                        <button class="imageonly-button" title="Lägg till mål" id="imageonly-buttonAddGoal"><img
                                 src="images/newgoal.png" alt="Nytt mål"></button>
                     </h3>
                     <%
