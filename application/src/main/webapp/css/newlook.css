@@ -97,9 +97,9 @@ fieldset {
     border-width: 1px;
     border-style: solid;
     border-color: #404040;
-    position: fixed;
-    right: 40px;
-    top: 250px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
     border-radius: 7px;
@@ -212,7 +212,6 @@ fieldset {
     min-width: 581px;
     width: 100%;
      */
-
 }
 
 #right-column {
@@ -462,6 +461,7 @@ fieldset {
     padding-right: 14px;
     padding-bottom: 2px;
     background-color: white;
+    position: relative;
 }
 
 .list-entry {

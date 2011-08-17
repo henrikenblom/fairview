@@ -1,3 +1,73 @@
+/**
+ * Created by IntelliJ IDEA.
+ * User: fairview
+ * Date: 7/7/11
+ * Time: 11:09 AM
+ * To change this template use File | Settings | File Templates.
+ */
+
+function generateBaseEditForm(unitId) {
+
+    var data = getNodeData(unitId);
+    var formId = getFormId();
+    var properties = data.node.properties;
+
+    var updateForm = generateUpdateForm(formId);
+
+    var fieldSet = $('<fieldset>');
+
+    var hiddenField_id = hiddenField('_id', unitId);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'true');
+    var hiddenField_username = hiddenField('_username', 'admin');
+
+    var descriptionDiv = generateDescriptionDiv(formId, properties);
+
+    var nameDiv = textInputComponent('Namn', 'name', propValue(properties.name), formId);
+    editTreeNamesOnChange(nameDiv, unitId);
+    var phoneDiv = textInputComponent('Telefonnummer', 'phone', propValue(properties.phone), formId);
+    var faxDiv = textInputComponent('Faxnummer', 'fax', propValue(properties.fax), formId);
+    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
+    var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId);
+
+    //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
+        emailDiv, '<br/>', webDiv, '<br/>');
+    updateForm.append(fieldSet);
+    return updateForm;
+}
+
+function generateSubunitCreationForm() {
+    var formId = 'subunitform';
+    var form = generateUpdateForm(formId);
+    var fieldSet = $('<fieldset>');
+
+    var hiddenField_id = hiddenField('_id', '');
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'true');
+    var hiddenField_username = hiddenField('_username', 'admin');
+    var hiddenField_nodeClass = hiddenField('nodeClass', 'unit');
+
+    var descriptionDiv = generateDescriptionDiv(formId, null);
+
+    var nameDiv = textInputComponent('Namn', 'name', '', formId);
+    var phoneDiv = textInputComponent('Telefonnummer', 'phone', '', formId);
+    var faxDiv = textInputComponent('Faxnummer', 'fax', '', formId);
+    var emailDiv = textInputComponent('E-post', 'email', '', formId);
+    var webDiv = textInputComponent('Hemsida', 'web', '', formId);
+
+    var addressDiv = textInputComponent('Adress', 'address', '', getFormId());
+    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getFormId());
+    var cityDiv = textInputComponent('Ort', 'city', '', getFormId());
+    var countryDiv = textInputComponent('Land', 'country', '', getFormId());
+
+    fieldSet.append(hiddenField_id, hiddenField_nodeClass, hiddenField_strict, hiddenField_type, hiddenField_type,
+        hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
+        '<br/>', webDiv, '<br/>', addressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>');
+    form.append(fieldSet);
+    return form;
+}
+
 function fieldLabelBox() {
     return $('<div class="field-label-box">');
 }
@@ -13,8 +83,8 @@ function textInputComponent(labelText, inputName, value, formId) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
-    textInput.change(function(){
-       $('#'+formId).ajaxSubmit();
+    textInput.change(function() {
+        $('#' + formId).ajaxSubmit();
     });
 
     inputDiv.append(inputLabel, textInput);
@@ -54,8 +124,8 @@ function generateDescriptionDiv(formId, properties) {
     var descriptionLabel = fieldLabelBox();
     descriptionLabel.append('Beskrivning');
     var descriptionInput = $('<textarea id="description-field" name="description">');
-    descriptionInput.change(function(){
-       $('#'+formId).ajaxSubmit();
+    descriptionInput.change(function() {
+        $('#' + formId).ajaxSubmit();
     });
     if (properties != null)
         descriptionInput.val(propValue(properties.description))
@@ -72,48 +142,6 @@ function getFormId() {
     var formId = 'organizationForm';
     return formId;
 }
-/**
- * Created by IntelliJ IDEA.
- * User: fairview
- * Date: 7/7/11
- * Time: 11:09 AM
- * To change this template use File | Settings | File Templates.
- */
-
-
-function generateBaseEditForm(unitId) {    //components shared between main and sub -organizations
-
-    var data = getNodeData(unitId);
-    var formId = getFormId();
-    var properties = data.node.properties;
-
-    var updateForm = generateUpdateForm(formId);
-
-    var fieldSet = $('<fieldset>');
-
-    var hiddenField_id = hiddenField('_id', unitId);
-    var hiddenField_type = hiddenField('_type', 'node');
-    var hiddenField_strict = hiddenField('_strict', 'true');
-    var hiddenField_username = hiddenField('_username', 'admin');
-
-    var descriptionDiv = generateDescriptionDiv(formId, properties);
-
-    var nameDiv = textInputComponent('Namn', 'name', propValue(properties.name), formId);
-    editTreeNamesOnChange(nameDiv, unitId);
-    var phoneDiv = textInputComponent('Telefonnummer', 'phone', propValue(properties.phone), formId);
-    var faxDiv = textInputComponent('Faxnummer', 'fax', propValue(properties.fax), formId);
-    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
-    var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId);
-
-    //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
-        emailDiv, '<br/>', webDiv, '<br/>');
-    updateForm.append(fieldSet);
-    return updateForm;
-}
-
-
-//components that are specific to either mainorganizations or subunits
 
 function generateOrgNrDiv(unitId) {
     var data = getNodeData(unitId);
@@ -140,37 +168,6 @@ function generateMainOrganizationAddressComponent(labelText, unitId, name, value
     var addressDescriptionDiv = textInputComponent(labelText, name, value, 'organization_address_form' + unitId);
     addressDescriptionDiv.children('#' + name + '-field').attr("id", name + "-field" + unitId);
     return addressDescriptionDiv;
-}
-
-function generateSubunitCreationForm(){
-    var formId = 'subunitform';
-    var form = generateUpdateForm(formId);
-    var fieldSet = $('<fieldset>');
-
-    var hiddenField_id = hiddenField('_id', '');
-    var hiddenField_type = hiddenField('_type', 'node');
-    var hiddenField_strict = hiddenField('_strict', 'true');
-    var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_nodeClass = hiddenField('nodeClass', 'unit');
-
-    var descriptionDiv = generateDescriptionDiv(formId, null);
-
-    var nameDiv = textInputComponent('Namn', 'name', '', formId);
-    var phoneDiv = textInputComponent('Telefonnummer', 'phone', '', formId);
-    var faxDiv = textInputComponent('Faxnummer', 'fax', '', formId);
-    var emailDiv = textInputComponent('E-post', 'email', '', formId);
-    var webDiv = textInputComponent('Hemsida', 'web', '', formId);
-
-    var addressDiv = textInputComponent('Adress', 'address', '', getFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getFormId());
-    var cityDiv = textInputComponent('Ort', 'city', '', getFormId());
-    var countryDiv = textInputComponent('Land', 'country', '', getFormId());
-
-    fieldSet.append(hiddenField_id, hiddenField_nodeClass, hiddenField_strict, hiddenField_type, hiddenField_type,
-    hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
-    '<br/>', webDiv, '<br/>', addressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv,'<br/>');
-    form.append(fieldSet);
-    return form;
 }
 
 function getRelationshipData(parentNode) {

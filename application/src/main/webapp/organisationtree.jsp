@@ -56,21 +56,6 @@
     <script type="text/javascript" src="orgunitsettings.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript">
-        function generateSubunitCreationTab(unitId) {
-            $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
-            var submitButton = $('<button>');
-            submitButton.addClass('addsubunit-button')
-            submitButton.html('Lägg till underavdelning');
-            submitButton.click(function(){
-               var createdSubunit =  getRelationshipData(getNodeData(unitId).node.id);
-               var createdSubunitId = createdSubunit.relationship.endNode;
-               $('#subunitform').children().children('input[name="_id"]').val(createdSubunitId);
-               $('#subunitform').ajaxSubmit(function(){
-                   location.reload();  //reloads the page to make the newly created subunit to be visible in the organization tree
-               });
-            });
-            submitButton.appendTo($('#unitsettings-subunits'));
-        }
         $(document).ready(function() {
             var unitId = <%= organization.getId()%>;
             $("#unitsettings-tabs").tabs();
@@ -78,7 +63,7 @@
             adjustViewPort();
             $('#modalizer').fadeOut(500);
 
-            $('#unitsettings-general-tablink[name=unitsettings-general-tablink'+unitId+']').click(function() {
+            $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationEditForm(unitId);
                 generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(0);
@@ -89,26 +74,42 @@
                 $('#modalizer').fadeOut(500);
             });
 
-
             $('#imageonly-buttonAddSubUnit').click(function() {
                 generateMainOrganizationEditForm(unitId);
                 generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(1);
             });
+
             $('#imageonly-buttonAddFunction').click(function() {
                 generateMainOrganizationEditForm(unitId);
                 generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(3);
             });
+
             $('#imageonly-buttonAddGoal').click(function() {
                 generateMainOrganizationEditForm(unitId);
                 generateSubunitCreationTab(unitId);
                 openUnitSettingsOnTab(2);
             });
-
         });
 
-         function generateMainOrganizationEditForm(unitId) {
+        function generateSubunitCreationTab(unitId) {
+            $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
+            var submitButton = $('<button>');
+            submitButton.addClass('addsubunit-button')
+            submitButton.html('Lägg till underavdelning');
+            submitButton.click(function() {
+                var createdSubunit = getRelationshipData(getNodeData(unitId).node.id);
+                var createdSubunitId = createdSubunit.relationship.endNode;
+                $('#subunitform').children().children('input[name="_id"]').val(createdSubunitId);
+                $('#subunitform').ajaxSubmit(function() {
+                    location.reload();  //reloads the page to make the newly created subunit to be visible in the organization tree
+                });
+            });
+            submitButton.appendTo($('#unitsettings-subunits'));
+        }
+
+        function generateMainOrganizationEditForm(unitId) {
             $('#unitsettings-general').empty().append(generateBaseEditForm(unitId));
             generateOrgNrDiv(unitId).insertAfter("#descriptionDiv");
             generateAdresses();
@@ -150,14 +151,14 @@
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
+
         function editHeaderNameOnChange() {
             $('#name-field').change(function() {
                 $('#header-organization-name').html(this.value);
             });
         }
+
         function generateBossSelector(unitId) {
-
-
             bossSelectorDiv = fieldBox();
             bossSelectorLabel = fieldLabelBox();
             bossSelectorLabel.append("Chef");
@@ -171,7 +172,6 @@
             bossOption.val(-1);
             bossOption.append('Ingen chef vald');
             bossSelector.append(bossOption);
-
         <%
          for (Node entry : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false)) {
 
@@ -188,15 +188,13 @@
                              }
                      }
                      %>
-
-            $.getJSON("fairview/ajax/get_manager.do", {_unitId: unitId}, function(data){
-               bossSelector.val(data.long);
+            $.getJSON("fairview/ajax/get_manager.do", {_unitId: unitId}, function(data) {
+                bossSelector.val(data.long);
             })
 
             bossSelectorDiv.append(bossSelectorLabel, bossSelector);
             return bossSelectorDiv;
         }
-
     </script>
 </head>
 <body onload="onload(<%= organization.getId()%>)" onresize="adjustViewPort()">
@@ -208,7 +206,8 @@
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">
-                    <h3 id="unitsettings-general-tablink" name="unitsettings-general-tablink<%=organization.getId()%>"><%=organization.getProperty("name", "")%>
+                    <h3 id="unitsettings-general-tablink"
+                        name="unitsettings-general-tablink<%=organization.getId()%>"><%=organization.getProperty("name", "")%>
                     </h3>
                     <ul>
                         <%
@@ -226,10 +225,12 @@
                 </div>
                 <div class="tree-column">
                     <h3>
-                        <button class="imageonly-button" title="Lägg till underavdelning" id="imageonly-buttonAddSubUnit"><img
+                        <button class="imageonly-button" title="Lägg till underavdelning"
+                                id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button" title="Lägg till funktion" id="imageonly-buttonAddFunction"><img
-                                src="images/newfunction.png" alt="Ny funktion"></button>
+                        <button class="imageonly-button" title="Lägg till funktion" id="imageonly-buttonAddFunction">
+                            <img
+                                    src="images/newfunction.png" alt="Ny funktion"></button>
                         <button class="imageonly-button" title="Lägg till mål" id="imageonly-buttonAddGoal"><img
                                 src="images/newgoal.png" alt="Nytt mål"></button>
                     </h3>
@@ -247,16 +248,21 @@
                     %>
                 </div>
             </div>
-        </div>
-        <div id="helpbox">
-            <div id="helpbox-header">Hjälpruta</div>
-            <div id="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
-                <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till underenhet <br/></div>
-                <div class="helpbox-listentry"><img src="images/newfunction.png" class="helpbox-image">Lägg till funktion <br/></div>
-                <div class="helpbox-listentry"><img src="images/newgoal.png" class="helpbox-image">Lägg till nytt mål</div>
+            <div id="helpbox">
+                <div id="helpbox-header">Hjälpruta</div>
+                <div id="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
+
+                    <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till
+                        underenhet
+                        <br/></div>
+                    <div class="helpbox-listentry"><img src="images/newfunction.png" class="helpbox-image">Lägg till
+                        funktion <br/></div>
+                    <div class="helpbox-listentry"><img src="images/newgoal.png" class="helpbox-image">Lägg till nytt
+                        mål
+                    </div>
+                </div>
             </div>
         </div>
-
         <div class="list-footer">
             &nbsp;
         </div>
