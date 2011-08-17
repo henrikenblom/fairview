@@ -58,6 +58,7 @@
         function generateSubunitCreationTab(unitId) {
             $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
             var submitButton = $('<button>');
+            submitButton.addClass('addsubunit-button')
             submitButton.html('Lägg till underavdelning');
             submitButton.click(function(){
                var createdSubunit =  getRelationshipData(getNodeData(unitId).node.id);
