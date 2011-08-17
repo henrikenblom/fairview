@@ -282,6 +282,11 @@ fieldset {
     min-width: 300px;
 }
 
+#unit-tree-icons{
+    position: relative;
+    bottom: 7px;
+}
+
 .imageonly-button {
     background: none;
     padding: 0;

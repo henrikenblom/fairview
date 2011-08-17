@@ -223,7 +223,7 @@
                         %>
                     </ul>
                 </div>
-                <div class="tree-column">
+                <div class="tree-column" id="unit-tree-icons">
                     <h3>
                         <button class="imageonly-button" title="Lägg till underavdelning"
                                 id="imageonly-buttonAddSubUnit"><img
