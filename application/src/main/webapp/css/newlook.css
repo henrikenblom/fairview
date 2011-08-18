@@ -572,7 +572,7 @@ fieldset {
 #modalizer {
     background-color: white;
     z-index: 10;
-    top: 111px;
+    top: 0px;
     left: 0;
     position: fixed;
     width: 100%;
