@@ -45,6 +45,7 @@ button {
 
 .addsubunit-button {
     margin-top: 15px;
+    height: 30px;
 }
 
 .dialog-button:disabled {

@@ -71,8 +71,7 @@
             $('#modalizer').fadeOut(500);
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
-                generateMainOrganizationEditForm(unitId);
-                generateSubunitCreationTab(unitId);
+                generateMainOrganizationPopup(unitId);
                 openUnitSettingsOnTab(0);
             });
 
@@ -82,29 +81,39 @@
             });
 
             $('#imageonly-buttonAddSubUnit').click(function() {
-                generateMainOrganizationEditForm(unitId);
-                generateSubunitCreationTab(unitId);
+                generateMainOrganizationPopup(unitId);
                 openUnitSettingsOnTab(1);
             });
 
             $('#imageonly-buttonAddFunction').click(function() {
-                generateMainOrganizationEditForm(unitId);
-                generateSubunitCreationTab(unitId);
+                generateMainOrganizationPopup(unitId);
                 openUnitSettingsOnTab(3);
             });
 
             $('#imageonly-buttonAddGoal').click(function() {
-                generateMainOrganizationEditForm(unitId);
-                generateSubunitCreationTab(unitId);
+                generateMainOrganizationPopup(unitId);
                 openUnitSettingsOnTab(2);
             });
         });
 
-        function generateSubunitCreationTab(unitId) {
+        function generateMainOrganizationPopup(unitId){
+            var data = getNodeData(unitId);
+            generateMainOrganizationEditForm(data);
+            generateSubunitCreationTab(data);
+        }
+
+        function generateSubunitPopup(unitId){
+            var data = getNodeData(unitId);
+            generateMainOrganizationEditForm(data);
+            generateSubunitCreationTab(data);
+        }
+
+        function generateSubunitCreationTab(data) {
+            var unitId = data.node.id;
             $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
             var submitButton = $('<button>');
             submitButton.addClass('addsubunit-button')
-            submitButton.html('Lägg till underavdelning');
+            submitButton.html('Lägg till underenhet till ' + data.node.properties.name.value);
             submitButton.click(function() {
                 var createdSubunit = getRelationshipData(getNodeData(unitId).node.id);
                 var createdSubunitId = createdSubunit.relationship.endNode;
@@ -116,8 +125,7 @@
             submitButton.appendTo($('#unitsettings-subunits'));
         }
 
-        function generateMainOrganizationEditForm(unitId) {
-            var data = getNodeData(unitId);
+        function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseEditForm(data));
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateAdresses();
