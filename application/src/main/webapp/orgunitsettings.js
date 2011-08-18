@@ -6,9 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function generateBaseEditForm(unitId) {
+function generateBaseEditForm(data) {
 
-    var data = getNodeData(unitId);
+    var unitId = data.node.id;
     var formId = getFormId();
     var properties = data.node.properties;
 
@@ -67,6 +67,10 @@ function generateSubunitCreationForm() {
     form.append(fieldSet);
     return form;
 }
+
+function setTabHeader(name){
+              $('#unitsettings-header').empty().append(name);
+        }
 
 function fieldLabelBox() {
     return $('<div class="field-label-box">');
@@ -143,16 +147,14 @@ function getFormId() {
     return formId;
 }
 
-function generateOrgNrDiv(unitId) {
-    var data = getNodeData(unitId);
+function generateOrgNrDiv(data) {
     var properties = data.node.properties;
 
     var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', propValue(properties.regnr), getFormId());
     return orgnrDiv;
 }
 
-function generateSubUnitAddressComponent(unitId) {
-    var data = getNodeData(unitId);
+function generateSubUnitAddressComponent(data) {
     var properties = data.node.properties;
 
     var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), getFormId());

@@ -108,7 +108,7 @@ fieldset {
 #helpbox-header{
     text-align: left;
     padding: 10px;
-    background-color: #E4E4E4;
+    background-color: #E8ECF5;
     -webkit-border-radius: 7px 7px 0px 0px;
     -moz-border-radius: 7px 7px 0px 0px;
     border-radius: 7px 7px 0px 0px;
@@ -301,6 +301,16 @@ fieldset {
     z-index: 500;
 }
 
+#unitsettings-header{
+    text-align: left;
+    font-size: 20px;
+    padding-left: 17px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #DDD;
+    border-top: 1px solid #DDD;
+    background-color: #E8ECF5;
+}
 .login-field {
     width: 300px;
 }

@@ -117,15 +117,19 @@
         }
 
         function generateMainOrganizationEditForm(unitId) {
-            $('#unitsettings-general').empty().append(generateBaseEditForm(unitId));
-            generateOrgNrDiv(unitId).insertAfter("#descriptionDiv");
+            var data = getNodeData(unitId);
+            $('#unitsettings-general').empty().append(generateBaseEditForm(data));
+            generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateAdresses();
             editHeaderNameOnChange();
+            setTabHeader(data.node.properties.name.value);
         }
         function generateSubunitEditForm(unitId) {
-            $('#unitsettings-general').empty().append(generateBaseEditForm(unitId));
-            generateSubUnitAddressComponent(unitId).insertAfter('#web-field');
+            var data = getNodeData(unitId);
+            $('#unitsettings-general').empty().append(generateBaseEditForm(data));
+            generateSubUnitAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(unitId).insertAfter("#descriptionDiv");
+            setTabHeader(data.node.properties.name.value);
         }
 
         function openUnitSettingsOnTab(tabnumber) {
@@ -278,13 +282,14 @@
 <div id="modalizer">&nbsp;</div>
 <div id="unitsettings-dialog" style="display: none;">
     <div id="unitsettings-tabs">
-        <ul>
+        <ul id="test">
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
             <li><a href="#unitsettings-goals">Lägg till Mål</a></li>
             <li><a href="#unitsettings-functions">Lägg till Funktion</a></li>
             <li><a href="#unitsettings-persons">Lägg till Person</a></li>
         </ul>
+        <div id="unitsettings-header"></div>
         <div class="unitsettings" id="unitsettings-general"></div>
         <div class="unitsettings" id="unitsettings-subunits">
         </div>
