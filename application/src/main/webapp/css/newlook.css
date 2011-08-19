@@ -108,11 +108,9 @@ fieldset {
 
 #helpbox-unitlist-addunit{
    top: 70px;
-   z-index: 5;
 }
 #helpbox-unitlist-help{
    top: 300px;
-   z-index: 5;
 }
 
 .helpbox-header{
@@ -215,7 +213,7 @@ fieldset {
     padding-left: 18px;
     padding-right: 18px;
     padding-top: 18px;
-    padding-bottom: 0px;
+    padding-bottom: 38px;
     text-align: left;
     /*display: table-cell;
 
@@ -441,7 +439,6 @@ fieldset {
 }
 
 .coworker-list-attribute-header{
-    padding-left: 14px;
     padding-top: 5px;
 }
 
@@ -484,21 +481,20 @@ fieldset {
     min-height: 114px;
     overflow-y: auto;
     overflow-x: hidden;
-    border-top: 1px solid #e8ecf5;
-    border-left: 1px solid #e8ecf5;
-    border-right: 1px solid #e8ecf5;
-    padding-top: 5px;
-    padding-left: 14px;
-    padding-right: 14px;
+    border: 1px solid #e8ecf5;
     padding-bottom: 2px;
     background-color: white;
     position: relative;
-    width: 800px;
+    width: 880px;
 }
 
 .list-entry {
     padding-bottom: 5px;
     white-space: nowrap;
+}
+
+.list-entry-alternating{
+    background-color: #F2F2F2;
 }
 
 .list-footer {
@@ -622,10 +618,11 @@ fieldset {
 
 .unit-list-cell, .goal-list-cell {
     display: inline-block;
-    min-width: 135px;
-    max-width: 135px;
+    min-width: 140px;
+    max-width: 140px;
     overflow: hidden;
     font-size: 12px;
+    vertical-align: middle;
 }
 
 .task-list-cell {

@@ -88,19 +88,22 @@
 
         }
 
+        function alternateRowColors() {
+            var rows = [];
+            $(".unit-list-entry").each(function() {
+                rows.push(this);
+            });
+            $.each(rows, function(i, obj) {
+                if (i % 2 == 0)
+                    $(obj).addClass('list-entry-alternating');
+            });
+        }
         $(document).ready(function() {
 
             adjustViewPort();
             $('#modalizer').fadeOut(500);
 
-            var rows = [];
-            $(".unit-list-entry").each(function() {
-                rows.push(this);
-            });
-            $.each(rows, function(i, obj){
-                if (i%2 == 0)
-                    $(obj).css('background-color', '#F2F2F2');
-            });
+            alternateRowColors();
         });
 
 
