@@ -91,7 +91,7 @@ fieldset {
     padding: 0;
 }
 
-#helpbox{
+.helpbox{
     height: 200px;
     width: 200px;
     background-color: white;
@@ -106,7 +106,16 @@ fieldset {
     border-radius: 7px;
 }
 
-#helpbox-header{
+#helpbox-unitlist-addunit{
+   top: 70px;
+   z-index: 5;
+}
+#helpbox-unitlist-help{
+   top: 300px;
+   z-index: 5;
+}
+
+.helpbox-header{
     text-align: left;
     padding: 10px;
     background-color: #E8ECF5;
@@ -115,7 +124,7 @@ fieldset {
     border-radius: 7px 7px 0px 0px;
 }
 
-#helpbox-content{
+.helpbox-content{
     padding: 5px;
 }
 
@@ -475,13 +484,16 @@ fieldset {
     min-height: 114px;
     overflow-y: auto;
     overflow-x: hidden;
-    border: 1px solid #e8ecf5;
+    border-top: 1px solid #e8ecf5;
+    border-left: 1px solid #e8ecf5;
+    border-right: 1px solid #e8ecf5;
     padding-top: 5px;
     padding-left: 14px;
     padding-right: 14px;
     padding-bottom: 2px;
     background-color: white;
     position: relative;
+    width: 800px;
 }
 
 .list-entry {
@@ -610,7 +622,10 @@ fieldset {
 
 .unit-list-cell, .goal-list-cell {
     display: inline-block;
-    min-width: 180px;
+    min-width: 135px;
+    max-width: 135px;
+    overflow: hidden;
+    font-size: 12px;
 }
 
 .task-list-cell {

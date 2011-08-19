@@ -266,9 +266,9 @@
                     %>
                 </div>
             </div>
-            <div id="helpbox">
-                <div id="helpbox-header">Hjälpruta</div>
-                <div id="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
+            <div class="helpbox">
+                <div class="helpbox-header">Hjälpruta</div>
+                <div class="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
 
                     <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till
                         underenhet
