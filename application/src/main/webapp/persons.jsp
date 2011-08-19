@@ -103,6 +103,12 @@
         <div id="main">
             <div id="content">
                 <div class="header"><input type="text" class="text-field filter-field" onkeyup="coworkerTextFilter(event)" placeholder="Person/Funktion/Enhet/Telefon/E-post" id="coworker-text-filter"></div>
+                <div class="coworker-list-attribute-header">
+                <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Funktion</div>
+                <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Beskrivning</div>
+                <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Enhet</div>
+                <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Person</div>
+                </div>
                 <div id="coworker-list" class="list-body">
 
                     <%
@@ -174,6 +180,9 @@
                     %>
 
                         <div class="list-entry coworker-list-entry unit-list-entry">
+                            <div class="unit-list-cell"><%=(functionMap.get(entry.getId()) == null) ? "-" : "<a href=\"functiondetails.jsp?id=" + functionMap.get(entry.getId()).getId() + "\">" + functionMap.get(entry.getId()).getProperty("name", "Namnlös funktion") + "</a>"%></div>
+                            <div class="unit-list-cell"><%=(functionMap.get(entry.getId()) == null) ? "-" : functionMap.get(entry.getId()).getProperty("description", "")%></div>
+                            <div class="unit-list-cell"><%=unitList.toString()%></div>
                             <div class="unit-list-cell list-entry">
                                 <sec:authorize ifAnyGranted="ROLE_MANAGER">
                                     <a class="active" href="coworkerprofile.jsp?id=<%= entry.getId()%>">
@@ -187,8 +196,7 @@
                                 </sec:authorize>
                                     <%= entry.getProperty("lastname", "")%>, <%= entry.getProperty("firstname", "")%></a>
                                 </div>
-                            <div class="unit-list-cell"><%=(functionMap.get(entry.getId()) == null) ? "-" : "<a href=\"functiondetails.jsp?id=" + functionMap.get(entry.getId()).getId() + "\">" + functionMap.get(entry.getId()).getProperty("name", "Namnlös funktion") + "</a>"%></div>
-                            <div class="unit-list-cell"><%=unitList.toString()%></div>
+
                             <div class="unit-list-cell"><%= entry.getProperty("phone", "-")%></div>
                             <div class="unit-list-cell"><a href="mailto:<%= entry.getProperty("email", "")%>"><%= entry.getProperty("email", "-")%></a></div>
                         </div>

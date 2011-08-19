@@ -431,6 +431,11 @@ fieldset {
 
 }
 
+.coworker-list-attribute-header{
+    padding-left: 14px;
+    padding-top: 5px;
+}
+
 .overdue {
     color: #ad4022;
 }
@@ -470,8 +475,7 @@ fieldset {
     min-height: 114px;
     overflow-y: auto;
     overflow-x: hidden;
-    border-left: 1px solid #e8ecf5;
-    border-right: 1px solid #e8ecf5;
+    border: 1px solid #e8ecf5;
     padding-top: 5px;
     padding-left: 14px;
     padding-right: 14px;
@@ -600,9 +604,13 @@ fieldset {
     display: block;
 }
 
+.coworker-list-attribute-header-entry{
+   text-decoration: underline;
+}
+
 .unit-list-cell, .goal-list-cell {
     display: inline-block;
-    min-width: 233px;
+    min-width: 180px;
 }
 
 .task-list-cell {
