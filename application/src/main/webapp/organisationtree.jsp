@@ -104,7 +104,7 @@
 
         function generateSubunitPopup(unitId){
             var data = getNodeData(unitId);
-            generateMainOrganizationEditForm(data);
+            generateSubunitEditForm(data);
             generateSubunitCreationTab(data);
         }
 
@@ -132,11 +132,10 @@
             editHeaderNameOnChange();
             setTabHeader(data.node.properties.name.value);
         }
-        function generateSubunitEditForm(unitId) {
-            var data = getNodeData(unitId);
+        function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseEditForm(data));
             generateSubUnitAddressComponent(data).insertAfter('#web-field');
-            generateBossSelector(unitId).insertAfter("#descriptionDiv");
+            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             setTabHeader(data.node.properties.name.value);
         }
 
@@ -244,7 +243,7 @@
                 </div>
                 <div class="tree-column" id="unit-tree-icons">
                     <h3>
-                        <button class="imageonly-button" title="Lägg till underavdelning"
+                        <button class="imageonly-button" title="Lägg till underenhet"
                                 id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
                         <button class="imageonly-button" title="Lägg till funktion" id="imageonly-buttonAddFunction">
