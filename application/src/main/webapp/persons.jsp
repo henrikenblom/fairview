@@ -8,19 +8,27 @@
 <%
 
     HashMap<Long, Node> functionMap = new HashMap<Long, Node>();
+    ArrayList<Node> unassigned_functions = new ArrayList<Node>();
 
     for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_FUNCTION"), Direction.OUTGOING)) {
 
         try {
 
-            Traverser employmentTraverser = entry.getEndNode().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.INCOMING);
-            Traverser employeeTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.INCOMING);
+            Traverser employmentTraverser = entry.getEndNode().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH,
+                    ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.INCOMING);
 
-            while (employeeTraverser.iterator().hasNext()) {
+            if (employmentTraverser.iterator().hasNext()) {
+                Traverser employeeTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.INCOMING);
 
-                functionMap.put(employeeTraverser.iterator().next().getId(), entry.getEndNode());
+                while (employeeTraverser.iterator().hasNext()) {
 
+                    functionMap.put(employeeTraverser.iterator().next().getId(), entry.getEndNode());
+
+                }
+            } else {
+                unassigned_functions.add(entry.getEndNode());
             }
+
 
         } catch (Exception ex) {
 
@@ -235,8 +243,19 @@
 
                     }
                 }
+                for (Node unassfunction : unassigned_functions){
             %>
-
+                <div class="list-entry coworker-list-entry unit-list-entry">
+                    <div class="unit-list-cell list-entry">
+                    <a href="functiondetails.jsp?id=<%=unassfunction.getId()%>"><%=unassfunction.getProperty("name", "Namnlös funktion")%></a>
+                    </div>
+                    <div class="unit-list-cell list-entry"><%=unassfunction.getProperty("description", "")%></div>
+                    <div class="unit-list-cell list-entry"></div>
+                    <div class="unit-list-cell list-entry">Vakant</div>
+                </div>
+            <%
+                }
+            %>
         </div>
 
         <div id="newUserDialog" class="popup" style="display: none">

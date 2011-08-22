@@ -622,7 +622,8 @@ fieldset {
     max-width: 140px;
     overflow: hidden;
     font-size: 12px;
-    vertical-align: middle;
+    position: relative;
+    top: 4px;
 }
 
 .task-list-cell {
