@@ -68,9 +68,12 @@ function generateSubunitCreationForm() {
     return form;
 }
 
-function setTabHeader(name){
-              $('#unitsettings-header').empty().append(name);
-        }
+function generateTabHeader(name) {
+    $('#unitsettings-header').empty().append(name);
+    $('#name-field').change(function() {
+        $('#unitsettings-header').html(this.value);
+    });
+}
 
 function fieldLabelBox() {
     return $('<div class="field-label-box">');

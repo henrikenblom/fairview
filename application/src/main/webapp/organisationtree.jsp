@@ -130,13 +130,13 @@
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateAdresses();
             editHeaderNameOnChange();
-            setTabHeader(data.node.properties.name.value);
+            generateTabHeader(data.node.properties.name.value);
         }
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseEditForm(data));
             generateSubUnitAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
-            setTabHeader(data.node.properties.name.value);
+            generateTabHeader(data.node.properties.name.value);
         }
 
         function openUnitSettingsOnTab(tabnumber) {
@@ -289,7 +289,7 @@
 <div id="modalizer">&nbsp;</div>
 <div id="unitsettings-dialog" style="display: none;">
     <div id="unitsettings-tabs">
-        <ul id="test">
+        <ul>
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
             <li><a href="#unitsettings-goals">Lägg till Mål</a></li>
