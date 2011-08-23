@@ -624,6 +624,7 @@ fieldset {
     font-size: 12px;
     position: relative;
     top: 4px;
+    text-overflow: ellipsis;
 }
 
 .unit-list-image{
