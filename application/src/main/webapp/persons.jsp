@@ -262,8 +262,10 @@
                     </div>
                     <div class="unit-list-cell list-entry"><%=unassfunction.getProperty("description", "")%></div>
                     <div class="unit-list-image unit-list-cell"><img src="images/copyfunction.png" onclick="duplicateFunction(<%=unassfunction.getId()%>)"></div>
-                    <div class="unit-list-cell list-entry"></div>
+                    <div class="unit-list-cell list-entry">-</div>
                     <div class="unit-list-cell list-entry">Vakant</div>
+                    <div class="unit-list-cell list-entry">-</div>
+                    <div class="unit-list-cell list-entry">-</div>
                 </div>
             <%
                 }
