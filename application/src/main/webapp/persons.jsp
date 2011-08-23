@@ -106,6 +106,11 @@
                     $(obj).addClass('list-entry-alternating');
             });
         }
+        function duplicateFunction(nodeId) {
+            $.getJSON("fairview/ajax/duplicate_function.do", {_nodeId:nodeId}, function(data) {
+                location.reload();
+            });
+        }
         $(document).ready(function() {
 
             adjustViewPort();
@@ -126,6 +131,7 @@
         <div class="coworker-list-attribute-header">
             <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Funktion</div>
             <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Beskrivning</div>
+            <div class="unit-list-image unit-list-cell"></div>
             <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Enhet</div>
             <div class="coworker-list-attribute-header-entry unit-list-cell list-entry">Person</div>
         </div>
@@ -214,6 +220,11 @@
                 </div>
                 <div class="unit-list-cell"><%=(functionMap.get(entry.getId()) == null) ? "-" : functionMap.get(entry.getId()).getProperty("description", "")%>
                 </div>
+                <div class="unit-list-image unit-list-cell">
+                    <%if (!(functionMap.get(entry.getId()) == null)){%>
+                    <img src="images/copyfunction.png" onclick="duplicateFunction(<%=functionMap.get(entry.getId()).getId()%>)">
+                    <%}%>
+                </div>
                 <div class="unit-list-cell"><%=unitList.toString()%>
                 </div>
                 <div class="unit-list-cell list-entry">
@@ -250,6 +261,7 @@
                     <a href="functiondetails.jsp?id=<%=unassfunction.getId()%>"><%=unassfunction.getProperty("name", "Namnlös funktion")%></a>
                     </div>
                     <div class="unit-list-cell list-entry"><%=unassfunction.getProperty("description", "")%></div>
+                    <div class="unit-list-image unit-list-cell"><img src="images/copyfunction.png" onclick="duplicateFunction(<%=unassfunction.getId()%>)"></div>
                     <div class="unit-list-cell list-entry"></div>
                     <div class="unit-list-cell list-entry">Vakant</div>
                 </div>

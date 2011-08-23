@@ -618,12 +618,18 @@ fieldset {
 
 .unit-list-cell, .goal-list-cell {
     display: inline-block;
-    min-width: 140px;
-    max-width: 140px;
+    min-width: 134px;
+    max-width: 134px;
     overflow: hidden;
     font-size: 12px;
     position: relative;
     top: 4px;
+}
+
+.unit-list-image{
+    min-width: 40px;
+    cursor: pointer;
+    margin-left: 20px;
 }
 
 .task-list-cell {
