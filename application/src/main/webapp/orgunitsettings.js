@@ -69,9 +69,9 @@ function generateSubunitCreationForm() {
 }
 
 function generateTabHeader(name) {
-    $('#unitsettings-header').empty().append(name);
+    $('#popup-header').empty().append(name);
     $('#name-field').change(function() {
-        $('#unitsettings-header').html(this.value);
+        $('#popup-header').html(this.value);
     });
 }
 

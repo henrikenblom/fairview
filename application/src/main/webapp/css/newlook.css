@@ -302,14 +302,14 @@ fieldset {
     border: none;
 }
 
-#unitsettings-tabs {
+#popup-tabs {
     left: 200px;
     top: 140px;
     width: 800px;
     z-index: 500;
 }
 
-#unitsettings-header{
+#popup-header{
     text-align: left;
     font-size: 20px;
     padding-left: 17px;

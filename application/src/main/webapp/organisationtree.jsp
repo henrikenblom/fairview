@@ -54,6 +54,7 @@
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
+    <script type="text/javascript" src="popupControls.js"></script>
     <script type="text/javascript" src="orgunitsettings.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
@@ -65,20 +66,17 @@
                 }
             });
             var unitId = <%= organization.getId()%>;
-            $("#unitsettings-tabs").tabs();
+            createTabs();
 
             adjustViewPort();
-            $('#modalizer').fadeOut(500);
+            fadeOutModalizer();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
                 openUnitSettingsOnTab(0);
             });
 
-            $('#modalizer').click(function() {
-                $('#unitsettings-dialog').hide(0);
-                $('#modalizer').fadeOut(500);
-            });
+            setupModalizerClickEvents();
 
             $('#imageonly-buttonAddSubUnit').click(function() {
                 generateMainOrganizationPopup(unitId);
@@ -137,13 +135,6 @@
             generateSubUnitAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
-        }
-
-        function openUnitSettingsOnTab(tabnumber) {
-            $('#unitsettings-dialog').show(0, function() {
-                $("#unitsettings-tabs").tabs('select', tabnumber);
-            });
-            $('#modalizer').fadeTo(400, 0.8);
         }
 
         function generateAdresses() {
@@ -287,8 +278,8 @@
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>
-<div id="unitsettings-dialog" style="display: none;">
-    <div id="unitsettings-tabs">
+<div id="popup-dialog" style="display: none;">
+    <div id="popup-tabs">
         <ul>
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
@@ -296,7 +287,7 @@
             <li><a href="#unitsettings-functions">Lägg till Funktion</a></li>
             <li><a href="#unitsettings-persons">Lägg till Person</a></li>
         </ul>
-        <div id="unitsettings-header"></div>
+        <div id="popup-header"></div>
         <div class="unitsettings" id="unitsettings-general"></div>
         <div class="unitsettings" id="unitsettings-subunits">
         </div>

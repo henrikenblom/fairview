@@ -48,8 +48,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Infero Quest - Personer</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
+    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="iq.js"></script>
+    <script type="text/javascript" src="popupControls.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript">
 
@@ -114,11 +117,14 @@
         $(document).ready(function() {
 
             adjustViewPort();
-            $('#modalizer').fadeOut(500);
+            fadeOutModalizer();
 
             alternateRowColors();
-        });
+            createTabs();
 
+            setupModalizerClickEvents();
+
+        });
 
     </script>
 </head>
@@ -334,7 +340,30 @@
             <div id="credentials-footer" class="list-footer">&nbsp;</div>
         </div>
     </div>
-    <div id="modalizer">&nbsp;</div>
+</div>
+<div id="modalizer">&nbsp;</div>
+<div id="popup-dialog" style="display: none;">
+    <div id="popup-tabs">
+        <ul>
+            <li><a href="#profile-generalinfo">Anställningsuppgifter</a></li>
+            <li><a href="#profile-responsibility">Arbetsbeskrivning</a></li>
+            <li><a href="#profile-competence">Kompetens</a></li>
+            <li><a href="#profile-experience">Erfarenhet</a></li>
+        </ul>
+        <div id="popup-header"></div>
+        <div class="unitsettings" id="unitsettings-general"></div>
+        <div class="unitsettings" id="unitsettings-subunits">
+        </div>
+        <div id="unitsettings-goals">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi
+            urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
+        </div>
+        <div id="unitsettings-functions">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque
+            nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
+        </div>
+        <div id="unitsettings-persons">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque
+            nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
+        </div>
+    </div>
 </div>
 </body>
 </html>
