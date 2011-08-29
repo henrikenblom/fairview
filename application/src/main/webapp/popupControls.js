@@ -5,7 +5,7 @@
  * Time: 9:18 AM
  * To change this template use File | Settings | File Templates.
  */
-function openUnitSettingsOnTab(tabnumber) {
+function openPopupTab(tabnumber) {
     $('#popup-dialog').show(0, function() {
         $("#popup-tabs").tabs('select', tabnumber);
     });

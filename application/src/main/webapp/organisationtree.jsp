@@ -55,7 +55,7 @@
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript" src="popupControls.js"></script>
-    <script type="text/javascript" src="orgunitsettings.js"></script>
+    <script type="text/javascript" src="formgenerator.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
     <script type="text/javascript">
@@ -73,24 +73,24 @@
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
-                openUnitSettingsOnTab(0);
+                openPopupTab(0);
             });
 
             setupModalizerClickEvents();
 
             $('#imageonly-buttonAddSubUnit').click(function() {
                 generateMainOrganizationPopup(unitId);
-                openUnitSettingsOnTab(1);
+                openPopupTab(1);
             });
 
             $('#imageonly-buttonAddFunction').click(function() {
                 generateMainOrganizationPopup(unitId);
-                openUnitSettingsOnTab(3);
+                openPopupTab(3);
             });
 
             $('#imageonly-buttonAddGoal').click(function() {
                 generateMainOrganizationPopup(unitId);
-                openUnitSettingsOnTab(2);
+                openPopupTab(2);
             });
         });
 
@@ -124,14 +124,14 @@
         }
 
         function generateMainOrganizationEditForm(data) {
-            $('#unitsettings-general').empty().append(generateBaseEditForm(data));
+            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateAdresses();
             editHeaderNameOnChange();
             generateTabHeader(data.node.properties.name.value);
         }
         function generateSubunitEditForm(data) {
-            $('#unitsettings-general').empty().append(generateBaseEditForm(data));
+            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
             generateSubUnitAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);

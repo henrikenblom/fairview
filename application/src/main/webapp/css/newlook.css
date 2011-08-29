@@ -695,6 +695,11 @@ fieldset {
     cursor: pointer;
 }
 
+.link{
+    color: #585C95;
+    cursor: pointer;
+}
+
 .unitsettings {
     padding-left: 18px;
     padding-right: 18px;
