@@ -16,10 +16,12 @@ function fadeOutModalizer() {
     $('#modalizer').fadeOut(500);
 }
 
-function setupModalizerClickEvents() {
+function setupModalizerClickEvents(reloadPage) {
     $('#modalizer').click(function() {
         $('#popup-dialog').hide(0);
         $('#modalizer').fadeOut(500);
+        if (reloadPage == 'true')
+            location.reload();
     });
 }
 

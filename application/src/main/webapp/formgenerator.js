@@ -81,13 +81,19 @@ function generateProfileEmploymentInfoForm(data) {
     var hiddenField_type = hiddenField('_type', 'node');
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_birthday = hiddenField('birthday', properties.birthday);
+    var hiddenField_birthday = hiddenField('birthday', makeBirthdate(propValue(properties.civic)));
+    var hiddenField_authorization = hiddenField('authorization', boolPropValue(properties.authorization));
+    var hiddenField_executive  = hiddenField('executive', boolPropValue(properties.executive));
+    var hiddenField_budgetresponsibility = hiddenField('budget-responsibility', boolPropValue(properties['budget-responsibility']));
+    var hiddenField_ownresultresponsibility = hiddenField('own-result-responsibility', boolPropValue(properties['own-result-responsibility']));
+
 
     var firstNameDiv = textInputComponent('Förnamn', 'firstname', propValue(properties.firstname), formId);
     var lastNameDiv = textInputComponent('Efternamn', 'lastname', propValue(properties.lastname), formId);
     var nationalityDiv = textInputComponent('Nationalitet', 'nationality', propValue(properties.nationality), formId);
     var employmentIdDiv = textInputComponent('Anställningsnummer', 'employmentid', propValue(properties.employmentid), formId);
-    var civicDiv = textInputComponent('Personnummer', 'civic', propValue(properties.civic), formId);
+    var civicDiv = civicInputComponent('Personnummer', 'civic', propValue(properties.civic), formId);
+
     var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), formId);
     var zipDiv = textInputComponent('Postnummer', 'zip', propValue(properties.zip), formId);
 
@@ -96,10 +102,10 @@ function generateProfileEmploymentInfoForm(data) {
     var phoneDiv = textInputComponent('Telefon', 'phone', propValue(properties.phone), formId);
     var cellDiv = textInputComponent('Mobiltelefon', 'cell', propValue(properties.cell), formId);
     var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
-    //          FUNKTION placeholder
+
     var fromdateDiv = textInputComponent('Från datum', 'fromdate', propValue(properties.fromdate), formId);
     var todateDiv = textInputComponent('Till datum', 'todate', propValue(properties.todate), formId);
-    // Anställningsform
+
     var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', propValue(properties.additional__info), formId, 'additional_infoDiv');
 
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId);
@@ -109,11 +115,15 @@ function generateProfileEmploymentInfoForm(data) {
     var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv', unitId);
     addFunctionOptions(functionDiv.children('#function-field'), unitId, assignedFunctionId);
 
+    var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId);
+    addEmploymentOptions(properties.employment, employmentDiv.children('#employment-field'));
 
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday,
-        firstNameDiv, '<br/>', lastNameDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
-        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', fromdateDiv, '<br/>',
-        todateDiv, '<br/>', additional_infoDiv, '<br/>', genderDiv, '<br/>', functionDiv);
+
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
+        hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
+        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
+        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>',functionDiv, '<br/>', fromdateDiv, '<br/>',
+        todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv);
 
     form.append(fieldSet);
     return form;
@@ -167,9 +177,31 @@ function addGenderOptions(gender, genderInputElement) {
     genderInputElement.append(optionMan, optionFemale)
 }
 
+function addEmploymentOptions(employment, employmentInputElement) {
+
+    var employmentOptions = new Array('Tills vidare', 'Provanställning', 'Visstidsanställning', 'Projektanställning', 'Säsongsanställning',
+        'Timanställning');
+
+    if (propValue(employment) == '' || propValue(employment) == 'Välj...') {
+        var optionChoose = $('<option>');
+        optionChoose.html('Välj...');
+        optionChoose.attr('selected', 'true');
+        employmentInputElement.append(optionChoose)
+    }
+
+    $.each(employmentOptions, function(i, data) {
+        var optionDiv = $('<option>');
+        optionDiv.attr('value', data);
+        optionDiv.html(data);
+        if (propValue(employment) == data)
+            optionDiv.attr('selected', 'true');
+        employmentInputElement.append(optionDiv);
+    });
+}
+
 function makeBirthdate(civicnumber) {
-    if (civicnumber.length > 6)
-        return civicnumber.substr(0, 6);
+    if (civicnumber.toString().length > 6)
+        return civicnumber.toString().substr(0, 6);
     else
         return civicnumber;
 }
@@ -203,15 +235,39 @@ function textInputComponent(labelText, inputName, value, formId) {
     inputDiv.append(inputLabel, textInput);
     return inputDiv;
 }
+function civicInputComponent(labelText, inputName, value, formId) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    inputLabel.append(labelText);
+    var textInput = $('<input type="text">');
+    textInput.addClass("text-field");
+    textInput.attr("id", inputName + "-field");
+    textInput.attr("name", inputName);
+    textInput.val(value);
+    textInput.change(function() {
+        $('#birthday-field').val(makeBirthdate(this.value));
+        $('#' + formId).ajaxSubmit();
+    });
+
+    inputDiv.append(inputLabel, textInput);
+    return inputDiv;
+}
 function hiddenField(name, value) {
     var hiddenField = $('<input type="hidden">');
     hiddenField.attr("name", name);
     hiddenField.val(value);
+    hiddenField.attr("id", name + "-field");
     return hiddenField;
 }
 function propValue(prop) {
     if ($.isEmptyObject(prop))
         return "";
+    else
+        return prop.value;
+}
+function boolPropValue(prop) {
+    if ($.isEmptyObject(prop))
+        return "false";
     else
         return prop.value;
 }
@@ -348,4 +404,5 @@ function assignFunction(unitId, functionId) {
             $.getJSON("fairview/ajax/assign_function.do", {employment:dataEmployment.relationship.endNode, "function:relationship":functionId, percent:100});
         });
     });
+    setupModalizerClickEvents('true');
 }

@@ -56,6 +56,7 @@
     <script type="text/javascript" src="formgenerator.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript">
+        var reloadPage = 'false';
 
         function addCoworker(event) {
 
@@ -369,9 +370,9 @@
         </ul>
         <div id="popup-header"></div>
         <div class="unitsettings" id="profile-employmentinfo">Anställningsuppgifter</div>
-        <div class="unitsettings" id="profile-responsibility">Arbetsbeskrivning</div>
-        <div id="profile-competence">Kompetens</div>
-        <div id="profile-experience">Erfarenhet</div>
+        <div class="unitsettings" id="profile-responsibility">Ännu ej implementerat.</div>
+        <div class="unitsettings" id="profile-competence">Ännu ej implementerat.</div>
+        <div class="unitsettings" id="profile-experience">Ännu ej implementerat.</div>
     </div>
 </div>
 </body>
