@@ -1,6 +1,6 @@
-fairview.iws
-application/target
+*.iws
+*.iml
+*.ipr
+target
 .DS_STORE
-
-
-application/fairview-application.iml
+.idea
