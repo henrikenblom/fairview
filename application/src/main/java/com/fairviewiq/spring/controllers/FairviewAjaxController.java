@@ -33,6 +33,7 @@ public class FairviewAjaxController {
 
     private XStreamView xstreamView;
     private NeoUtils neoUtils;
+    private FunctionListGenerator functionListGenerator;
 
     @PostConstruct
     public void initialize() {
@@ -65,6 +66,7 @@ public class FairviewAjaxController {
 
         xstreamView = new XStreamView(xstream, "text/json");
 
+        functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
     }
 
     @RequestMapping(value = {"/fairview/ajax/update_position.do"})
@@ -230,8 +232,6 @@ public class FairviewAjaxController {
 
     @RequestMapping(value = {"/fairview/ajax/get_functions.do"})
     public ModelAndView getFunctions(@RequestParam("_nodeId") Long nodeId) {
-        FunctionListGenerator functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
-
         HashMap<Long, String> retval = new HashMap<Long, String>();
 
         Node node = neo.getNodeById(nodeId);
