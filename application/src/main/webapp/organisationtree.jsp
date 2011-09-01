@@ -70,13 +70,13 @@
 
             adjustViewPort();
             fadeOutModalizer();
+            setupModalizerClickEvents();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
                 openPopupTab(0);
             });
 
-            setupModalizerClickEvents();
 
             $('#imageonly-buttonAddSubUnit').click(function() {
                 generateMainOrganizationPopup(unitId);
