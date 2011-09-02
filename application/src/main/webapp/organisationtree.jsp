@@ -150,13 +150,12 @@
             var hiddenField_strict = hiddenField('_strict', 'true');
             var hiddenField_username = hiddenField('_username', 'admin');
 
-            var addressDescriptionDiv = generateMainOrganizationAddressComponent('Adressbenämning', unitId, 'description', propValue(properties.description));
             var addressDiv = generateMainOrganizationAddressComponent('Adress', unitId, 'address', propValue(properties.address));
             var postalCodeDiv = generateMainOrganizationAddressComponent('Postnummer', unitId, 'postalcode', propValue(properties.postalcode));
             var cityDiv = generateMainOrganizationAddressComponent('Ort', unitId, 'city', propValue(properties.city));
             var countryDiv = generateMainOrganizationAddressComponent('Land', unitId, 'country', propValue(properties.country));
 
-            updateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, '<br/>', addressDescriptionDiv, '<br/>', addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
+            updateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
