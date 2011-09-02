@@ -2,8 +2,11 @@ package com.fairviewiq.spring.controllers;
 
 
 import com.fairviewiq.utils.FunctionListGenerator;
+import com.fairviewiq.utils.PersonListGenerator;
+
+import static com.fairviewiq.spring.controllers.FairviewAjaxController.*;
+
 import com.google.gson.Gson;
-import com.sun.tools.corba.se.idl.toJavaPortable.StringGen;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,11 +39,13 @@ public class DatatablesController {
     private GraphDatabaseService neo;
 
     private FunctionListGenerator functionListGenerator;
+    private PersonListGenerator personListGenerator;
 
     @PostConstruct
     public void initialize() {
 
         functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
+        personListGenerator = new PersonListGenerator((EmbeddedGraphDatabase) neo);
 
     }
 
@@ -70,6 +76,58 @@ public class DatatablesController {
         }
 
 
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/datatables/get_employee_data.do"})
+    public void getEmployeeData(HttpServletResponse response, HttpSession httpSession) {
+
+        HashMap<String, ArrayList<HashMap<String, String>>> returnValue = new HashMap<String, ArrayList<HashMap<String, String>>>();
+        ArrayList<HashMap<String, String>> aaData = new ArrayList<HashMap<String, String>>();
+
+        for (Node employeeNode : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, true)) {
+            HashMap<String, String> row = new HashMap<String, String>();
+            LoadData(employeeNode, row);
+            aaData.add(row);
+        }
+
+        returnValue.put("aaData", aaData);
+        try {
+            response.getWriter().print(gson.toJson(returnValue));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadData(Node employeeNode, HashMap<String, String> row) {
+        row.put("firstname", employeeNode.getProperty("firstname", "").toString());
+        row.put("lastname", employeeNode.getProperty("lastname", "").toString());
+        row.put("phone", employeeNode.getProperty("phone", "").toString());
+        row.put("email", employeeNode.getProperty("email", "").toString());
+        row.put("node_id", String.valueOf(employeeNode.getId()));
+
+        Node functionNode = getFunctionNode(employeeNode);
+        if (functionNode != null) {
+            addFunctionValuesToRow(row, String.valueOf(functionNode.getId()), functionNode.getProperty("name").toString());
+        } else {
+            addFunctionValuesToRow(row, "", "");
+        }
+
+        Node unitNode = getUnitNode(functionNode);
+        if (unitNode != null) {
+            addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name").toString());
+        } else {
+            addUnitValuesToRow(row, "", "");
+        }
+    }
+
+    private void addUnitValuesToRow(HashMap<String, String> row, String unitId, String unitName) {
+        row.put("unit_id", unitId);
+        row.put("unit_name", unitName);
+    }
+
+    private void addFunctionValuesToRow(HashMap<String, String> row, String functionId, String functionName) {
+        row.put("function_id", functionId);
+        row.put("function_name", functionName);
     }
 
 }

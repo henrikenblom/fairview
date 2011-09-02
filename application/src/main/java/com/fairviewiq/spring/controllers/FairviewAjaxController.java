@@ -184,10 +184,11 @@ public class FairviewAjaxController {
         return mav;
     }
 
-    private long getFunctionNodeId(Node node) {
+
+    public static long getFunctionNodeId(Node employeeNode) {
         long functionId = -1;
         try {
-            Traverser employmentTraverser = node.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
+            Traverser employmentTraverser = employeeNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
             Traverser functionTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.OUTGOING);
             functionId = functionTraverser.iterator().next().getId();
         } catch (Exception e) {
@@ -196,16 +197,27 @@ public class FairviewAjaxController {
         return functionId;
     }
 
-    private Node getFunctionNode(Node node) {
+    public static Node getFunctionNode(Node employeeNode) {
         Node functionNode = null;
         try {
-            Traverser employmentTraverser = node.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
+            Traverser employmentTraverser = employeeNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
             Traverser functionTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.OUTGOING);
             functionNode = functionTraverser.iterator().next();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return functionNode;
+    }
+
+    public static Node getUnitNode(Node functionNode) {
+        Node unitNode = null;
+        try {
+            Traverser unitTraverser = functionNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("BELONGS_TO"), Direction.OUTGOING);
+            unitNode = unitTraverser.iterator().next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return unitNode;
     }
 
     @RequestMapping(value = {"/fairview/ajax/unassign_function.do"})
