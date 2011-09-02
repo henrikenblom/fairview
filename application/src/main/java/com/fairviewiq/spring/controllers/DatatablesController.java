@@ -56,17 +56,12 @@ public class DatatablesController {
         HashMap<String, ArrayList<HashMap<String, String>>> retval = new HashMap<String, ArrayList<HashMap<String, String>>>();
         ArrayList<HashMap<String, String>> aaData = new ArrayList<HashMap<String, String>>();
 
-        for (Node entry : functionListGenerator.getSortedList(FunctionListGenerator.ALPHABETICAL, true)) {
+        for (Node functionNode : functionListGenerator.getSortedList(FunctionListGenerator.ALPHABETICAL, true)) {
 
             HashMap<String, String> row = new HashMap<String, String>();
-
-            row.put("name", entry.getProperty("name", "").toString());
-            row.put("description", entry.getProperty("description", "").toString());
-
+            loadFunctionData(functionNode, row);
             aaData.add(row);
-
         }
-
         retval.put("aaData", aaData);
 
         try {
@@ -78,6 +73,17 @@ public class DatatablesController {
 
     }
 
+    private void loadFunctionData(Node functionNode, HashMap<String, String> row) {
+        addFunctionValuesToRow(row, functionNode.getProperty("name", "").toString(), String.valueOf(functionNode.getId()));
+        row.put("description", functionNode.getProperty("description", "").toString());
+        Node unitNode = getUnitOfFunction(functionNode);
+        if (unitNode != null) {
+            addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name").toString());
+        } else {
+            addUnitValuesToRow(row, "", "");
+        }
+    }
+
     @RequestMapping(value = {"/fairview/ajax/datatables/get_employee_data.do"})
     public void getEmployeeData(HttpServletResponse response, HttpSession httpSession) {
 
@@ -86,7 +92,7 @@ public class DatatablesController {
 
         for (Node employeeNode : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, true)) {
             HashMap<String, String> row = new HashMap<String, String>();
-            loadData(employeeNode, row);
+            loadEmployeeData(employeeNode, row);
             aaData.add(row);
         }
 
@@ -98,21 +104,21 @@ public class DatatablesController {
         }
     }
 
-    private void loadData(Node employeeNode, HashMap<String, String> row) {
+    private void loadEmployeeData(Node employeeNode, HashMap<String, String> row) {
         row.put("firstname", employeeNode.getProperty("firstname", "").toString());
         row.put("lastname", employeeNode.getProperty("lastname", "").toString());
         row.put("phone", employeeNode.getProperty("phone", "").toString());
         row.put("email", employeeNode.getProperty("email", "").toString());
         row.put("node_id", String.valueOf(employeeNode.getId()));
 
-        Node functionNode = getFunctionNode(employeeNode);
+        Node functionNode = getFunctionOfEmployee(employeeNode);
         if (functionNode != null) {
             addFunctionValuesToRow(row, String.valueOf(functionNode.getId()), functionNode.getProperty("name").toString());
         } else {
             addFunctionValuesToRow(row, "", "");
         }
 
-        Node unitNode = getUnitNode(functionNode);
+        Node unitNode = getUnitOfFunction(functionNode);
         if (unitNode != null) {
             addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name").toString());
         } else {

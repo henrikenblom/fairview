@@ -197,7 +197,7 @@ public class FairviewAjaxController {
         return functionId;
     }
 
-    public static Node getFunctionNode(Node employeeNode) {
+    public static Node getFunctionOfEmployee(Node employeeNode) {
         Node functionNode = null;
         try {
             Traverser employmentTraverser = employeeNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
@@ -209,7 +209,7 @@ public class FairviewAjaxController {
         return functionNode;
     }
 
-    public static Node getUnitNode(Node functionNode) {
+    public static Node getUnitOfFunction(Node functionNode) {
         Node unitNode = null;
         try {
             Traverser unitTraverser = functionNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("BELONGS_TO"), Direction.OUTGOING);
@@ -247,7 +247,7 @@ public class FairviewAjaxController {
         HashMap<Long, String> retval = new HashMap<Long, String>();
 
         Node node = neo.getNodeById(nodeId);
-        Node functionNode = getFunctionNode(node);
+        Node functionNode = getFunctionOfEmployee(node);
         if (functionNode != null)
             retval.put(functionNode.getId(), functionNode.getProperty("name").toString());
 
