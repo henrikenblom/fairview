@@ -86,7 +86,7 @@ public class DatatablesController {
 
         for (Node employeeNode : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, true)) {
             HashMap<String, String> row = new HashMap<String, String>();
-            LoadData(employeeNode, row);
+            loadData(employeeNode, row);
             aaData.add(row);
         }
 
@@ -98,7 +98,7 @@ public class DatatablesController {
         }
     }
 
-    private void LoadData(Node employeeNode, HashMap<String, String> row) {
+    private void loadData(Node employeeNode, HashMap<String, String> row) {
         row.put("firstname", employeeNode.getProperty("firstname", "").toString());
         row.put("lastname", employeeNode.getProperty("lastname", "").toString());
         row.put("phone", employeeNode.getProperty("phone", "").toString());
