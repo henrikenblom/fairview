@@ -50,14 +50,17 @@
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
     <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
+    <link type="text/css" href="css/jquery.multiselect2side.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript" src="popupControls.js"></script>
     <script type="text/javascript" src="formgenerator.js"></script>
+    <script type="text/javascript" src="multiSelectGenerator.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="js/jquery-plugins/jquery.multiselect2side.js" ></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
@@ -98,12 +101,14 @@
             var data = getNodeData(unitId);
             generateMainOrganizationEditForm(data);
             generateSubunitCreationTab(data);
+            genetateFunctionTab(data);
         }
 
         function generateSubunitPopup(unitId){
             var data = getNodeData(unitId);
             generateSubunitEditForm(data);
             generateSubunitCreationTab(data);
+            genetateFunctionTab(data);
         }
 
         function generateSubunitCreationTab(data) {
@@ -135,6 +140,19 @@
             generateSubUnitAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
+        }
+
+        function genetateFunctionTab(data){
+            var unitId = data.node.id;
+            $('#unitsettings-functions').empty().append(generateFunctionMultiSelect(unitId));
+            $('#multiSelect').multiselect2side({
+				selectedPosition: 'right',
+				moveOptions: false,
+				labelsx: '',
+				labeldx: '',
+				autoSort: true,
+				autoSortAvailable: true
+            });
         }
 
         function generateAdresses() {
@@ -283,7 +301,7 @@
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
             <li><a href="#unitsettings-goals">Lägg till Mål</a></li>
-            <li><a href="#unitsettings-functions">Lägg till Funktion</a></li>
+            <li><a href="#unitsettings-functions">Funktioner</a></li>
             <li><a href="#unitsettings-persons">Lägg till Person</a></li>
         </ul>
         <div id="popup-header"></div>
@@ -293,8 +311,7 @@
         <div id="unitsettings-goals">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi
             urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
         </div>
-        <div id="unitsettings-functions">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque
-            nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
+        <div id="unitsettings-functions">
         </div>
         <div id="unitsettings-persons">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque
             nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.

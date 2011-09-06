@@ -1,6 +1,7 @@
 package com.fairviewiq.spring.controllers;
 
 import com.fairviewiq.utils.FunctionListGenerator;
+import com.fairviewiq.utils.MultiSelectFunctionMember;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import org.neo4j.graphdb.*;
@@ -584,5 +585,28 @@ public class FairviewAjaxController {
     }
 
 
+    @RequestMapping(value = {"/fairview/ajax/get_multiselect_functions.do"})
+    public ModelAndView getMultiselectFunctions(@RequestParam("_unitId") long unitId) {
+
+        ArrayList<Node> functions = functionListGenerator.getSortedList(0, true);
+        ArrayList<MultiSelectFunctionMember> msfList = new ArrayList<MultiSelectFunctionMember>();
+        for(Node function : functions){
+            Node unitNode = getUnitOfFunction(function);
+            MultiSelectFunctionMember multiSelectFunction = new MultiSelectFunctionMember(function.getProperty("name").toString(), function.getId());
+            if(unitNode != null && unitId == unitNode.getId())
+                multiSelectFunction.setSelected(true);
+            else
+                multiSelectFunction.setSelected(false);
+            msfList.add(multiSelectFunction);
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, msfList);
+        return mav;
+    }
+
+
 }
+
+
 
