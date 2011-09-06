@@ -83,7 +83,7 @@ function generateProfileEmploymentInfoForm(data) {
     var hiddenField_username = hiddenField('_username', 'admin');
     var hiddenField_birthday = hiddenField('birthday', makeBirthdate(propValue(properties.civic)));
     var hiddenField_authorization = hiddenField('authorization', boolPropValue(properties.authorization));
-    var hiddenField_executive  = hiddenField('executive', boolPropValue(properties.executive));
+    var hiddenField_executive = hiddenField('executive', boolPropValue(properties.executive));
     var hiddenField_budgetresponsibility = hiddenField('budget-responsibility', boolPropValue(properties['budget-responsibility']));
     var hiddenField_ownresultresponsibility = hiddenField('own-result-responsibility', boolPropValue(properties['own-result-responsibility']));
 
@@ -122,7 +122,7 @@ function generateProfileEmploymentInfoForm(data) {
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
         hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
-        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>',functionDiv, '<br/>', fromdateDiv, '<br/>',
+        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', functionDiv, '<br/>', fromdateDiv, '<br/>',
         todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv);
 
     form.append(fieldSet);
@@ -132,28 +132,37 @@ function generateProfileEmploymentInfoForm(data) {
 function addFunctionOptions(functionInputElement, unitId, assignedFunctionId) {
     var func = getFunctions(unitId);
 
-    if (assignedFunctionId == -1) {
-        var chooseOption = $('<option>');
-        chooseOption.html('Välj...');
-        chooseOption.attr('selected', 'true');
-        functionInputElement.append(chooseOption);
-    }
-    if (func.map.entry.length > 1) {
-        $.each(func.map.entry, function(nr, value) {
+    if (func.map.entry == null) { // The unit has no assigned function, and no functions are available
+        var nooneavailableOption = $('<option>');
+        nooneavailableOption.html('Inga lediga funktioner finns.');
+        nooneavailableOption.attr('selected', 'true');
+        nooneavailableOption.attr('value', -1);
+        functionInputElement.append(nooneavailableOption);
+    } else {
+        if (assignedFunctionId == -1) {
+            var chooseOption = $('<option>');
+            chooseOption.html('Välj...');
+            chooseOption.attr('selected', 'true');
+            chooseOption.attr('value', -1);
+            functionInputElement.append(chooseOption);
+        }
+        if (func.map.entry.length > 1) {
+            $.each(func.map.entry, function(nr, value) {
+                var functionOption = $('<option>');
+                functionOption.attr('value', value.long);
+                functionOption.html(value.string);
+                if (assignedFunctionId == value.long)
+                    functionOption.attr('selected', 'true');
+                functionInputElement.append(functionOption);
+            });
+        } else {  //if the map contains only one entry, it is not considered an array by javascript but rather a single value
             var functionOption = $('<option>');
-            functionOption.attr('value', value.long);
-            functionOption.html(value.string);
-            if (assignedFunctionId == value.long)
+            functionOption.attr('value', func.map.entry.long);
+            functionOption.html(func.map.entry.string);
+            if (assignedFunctionId == func.map.entry.long)
                 functionOption.attr('selected', 'true');
             functionInputElement.append(functionOption);
-        });
-    } else {  //if the map contains only one entry, it is not considered an array by javascript but rather a single value
-        var functionOption = $('<option>');
-        functionOption.attr('value', func.map.entry.long);
-        functionOption.html(func.map.entry.string);
-        if (assignedFunctionId == func.map.entry.long)
-            functionOption.attr('selected', 'true');
-        functionInputElement.append(functionOption);
+        }
     }
 }
 
