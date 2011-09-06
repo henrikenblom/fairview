@@ -1,6 +1,7 @@
 package com.fairviewiq.spring.controllers;
 
 import com.fairviewiq.utils.FunctionListGenerator;
+import com.fairviewiq.utils.MultiSelectFunctionMember;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import org.neo4j.graphdb.*;
@@ -33,6 +34,7 @@ public class FairviewAjaxController {
 
     private XStreamView xstreamView;
     private NeoUtils neoUtils;
+    private FunctionListGenerator functionListGenerator;
 
     @PostConstruct
     public void initialize() {
@@ -65,6 +67,7 @@ public class FairviewAjaxController {
 
         xstreamView = new XStreamView(xstream, "text/json");
 
+        functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
     }
 
     @RequestMapping(value = {"/fairview/ajax/update_position.do"})
@@ -182,10 +185,11 @@ public class FairviewAjaxController {
         return mav;
     }
 
-    private long getFunctionNodeId(Node node) {
+
+    public static long getFunctionNodeId(Node employeeNode) {
         long functionId = -1;
         try {
-            Traverser employmentTraverser = node.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
+            Traverser employmentTraverser = employeeNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
             Traverser functionTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.OUTGOING);
             functionId = functionTraverser.iterator().next().getId();
         } catch (Exception e) {
@@ -194,16 +198,27 @@ public class FairviewAjaxController {
         return functionId;
     }
 
-    private Node getFunctionNode(Node node) {
+    public static Node getFunctionOfEmployee(Node employeeNode) {
         Node functionNode = null;
         try {
-            Traverser employmentTraverser = node.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
+            Traverser employmentTraverser = employeeNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
             Traverser functionTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.OUTGOING);
             functionNode = functionTraverser.iterator().next();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return functionNode;
+    }
+
+    public static Node getUnitOfFunction(Node functionNode) {
+        Node unitNode = null;
+        try {
+            Traverser unitTraverser = functionNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("BELONGS_TO"), Direction.OUTGOING);
+            unitNode = unitTraverser.iterator().next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return unitNode;
     }
 
     @RequestMapping(value = {"/fairview/ajax/unassign_function.do"})
@@ -230,12 +245,10 @@ public class FairviewAjaxController {
 
     @RequestMapping(value = {"/fairview/ajax/get_functions.do"})
     public ModelAndView getFunctions(@RequestParam("_nodeId") Long nodeId) {
-        FunctionListGenerator functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
-
         HashMap<Long, String> retval = new HashMap<Long, String>();
 
         Node node = neo.getNodeById(nodeId);
-        Node functionNode = getFunctionNode(node);
+        Node functionNode = getFunctionOfEmployee(node);
         if (functionNode != null)
             retval.put(functionNode.getId(), functionNode.getProperty("name").toString());
 
@@ -572,5 +585,28 @@ public class FairviewAjaxController {
     }
 
 
+    @RequestMapping(value = {"/fairview/ajax/get_multiselect_functions.do"})
+    public ModelAndView getMultiselectFunctions(@RequestParam("_unitId") long unitId) {
+
+        ArrayList<Node> functions = functionListGenerator.getSortedList(0, true);
+        ArrayList<MultiSelectFunctionMember> msfList = new ArrayList<MultiSelectFunctionMember>();
+        for(Node function : functions){
+            Node unitNode = getUnitOfFunction(function);
+            MultiSelectFunctionMember multiSelectFunction = new MultiSelectFunctionMember(function.getProperty("name").toString(), function.getId());
+            if(unitNode != null && unitId == unitNode.getId())
+                multiSelectFunction.setSelected(true);
+            else
+                multiSelectFunction.setSelected(false);
+            msfList.add(multiSelectFunction);
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, msfList);
+        return mav;
+    }
+
+
 }
+
+
 
