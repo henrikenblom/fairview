@@ -132,7 +132,7 @@ function generateProfileEmploymentInfoForm(data) {
 function addFunctionOptions(functionInputElement, unitId, assignedFunctionId) {
     var func = getFunctions(unitId);
 
-    if (func.map.entry == null) { // The unit has no assigned function, and no functions are available
+    if (func.map.entry == null) { // True if the unit has no assigned function, and no functions are available
         var nooneavailableOption = $('<option>');
         nooneavailableOption.html('Inga lediga funktioner finns.');
         nooneavailableOption.attr('selected', 'true');
@@ -408,7 +408,7 @@ function getFunctionId(unitId) {
 }
 
 function assignFunction(unitId, functionId) {
-    $.getJSON("fairview/ajax/unassign_function.do", {_nodeId: unitId}, function(data) {
+    $.getJSON("fairview/ajax/unassign_function.do", {_nodeId: unitId}, function() {
         $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _type:"HAS_EMPLOYMENT" }, function(dataEmployment) {
             $.getJSON("fairview/ajax/assign_function.do", {employment:dataEmployment.relationship.endNode, "function:relationship":functionId, percent:100});
         });
