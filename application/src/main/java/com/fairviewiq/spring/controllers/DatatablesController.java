@@ -74,7 +74,7 @@ public class DatatablesController {
     }
 
     private void loadFunctionData(Node functionNode, HashMap<String, String> row) {
-        addFunctionValuesToRow(row, functionNode.getProperty("name", "").toString(), String.valueOf(functionNode.getId()));
+        addFunctionValuesToRow(row, String.valueOf(functionNode.getId()), functionNode.getProperty("name", "").toString());
         row.put("description", functionNode.getProperty("description", "").toString());
         Node unitNode = getUnitOfFunction(functionNode);
         if (unitNode != null) {
