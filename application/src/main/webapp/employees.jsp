@@ -17,8 +17,9 @@
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.dataTables.js"></script>
     <script type="text/javascript">
+        var oTable;
         $(document).ready(function() {
-            $('#example').dataTable({
+            oTable = $('#datatable').dataTable({
                 "bProcessing": true,
                 "sAjaxSource": "fairview/ajax/datatables/get_employee_data.do",
                 "aoColumns": [
@@ -30,6 +31,19 @@
                     { "mDataProp": "function_name" }
                 ]
             });
+
+            $('#datatable tbody tr td').live('click', function () {
+                var data = oTable.fnGetData(this.parentElement);
+                if (this.cellIndex == '5'){
+                    alert(data.function_id);
+                }
+                else if (this.cellIndex == '4'){
+                    alert(data.unit_id);
+                }
+                else if (this.cellIndex == '0' || this.cellIndex == '1'){
+                    alert(data.node_id);
+                }
+            });
         });
     </script>
 </head>
@@ -37,7 +51,7 @@
 <body>
 <div id="main">
     <div style="width: 1000px">
-        <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
             <thead>
             <tr>
                 <th>Förnamn</th>
