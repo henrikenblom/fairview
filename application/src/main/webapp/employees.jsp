@@ -16,6 +16,10 @@
     <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="popupControls.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="formgenerator.js"></script>
+    <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
@@ -34,17 +38,27 @@
 
             $('#datatable tbody tr td').live('click', function () {
                 var data = oTable.fnGetData(this.parentElement);
-                if (this.cellIndex == '5'){
+                if (this.cellIndex == '5') {
                     alert(data.function_id);
                 }
-                else if (this.cellIndex == '4'){
+                else if (this.cellIndex == '4') {
                     alert(data.unit_id);
                 }
-                else if (this.cellIndex == '0' || this.cellIndex == '1'){
-                    alert(data.node_id);
+                else if (this.cellIndex == '0' || this.cellIndex == '1') {
+                    generateProfileForm(data.node_id)
+                    openPopupTab(0);
                 }
             });
+
+            fadeOutModalizer();
+            setupModalizerClickEvents();
+            createTabs();
+
         });
+        function generateProfileForm(unitId) {
+            var data = getNodeData(unitId);
+            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+        }
     </script>
 </head>
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
@@ -76,6 +90,22 @@
             </tr>
             </tfoot>
         </table>
+    </div>
+</div>
+<div id="modalizer">&nbsp;</div>
+<div id="popup-dialog" style="display: none;">
+    <div id="popup-tabs">
+        <ul>
+            <li><a href="#profile-employmentinfo">Anställningsuppgifter</a></li>
+            <li><a href="#profile-responsibility">Arbetsbeskrivning</a></li>
+            <li><a href="#profile-competence">Kompetens</a></li>
+            <li><a href="#profile-experience">Erfarenhet</a></li>
+        </ul>
+        <div id="popup-header"></div>
+        <div class="unitsettings" id="profile-employmentinfo">Anställningsuppgifter</div>
+        <div class="unitsettings" id="profile-responsibility">Ännu ej implementerat.</div>
+        <div class="unitsettings" id="profile-competence">Ännu ej implementerat.</div>
+        <div class="unitsettings" id="profile-experience">Ännu ej implementerat.</div>
     </div>
 </div>
 </body>
