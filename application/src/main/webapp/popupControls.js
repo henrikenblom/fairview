@@ -25,6 +25,37 @@ function setupModalizerClickEvents(reloadPage) {
     });
 }
 
-function createTabs() {
+function bindTabs() {
     $("#popup-tabs").tabs();
+}
+
+function tabLinks(links) {
+    var tabList = $('<ul>');
+    $.each(links, function(i) {
+        var tabListItem = $('<li>');
+        var tabLink = $('<a>');
+        tabLink.attr('href', '#'+links[i][0]);
+        tabLink.html(links[i][1]);
+        tabListItem.append(tabLink);
+        tabList.append(tabListItem);
+    })
+    return tabList;
+}
+function tabBody(id) {
+    var tabBody = $('<div>');
+    tabBody.attr('id', id);
+    return tabBody;
+}
+function generateTabs(aLinkData) {
+    var container = $('<div>');
+    container.attr('id', 'popup-tabs');
+    container.addClass('unitsettings');
+    var linksDiv = tabLinks(aLinkData);
+    container.append(linksDiv);
+
+    $.each(aLinkData, function(i) {
+        container.append(tabBody(aLinkData[i][0]));
+    });
+
+    return container;
 }

@@ -69,7 +69,7 @@
                 }
             });
             var unitId = <%= organization.getId()%>;
-            createTabs();
+            bindTabs();
 
             adjustViewPort();
             fadeOutModalizer();

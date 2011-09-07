@@ -45,19 +45,29 @@
                     alert(data.unit_id);
                 }
                 else if (this.cellIndex == '0' || this.cellIndex == '1') {
-                    generateProfileForm(data.node_id)
-                    openPopupTab(0);
+                    openEmployeeForm(data);
                 }
             });
 
             fadeOutModalizer();
             setupModalizerClickEvents();
-            createTabs();
 
         });
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
             $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+        }
+         function openEmployeeForm(data) {
+            var linkData = [
+                ['profile-employmentinfo', 'Anställningsuppgifter'],
+                ['profile-responsibility', 'Arbetsbeskrivning'],
+                ['profile-competence', 'Kompetens'],
+                ['profile-experience', 'Erfarenhet']
+            ];
+            $('#popup-dialog').append(generateTabs(linkData));
+            bindTabs();
+            generateProfileForm(data.node_id)
+            openPopupTab(0);
         }
     </script>
 </head>
@@ -94,19 +104,6 @@
 </div>
 <div id="modalizer">&nbsp;</div>
 <div id="popup-dialog" style="display: none;">
-    <div id="popup-tabs">
-        <ul>
-            <li><a href="#profile-employmentinfo">Anställningsuppgifter</a></li>
-            <li><a href="#profile-responsibility">Arbetsbeskrivning</a></li>
-            <li><a href="#profile-competence">Kompetens</a></li>
-            <li><a href="#profile-experience">Erfarenhet</a></li>
-        </ul>
-        <div id="popup-header"></div>
-        <div class="unitsettings" id="profile-employmentinfo">Anställningsuppgifter</div>
-        <div class="unitsettings" id="profile-responsibility">Ännu ej implementerat.</div>
-        <div class="unitsettings" id="profile-competence">Ännu ej implementerat.</div>
-        <div class="unitsettings" id="profile-experience">Ännu ej implementerat.</div>
-    </div>
 </div>
 </body>
 </html>
