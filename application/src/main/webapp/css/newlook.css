@@ -43,6 +43,18 @@ button {
     cursor: pointer;
 }
 
+.button {
+    background-color: #585c95;
+    color: white;
+    text-align: center;
+    border: 1px solid #404040;
+    margin: 0px;
+    cursor: pointer;
+    width: 45px;
+    padding: 2px;
+    margin-top: 15px;
+}
+
 .addsubunit-button {
     margin-top: 15px;
     height: 30px;
