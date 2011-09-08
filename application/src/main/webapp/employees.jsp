@@ -41,15 +41,13 @@
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentElement);
                         if (this.cellIndex == '5') {  //function-cell
-                            $(this).click(function() {
-                                alert(data.function_id);
-                            })
+                            initFunctionCell(data.function_id, this);
                         }
                         else if (this.cellIndex == '4') { //unit-cell
-                            initUnitCell(data, this);
+                            initUnitCell(data.unit_id, this);
                         }
                         else if (this.cellIndex == '0' || this.cellIndex == '1') { //firstname & lastname cells
-                            initEmployeeCell(data, this);
+                            initEmployeeCell(data.node_id, this);
                         }
                     });
                 }
@@ -60,20 +58,32 @@
 
         });
 
-        function initEmployeeCell(data, cell) {
-            if (data.node_id != "") {
+        function initFunctionCell(functionId, cell) {
+            if (functionId != "") {
+                $(cell).unbind();
+                $(cell).css('cursor', 'pointer');
+                $(cell).click(function(){
+                    alert('Not yet implemented.');
+                });
+            }
+        }
+
+        function initEmployeeCell(nodeId, cell) {
+            if (nodeId != "") {
+                $(cell).unbind();
                 $(cell).css('cursor', 'pointer');
                 $(cell).click(function() {
-                    openEmployeeForm(data.node_id);
+                    openEmployeeForm(nodeId);
                 })
             }
         }
 
-        function initUnitCell(data, cell) {
-            if (data.unit_id != "") {
+        function initUnitCell(unitId, cell) {
+            if (unitId != "") {
+                $(cell).unbind();
                 $(cell).css('cursor', 'pointer');
                 $(cell).click(function() {
-                    openUnitForm(data.unit_id);
+                    openUnitForm(unitId);
                 })
             }
         }
