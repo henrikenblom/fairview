@@ -137,7 +137,7 @@
         }
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            generateSubUnitAddressComponent(data).insertAfter('#web-field');
+            generateSingleAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
         }
