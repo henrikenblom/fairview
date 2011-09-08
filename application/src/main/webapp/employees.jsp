@@ -20,6 +20,7 @@
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="formgenerator.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
+    <script type="text/javascript" src="js/datatables_util.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
@@ -58,35 +59,8 @@
 
         });
 
-        function initFunctionCell(functionId, cell) {
-            if (functionId != "") {
-                $(cell).unbind();
-                $(cell).css('cursor', 'pointer');
-                $(cell).click(function(){
-                    alert('Not yet implemented.');
-                });
-            }
-        }
 
-        function initEmployeeCell(nodeId, cell) {
-            if (nodeId != "") {
-                $(cell).unbind();
-                $(cell).css('cursor', 'pointer');
-                $(cell).click(function() {
-                    openEmployeeForm(nodeId);
-                })
-            }
-        }
 
-        function initUnitCell(unitId, cell) {
-            if (unitId != "") {
-                $(cell).unbind();
-                $(cell).css('cursor', 'pointer');
-                $(cell).click(function() {
-                    openUnitForm(unitId);
-                })
-            }
-        }
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
             $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
