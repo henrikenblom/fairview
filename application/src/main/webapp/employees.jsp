@@ -33,19 +33,25 @@
                     { "mDataProp": "email" },
                     { "mDataProp": "unit_name" },
                     { "mDataProp": "function_name" }
-                ]
-            });
-
-            $('#datatable tbody tr td').live('click', function () {
-                var data = oTable.fnGetData(this.parentElement);
-                if (this.cellIndex == '5') {
-                    alert(data.function_id);
-                }
-                else if (this.cellIndex == '4') {
-                    alert(data.unit_id);
-                }
-                else if (this.cellIndex == '0' || this.cellIndex == '1') {
-                    openEmployeeForm(data);
+                ],
+                "fnDrawCallback" : function() {
+                    var datatable = this;
+                    var trNodes = this.fnGetNodes();
+                    var tdNodes = $(trNodes).children();
+                    $.each(tdNodes, function() {
+                        var data = datatable.fnGetData(this.parentElement);
+                        if (this.cellIndex == '5') {  //function-cell
+                            $(this).click(function() {
+                                alert(data.function_id);
+                            })
+                        }
+                        else if (this.cellIndex == '4') { //unit-cell
+                            initUnitCell(data, this);
+                        }
+                        else if (this.cellIndex == '0' || this.cellIndex == '1') { //firstname & lastname cells
+                            initEmployeeCell(data, this);
+                        }
+                    });
                 }
             });
 
@@ -53,20 +59,51 @@
             setupModalizerClickEvents();
 
         });
+
+        function initEmployeeCell(data, cell) {
+            if (data.node_id != "") {
+                $(cell).css('cursor', 'pointer');
+                $(cell).click(function() {
+                    openEmployeeForm(data.node_id);
+                })
+            }
+        }
+
+        function initUnitCell(data, cell) {
+            if (data.unit_id != "") {
+                $(cell).css('cursor', 'pointer');
+                $(cell).click(function() {
+                    openUnitForm(data.unit_id);
+                })
+            }
+        }
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
             $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
         }
-         function openEmployeeForm(data) {
+        function openEmployeeForm(nodeId) {
             var linkData = [
                 ['profile-employmentinfo', 'Anställningsuppgifter'],
                 ['profile-responsibility', 'Arbetsbeskrivning'],
                 ['profile-competence', 'Kompetens'],
                 ['profile-experience', 'Erfarenhet']
             ];
-            $('#popup-dialog').append(generateTabs(linkData));
+            $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
-            generateProfileForm(data.node_id)
+            generateProfileForm(nodeId)
+            openPopupTab(0);
+        }
+        function openUnitForm(unitId) {
+            var linkData = [
+                ['unitsettings-general', 'Avdelningsinställningar'],
+                ['unitsettings-subunits', 'Lägg till Underavdelning'],
+                ['unitsettings-functions', 'Funktioner']
+            ];
+            $('#popup-dialog').empty().append(generateTabs(linkData));
+            bindTabs();
+            var data = getNodeData(unitId);
+            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+            generateSingleAddressComponent(data).insertAfter('#web-field');
             openPopupTab(0);
         }
     </script>

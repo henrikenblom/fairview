@@ -360,7 +360,7 @@ function generateOrgNrDiv(data) {
     return orgnrDiv;
 }
 
-function generateSubUnitAddressComponent(data) {
+function generateSingleAddressComponent(data) {
     var properties = data.node.properties;
 
     var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), getOrganizationFormId());
