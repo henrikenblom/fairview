@@ -5,6 +5,7 @@
  * Time: 11:09 AM
  * To change this template use File | Settings | File Templates.
  */
+var assignedFunctionId;
 
 function generateBaseUnitEditForm(data, datatable) {
 
@@ -115,7 +116,7 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId);
     addGenderOptions(properties.gender, genderDiv.children('#gender-field'));
 
-    var assignedFunctionId = getFunctionId(unitId).long;
+    assignedFunctionId = getFunctionId(unitId).long;
     var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv');
     addFunctionOptions(functionDiv.children('#function-field'), unitId, assignedFunctionId);
 
@@ -136,7 +137,12 @@ function generateProfileEmploymentInfoForm(data, datatable) {
 
 function assignFunctionCallback(unitId, datatable) {
     return function response() {
-        assignFunction(unitId, $('#function-field').val(), updateTableCallback(datatable));
+        var selectedFunctionId = $('#function-field').val();
+        if (assignedFunctionId != selectedFunctionId) {
+            assignFunction(unitId, selectedFunctionId, updateTableCallback(datatable));
+        } else{
+            updateTableCallback(datatable);
+        }
     }
 }
 
