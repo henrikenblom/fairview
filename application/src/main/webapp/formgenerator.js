@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function generateBaseUnitEditForm(data) {
+function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
     var formId = getOrganizationFormId();
@@ -30,7 +30,7 @@ function generateBaseUnitEditForm(data) {
     var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
     var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId);
 
-    var saveButton = saveButtonComponent(formId);
+    var saveButton = saveButtonComponent(formId, updateTableCallback(datatable));
     saveButton.click(function() {
         editTreeNamesOnChange(nameDiv, unitId);
     });
@@ -73,7 +73,7 @@ function generateSubunitCreationForm() {
     return form;
 }
 
-function generateProfileEmploymentInfoForm(data) {
+function generateProfileEmploymentInfoForm(data, datatable) {
     var formId = 'profile_form';
     var unitId = data.node.id;
     var properties = data.node.properties;
@@ -122,10 +122,7 @@ function generateProfileEmploymentInfoForm(data) {
     var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId);
     addEmploymentOptions(properties.employment, employmentDiv.children('#employment-field'));
 
-    var saveButton = saveButtonComponent(formId, unitId);
-    saveButton.click(function() {
-        assignFunction(unitId, $('#function-field').val());
-    });
+    var saveButton = saveButtonComponent(formId, assignFunctionCallback(unitId, datatable));
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
         hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
@@ -137,13 +134,29 @@ function generateProfileEmploymentInfoForm(data) {
     return form;
 }
 
-function saveButtonComponent(formId) {
+function assignFunctionCallback(unitId, datatable) {
+    return function response() {
+        assignFunction(unitId, $('#function-field').val(), updateTableCallback(datatable));
+    }
+}
+
+function updateTableCallback(datatable) {
+    if (datatable != null)
+        return function response() {
+            updateTable(datatable);
+        }
+}
+
+function saveButtonComponent(formId, callback) {
     var saveButton = $('<div>');
     saveButton.html('Spara');
     saveButton.addClass('button');
     saveButton.attr('id', 'savebutton');
     saveButton.click(function() {
-        $('#' + formId).ajaxSubmit();
+        $('#' + formId).ajaxSubmit(function() {
+            if (typeof callback == 'function')
+                callback.call();
+        });
     });
     return saveButton;
 }
@@ -408,10 +421,10 @@ function getFunctionId(unitId) {
     return data;
 }
 
-function assignFunction(unitId, functionId) {
+function assignFunction(unitId, functionId, callback) {
     $.getJSON("fairview/ajax/unassign_function.do", {_nodeId: unitId}, function() {
         $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _type:"HAS_EMPLOYMENT" }, function(dataEmployment) {
-            $.getJSON("fairview/ajax/assign_function.do", {employment:dataEmployment.relationship.endNode, "function:relationship":functionId, percent:100});
+            $.getJSON("fairview/ajax/assign_function.do", {employment:dataEmployment.relationship.endNode, "function:relationship":functionId, percent:100}, callback);
         });
     });
 }
