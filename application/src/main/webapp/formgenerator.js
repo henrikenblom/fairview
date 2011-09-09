@@ -140,8 +140,8 @@ function assignFunctionCallback(unitId, datatable) {
         var selectedFunctionId = $('#function-field').val();
         if (assignedFunctionId != selectedFunctionId) {
             assignFunction(unitId, selectedFunctionId, updateTableCallback(datatable));
-        } else{
-            updateTableCallback(datatable);
+        } else {
+            updateTable(datatable);
         }
     }
 }
