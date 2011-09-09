@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+///////////////// creating html ////////////////////
 function generateFunctionMultiSelectForm(unitId){
     var multiSelectForm = $('<form>');
     multiSelectForm.attr("id", "functionForm");
@@ -16,8 +17,12 @@ function generateFunctionMultiSelectForm(unitId){
     fieldset.append(select);
     var hidden = createHidden(unitId);
     fieldset.append(hidden);
-    var submit = createSubmitBtn;
-    fieldset.append(submit);
+    var submitDiv = $('<div>')
+    var submit = createSubmitBtn();
+    submitDiv.append(submit);
+    var span = createSavedSpan();
+    submitDiv.append(span);
+    fieldset.append(submitDiv);
     multiSelectForm.append(fieldset);
 
     return multiSelectForm;
@@ -58,10 +63,18 @@ function createSubmitBtn(){
     submit.attr("value", "Skicka");
     return submit;
 }
+function createSavedSpan(){
+    var span = $('<p>');
+    span.attr("style", "display: none; color: red");
+    span.attr("id", "savedSpan");
+    span.append("Sparad");
+    return span;
+}
 
+/////////////////// Logic /////////////////////////////////
 
 function getDataUpdateDatabase(_unitId) {
-    $('#functionForm').ajaxForm(function() {
+    $('#functionForm').click().ajaxForm(function() {
         var functionIds = new Array();
         var data = "[";
         var multi = false;
@@ -74,7 +87,13 @@ function getDataUpdateDatabase(_unitId) {
             multi = true;
         });
         data += "]";
-        $.getJSON('fairview/ajax/set_multiselect_functions.do', {_functionIds:data, _unitId:_unitId});
+        $.getJSON('fairview/ajax/set_multiselect_functions.do', {_functionIds:data, _unitId:_unitId}, function(json){
+                                    $("#submit_btn").attr('disabled', true).css({ opacity: 0.5 }).delay('2000').queue(function(n){
+                                        $(this).removeAttr('disabled').css({ opacity: 1 });
+                                        n();
+                                    });
+                                    $("#savedSpan").show().fadeOut(5000);
+        });
     });
 }
 
