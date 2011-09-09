@@ -51,7 +51,7 @@ function initFunctionCell(functionId, cell) {
     }
 }
 
-function initEmployeeCell(nodeId, cell) {
+function initEmployeeCell(nodeId, cell, datatable) {
     if (nodeId != "") {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
@@ -61,7 +61,7 @@ function initEmployeeCell(nodeId, cell) {
     }
 }
 
-function initUnitCell(unitId, cell) {
+function initUnitCell(unitId, cell, datatable) {
     if (unitId != "") {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
