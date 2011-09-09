@@ -26,6 +26,7 @@
         $(document).ready(function() {
             oTable = $('#datatable').dataTable({
                 "bProcessing": true,
+                "bSortClasses": false,
                 "sAjaxSource": "fairview/ajax/datatables/get_employee_data.do",
                 "aoColumns": [
                     { "mDataProp": "firstname"},
@@ -51,14 +52,21 @@
                             initEmployeeCell(data.node_id, this, datatable);
                         }
                     });
+                    $('td', datatable.fnGetNodes()).hover(function() {
+                        var iCol = $('td').index(this) % 6; // the number to the right of the % must be the correct nr of columns
+                        var nTrs = datatable.fnGetNodes();
+                        $('td:nth-child(' + (iCol + 1) + ')', nTrs).addClass('highlighted');
+                    }, function() {
+                        $('td.highlighted', datatable.fnGetNodes()).removeClass('highlighted');
+                    });
                 }
             });
+
 
             fadeOutModalizer();
             setupModalizerClickEvents();
 
         });
-
 
 
         function generateProfileForm(unitId) {
@@ -93,7 +101,7 @@
     </script>
 </head>
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
-<body>
+<body class="ex_highlight_row">
 <div id="main">
     <div style="width: 1000px">
         <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
