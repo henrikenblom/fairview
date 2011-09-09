@@ -70,7 +70,7 @@
                 }
             });
             var unitId = <%= organization.getId()%>;
-            createTabs();
+            bindTabs();
 
             adjustViewPort();
             fadeOutModalizer();
@@ -133,15 +133,23 @@
         function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
-            generateAdresses();
-            editHeaderNameOnChange();
+            generateSingleAddressComponent(data).insertAfter('#web-field');
             generateTabHeader(data.node.properties.name.value);
+            $('#savebutton').click(function(){
+               $('#header-organization-name').html($('#name-field').val());
+               $('#popup-header').html($('#name-field').val());
+            });
         }
+
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            generateSubUnitAddressComponent(data).insertAfter('#web-field');
+            generateSingleAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
+            $('#savebutton').click(function(){
+               assignManager(data.node.id, $('#manager-selection'));
+               $('#popup-header').html($('#name-field').val());
+            });
         }
 
         function generateFunctionTab(data) {
@@ -173,13 +181,9 @@
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
-
-        function editHeaderNameOnChange() {
-            $('#name-field').change(function() {
-                $('#header-organization-name').html(this.value);
-            });
+        function assignManager(unitId, bossSelector) {
+            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
         }
-
         function generateBossSelector(unitId) {
             bossSelectorDiv = fieldBox();
             bossSelectorLabel = fieldLabelBox();
@@ -187,9 +191,6 @@
 
             bossSelector = $('<select>');
             bossSelector.attr("id", "manager-selection");
-            bossSelector.change(function() {
-                $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
-            });
             bossOption = $('<option>');
             bossOption.val(-1);
             bossOption.append('Ingen chef vald');

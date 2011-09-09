@@ -128,7 +128,7 @@
             fadeOutModalizer();
 
             alternateRowColors();
-            createTabs();
+            bindTabs();
 
             setupModalizerClickEvents();
 

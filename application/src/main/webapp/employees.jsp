@@ -16,6 +16,11 @@
     <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="popupControls.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="formgenerator.js"></script>
+    <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
+    <script type="text/javascript" src="js/datatables_util.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
@@ -29,22 +34,62 @@
                     { "mDataProp": "email" },
                     { "mDataProp": "unit_name" },
                     { "mDataProp": "function_name" }
-                ]
+                ],
+                "fnDrawCallback" : function() {
+                    var datatable = this;
+                    var trNodes = this.fnGetNodes();
+                    var tdNodes = $(trNodes).children();
+                    $.each(tdNodes, function() {
+                        var data = datatable.fnGetData(this.parentElement);
+                        if (this.cellIndex == '5') {  //function-cell
+                            initFunctionCell(data.function_id, this);
+                        }
+                        else if (this.cellIndex == '4') { //unit-cell
+                            initUnitCell(data.unit_id, this);
+                        }
+                        else if (this.cellIndex == '0' || this.cellIndex == '1') { //firstname & lastname cells
+                            initEmployeeCell(data.node_id, this);
+                        }
+                    });
+                }
             });
 
-            $('#datatable tbody tr td').live('click', function () {
-                var data = oTable.fnGetData(this.parentElement);
-                if (this.cellIndex == '5'){
-                    alert(data.function_id);
-                }
-                else if (this.cellIndex == '4'){
-                    alert(data.unit_id);
-                }
-                else if (this.cellIndex == '0' || this.cellIndex == '1'){
-                    alert(data.node_id);
-                }
-            });
+            fadeOutModalizer();
+            setupModalizerClickEvents();
+
         });
+
+
+
+        function generateProfileForm(unitId) {
+            var data = getNodeData(unitId);
+            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+        }
+        function openEmployeeForm(nodeId) {
+            var linkData = [
+                ['profile-employmentinfo', 'Anställningsuppgifter'],
+                ['profile-responsibility', 'Arbetsbeskrivning'],
+                ['profile-competence', 'Kompetens'],
+                ['profile-experience', 'Erfarenhet']
+            ];
+            $('#popup-dialog').empty().append(generateTabs(linkData));
+            bindTabs();
+            generateProfileForm(nodeId)
+            openPopupTab(0);
+        }
+        function openUnitForm(unitId) {
+            var linkData = [
+                ['unitsettings-general', 'Avdelningsinställningar'],
+                ['unitsettings-subunits', 'Lägg till Underavdelning'],
+                ['unitsettings-functions', 'Funktioner']
+            ];
+            $('#popup-dialog').empty().append(generateTabs(linkData));
+            bindTabs();
+            var data = getNodeData(unitId);
+            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+            generateSingleAddressComponent(data).insertAfter('#web-field');
+            openPopupTab(0);
+        }
     </script>
 </head>
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
@@ -77,6 +122,9 @@
             </tfoot>
         </table>
     </div>
+</div>
+<div id="modalizer">&nbsp;</div>
+<div id="popup-dialog" style="display: none;">
 </div>
 </body>
 </html>

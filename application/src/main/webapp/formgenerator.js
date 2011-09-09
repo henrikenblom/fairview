@@ -24,15 +24,20 @@ function generateBaseUnitEditForm(data) {
     var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', propValue(properties.description), formId, 'descriptionDiv');
 
     var nameDiv = textInputComponent('Namn', 'name', propValue(properties.name), formId);
-    editTreeNamesOnChange(nameDiv, unitId);
+
     var phoneDiv = textInputComponent('Telefonnummer', 'phone', propValue(properties.phone), formId);
     var faxDiv = textInputComponent('Faxnummer', 'fax', propValue(properties.fax), formId);
     var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
     var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId);
 
+    var saveButton = saveButtonComponent(formId);
+    saveButton.click(function() {
+        editTreeNamesOnChange(nameDiv, unitId);
+    });
+
     //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
-        emailDiv, '<br/>', webDiv, '<br/>');
+        emailDiv, '<br/>', webDiv, '<br/>', saveButton);
     updateForm.append(fieldSet);
     return updateForm;
 }
@@ -67,7 +72,6 @@ function generateSubunitCreationForm() {
     form.append(fieldSet);
     return form;
 }
-
 
 function generateProfileEmploymentInfoForm(data) {
     var formId = 'profile_form';
@@ -112,27 +116,42 @@ function generateProfileEmploymentInfoForm(data) {
     addGenderOptions(properties.gender, genderDiv.children('#gender-field'));
 
     var assignedFunctionId = getFunctionId(unitId).long;
-    var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv', unitId);
+    var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv');
     addFunctionOptions(functionDiv.children('#function-field'), unitId, assignedFunctionId);
 
     var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId);
     addEmploymentOptions(properties.employment, employmentDiv.children('#employment-field'));
 
+    var saveButton = saveButtonComponent(formId, unitId);
+    saveButton.click(function() {
+        assignFunction(unitId, $('#function-field').val());
+    });
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
         hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
         zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', functionDiv, '<br/>', fromdateDiv, '<br/>',
-        todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv);
+        todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv, '<br/>', saveButton);
 
     form.append(fieldSet);
     return form;
 }
 
+function saveButtonComponent(formId) {
+    var saveButton = $('<div>');
+    saveButton.html('Spara');
+    saveButton.addClass('button');
+    saveButton.attr('id', 'savebutton');
+    saveButton.click(function() {
+        $('#' + formId).ajaxSubmit();
+    });
+    return saveButton;
+}
+
 function addFunctionOptions(functionInputElement, unitId, assignedFunctionId) {
     var func = getFunctions(unitId);
 
-    if (func.map.entry == null) { // The unit has no assigned function, and no functions are available
+    if (func.map.entry == null) { // True if the unit has no assigned function, and no functions are available
         var nooneavailableOption = $('<option>');
         nooneavailableOption.html('Inga lediga funktioner finns.');
         nooneavailableOption.attr('selected', 'true');
@@ -217,9 +236,6 @@ function makeBirthdate(civicnumber) {
 
 function generateTabHeader(name) {
     $('#popup-header').empty().append(name);
-    $('#name-field').change(function() {
-        $('#popup-header').html(this.value);
-    });
 }
 
 function fieldLabelBox() {
@@ -237,9 +253,6 @@ function textInputComponent(labelText, inputName, value, formId) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
-    textInput.change(function() {
-        $('#' + formId).ajaxSubmit();
-    });
 
     inputDiv.append(inputLabel, textInput);
     return inputDiv;
@@ -255,7 +268,6 @@ function civicInputComponent(labelText, inputName, value, formId) {
     textInput.val(value);
     textInput.change(function() {
         $('#birthday-field').val(makeBirthdate(this.value));
-        $('#' + formId).ajaxSubmit();
     });
 
     inputDiv.append(inputLabel, textInput);
@@ -304,9 +316,6 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     var textareaInput = $('<textarea>');
     textareaInput.attr("name", inputName);
     textareaInput.attr("id", inputName + "-field");
-    textareaInput.change(function() {
-        $('#' + formId).ajaxSubmit();
-    });
     textareaInput.val(value)
     textareaDiv.append(textareaLabel, textareaInput, $('<br>'));
     return textareaDiv;
@@ -320,14 +329,11 @@ function selectInputComponent(labelText, inputName, divId, formId) {
     var selectInput = $('<select>');
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
-    selectInput.change(function() {
-        $('#' + formId).ajaxSubmit();
-    });
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
 }
 
-function functionSelectInputComponent(labelText, inputName, divId, employeeId) {
+function functionSelectInputComponent(labelText, inputName, divId) {
     var selectDiv = fieldBox();
     selectDiv.attr("id", divId);
     var selectLabel = fieldLabelBox();
@@ -335,18 +341,13 @@ function functionSelectInputComponent(labelText, inputName, divId, employeeId) {
     var selectInput = $('<select>');
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
-    selectInput.change(function() {
-        assignFunction(employeeId, selectInput.val())
-    });
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
 }
 
 function editTreeNamesOnChange(nameDiv, unitId) {
     var nameInput = nameDiv.children('#name-field');
-    nameInput.change(function() {
-        $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').empty().append(nameInput.val());
-    });
+    $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').empty().append(nameInput.val());
 }
 function getOrganizationFormId() {
     var formId = 'organizationForm';
@@ -360,7 +361,7 @@ function generateOrgNrDiv(data) {
     return orgnrDiv;
 }
 
-function generateSubUnitAddressComponent(data) {
+function generateSingleAddressComponent(data) {
     var properties = data.node.properties;
 
     var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), getOrganizationFormId());
@@ -408,10 +409,9 @@ function getFunctionId(unitId) {
 }
 
 function assignFunction(unitId, functionId) {
-    $.getJSON("fairview/ajax/unassign_function.do", {_nodeId: unitId}, function(data) {
+    $.getJSON("fairview/ajax/unassign_function.do", {_nodeId: unitId}, function() {
         $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _type:"HAS_EMPLOYMENT" }, function(dataEmployment) {
             $.getJSON("fairview/ajax/assign_function.do", {employment:dataEmployment.relationship.endNode, "function:relationship":functionId, percent:100});
         });
     });
-    setupModalizerClickEvents('true');
 }
