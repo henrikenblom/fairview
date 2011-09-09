@@ -103,32 +103,40 @@
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
 <body class="ex_highlight_row">
 <div id="main">
-    <div style="width: 1000px">
-        <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
-            <thead>
-            <tr>
-                <th>Förnamn</th>
-                <th>Efternamn</th>
-                <th>Telefon</th>
-                <th>E-post</th>
-                <th>Enhet</th>
-                <th>Funktion</th>
-            </tr>
-            </thead>
-            <tbody>
+    <div id="content">
+        <div class="datatable">
+            <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
+                <thead>
+                <tr>
+                    <th>Förnamn</th>
+                    <th>Efternamn</th>
+                    <th>Telefon</th>
+                    <th>E-post</th>
+                    <th>Enhet</th>
+                    <th>Funktion</th>
+                </tr>
+                </thead>
+                <tbody>
 
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>Förnamn</th>
-                <th>Efternamn</th>
-                <th>Telefon</th>
-                <th>E-post</th>
-                <th>Enhet</th>
-                <th>Funktion</th>
-            </tr>
-            </tfoot>
-        </table>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>Förnamn</th>
+                    <th>Efternamn</th>
+                    <th>Telefon</th>
+                    <th>E-post</th>
+                    <th>Enhet</th>
+                    <th>Funktion</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="helpbox" id="helpbox-unitlist-addunit">
+            <div class="helpbox-header">Lägg till</div>
+            <div class="helpbox-content" onclick="alert('Not yet implemented.')">
+                <img src="images/newperson.png" class="helpbox-image">Lägg till person
+            </div>
+        </div>
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>
