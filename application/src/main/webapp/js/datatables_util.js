@@ -72,5 +72,5 @@ function initUnitCell(unitId, cell, datatable) {
 }
 
 function updateTable(datatable) {
-    datatable.fnReloadAjax();
+    datatable.fnReloadAjax(null, null, true);
 }
