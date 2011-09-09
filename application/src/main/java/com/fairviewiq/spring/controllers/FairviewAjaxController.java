@@ -2,6 +2,7 @@ package com.fairviewiq.spring.controllers;
 
 import com.fairviewiq.utils.FunctionListGenerator;
 import com.fairviewiq.utils.MultiSelectFunctionMember;
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import org.neo4j.graphdb.*;
@@ -18,6 +19,7 @@ import se.codemate.spring.mvc.XStreamView;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +37,7 @@ public class FairviewAjaxController {
     private XStreamView xstreamView;
     private NeoUtils neoUtils;
     private FunctionListGenerator functionListGenerator;
+    private Gson gson = new Gson();
 
     @PostConstruct
     public void initialize() {
@@ -208,6 +211,23 @@ public class FairviewAjaxController {
             e.printStackTrace();
         }
         return functionNode;
+    }
+
+    private boolean functionBelongsToUnit(Node functionNode, long unitId) {
+
+        boolean retval = false;
+
+        for (Relationship relationship : functionNode.getRelationships(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING)) {
+
+            if (relationship.getEndNode().getId() == unitId) {
+                retval = true;
+                break;
+            }
+
+        }
+
+        return retval;
+
     }
 
     public static Node getUnitOfFunction(Node functionNode) {
@@ -590,13 +610,14 @@ public class FairviewAjaxController {
 
         ArrayList<Node> functions = functionListGenerator.getSortedList(0, true);
         ArrayList<MultiSelectFunctionMember> msfList = new ArrayList<MultiSelectFunctionMember>();
-        for(Node function : functions){
-            Node unitNode = getUnitOfFunction(function);
+        for (Node function : functions) {
+
             MultiSelectFunctionMember multiSelectFunction = new MultiSelectFunctionMember(function.getProperty("name").toString(), function.getId());
-            if(unitNode != null && unitId == unitNode.getId())
+            if (functionBelongsToUnit(function, unitId)) {
+
                 multiSelectFunction.setSelected(true);
-            else
-                multiSelectFunction.setSelected(false);
+
+            }
             msfList.add(multiSelectFunction);
         }
 
@@ -605,6 +626,25 @@ public class FairviewAjaxController {
         return mav;
     }
 
+    @RequestMapping(value = {"/fairview/ajax/set_multiselect_functions.do"})
+    public ModelAndView setMultiselectFunctions(@RequestParam("_unitId") long unitId,
+                                                @RequestParam("_functionIds") String functionIds) {
+
+        Long[] functionIdArray = gson.fromJson(functionIds, Long[].class);
+
+        Node unitNode = neo.getNodeById(unitId);
+
+        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("BELONGS_TO"), Direction.INCOMING)) {
+            relationship.delete();
+        }
+
+        for (Long entry : functionIdArray) {
+            neo.getNodeById(entry).createRelationshipTo(unitNode, new SimpleRelationshipType("BELONGS_TO"));
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        return mav;
+    }
 
 }
 
