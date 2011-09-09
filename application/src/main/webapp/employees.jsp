@@ -45,10 +45,10 @@
                             initFunctionCell(data.function_id, this);
                         }
                         else if (this.cellIndex == '4') { //unit-cell
-                            initUnitCell(data.unit_id, this);
+                            initUnitCell(data.unit_id, this, datatable);
                         }
                         else if (this.cellIndex == '0' || this.cellIndex == '1') { //firstname & lastname cells
-                            initEmployeeCell(data.node_id, this);
+                            initEmployeeCell(data.node_id, this, datatable);
                         }
                     });
                 }
@@ -63,7 +63,7 @@
 
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
-            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data, oTable));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
@@ -86,7 +86,7 @@
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
             var data = getNodeData(unitId);
-            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
             openPopupTab(0);
         }
