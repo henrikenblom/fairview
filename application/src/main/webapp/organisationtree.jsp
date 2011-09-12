@@ -47,10 +47,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Infero Quest - Enheter</title>
-    <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
-    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
-    <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
-    <link type="text/css" href="css/jquery.multiselect2side.css" rel="stylesheet">
+
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
@@ -60,7 +57,12 @@
     <script type="text/javascript" src="multiSelectGenerator.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
-    <script type="text/javascript" src="js/jquery-plugins/jquery.multiselect2side.js" ></script>
+    <script type="text/javascript" src="js/jquery-plugins/jquery.multiselect2side.js"></script>
+    <!--<link rel="stylesheet" href="css/reset.css" type="text/css">!-->
+    <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
+    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
+    <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
+    <link type="text/css" href="css/jquery.multiselect2side.css" rel="stylesheet">
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
@@ -69,7 +71,7 @@
                 }
             });
             var unitId = <%= organization.getId()%>;
-            createTabs();
+            bindTabs();
 
             adjustViewPort();
             fadeOutModalizer();
@@ -95,20 +97,21 @@
                 generateMainOrganizationPopup(unitId);
                 openPopupTab(2);
             });
+
         });
 
-        function generateMainOrganizationPopup(unitId){
+        function generateMainOrganizationPopup(unitId) {
             var data = getNodeData(unitId);
             generateMainOrganizationEditForm(data);
             generateSubunitCreationTab(data);
-            genetateFunctionTab(data);
+            generateFunctionTab(data);
         }
 
-        function generateSubunitPopup(unitId){
+        function generateSubunitPopup(unitId) {
             var data = getNodeData(unitId);
             generateSubunitEditForm(data);
             generateSubunitCreationTab(data);
-            genetateFunctionTab(data);
+            generateFunctionTab(data);
         }
 
         function generateSubunitCreationTab(data) {
@@ -131,28 +134,30 @@
         function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
-            generateAdresses();
-            editHeaderNameOnChange();
+            generateSingleAddressComponent(data).insertAfter('#web-field');
             generateTabHeader(data.node.properties.name.value);
-        }
-        function generateSubunitEditForm(data) {
-            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            generateSubUnitAddressComponent(data).insertAfter('#web-field');
-            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
-            generateTabHeader(data.node.properties.name.value);
+            $('#savebutton').click(function(){
+               $('#header-organization-name').html($('#name-field').val());
+               $('#popup-header').html($('#name-field').val());
+            });
         }
 
-        function genetateFunctionTab(data){
-            var unitId = data.node.id;
-            $('#unitsettings-functions').empty().append(generateFunctionMultiSelect(unitId));
-            $('#multiSelect').multiselect2side({
-				selectedPosition: 'right',
-				moveOptions: false,
-				labelsx: '',
-				labeldx: '',
-				autoSort: true,
-				autoSortAvailable: true
+        function generateSubunitEditForm(data) {
+            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+            generateSingleAddressComponent(data).insertAfter('#web-field');
+            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
+            generateTabHeader(data.node.properties.name.value);
+            $('#savebutton').click(function(){
+               assignManager(data.node.id, $('#manager-selection'));
+               $('#popup-header').html($('#name-field').val());
             });
+        }
+
+        function generateFunctionTab(data) {
+            var _unitId = data.node.id;
+            $('#unitsettings-functions').empty().append(generateFunctionMultiSelectForm(_unitId));
+            initDoubleBoxes();
+            getDataUpdateDatabase(_unitId);
         }
 
         function generateAdresses() {
@@ -177,13 +182,9 @@
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
-
-        function editHeaderNameOnChange() {
-            $('#name-field').change(function() {
-                $('#header-organization-name').html(this.value);
-            });
+        function assignManager(unitId, bossSelector) {
+            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
         }
-
         function generateBossSelector(unitId) {
             bossSelectorDiv = fieldBox();
             bossSelectorLabel = fieldLabelBox();
@@ -191,9 +192,6 @@
 
             bossSelector = $('<select>');
             bossSelector.attr("id", "manager-selection");
-            bossSelector.change(function() {
-                $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
-            });
             bossOption = $('<option>');
             bossOption.val(-1);
             bossOption.append('Ingen chef vald');

@@ -11,7 +11,7 @@ public class MultiSelectFunctionMember {
 
     private String functionName;
     private long functionId;
-    private Boolean selected;
+    private Boolean selected = false;
 
     public MultiSelectFunctionMember(String fname, long fId){
         this.functionName = fname;

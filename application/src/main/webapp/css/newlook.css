@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : newlook
     Created on : 2010-okt-28, 13:18:42
     Author     : henrik
@@ -33,6 +33,10 @@ div {
     padding: 0px;
 }
 
+.datatable{
+    padding-right: 250px;
+}
+
 button {
     background-color: #585c95;
     color: white;
@@ -41,6 +45,25 @@ button {
     border: 1px solid #404040;
     margin: 0px;
     cursor: pointer;
+}
+
+.button {
+    background-color: #585c95;
+    color: white;
+    text-align: center;
+    border: 1px solid #404040;
+    margin: 0px;
+    cursor: pointer;
+    width: 45px;
+    padding: 2px;
+    margin-top: 15px;
+    float: left;
+}
+
+.savedSpan{
+    float: left;
+    margin-top: 16px;
+    margin-left: 4px;
 }
 
 .addsubunit-button {
@@ -92,7 +115,6 @@ fieldset {
 }
 
 .helpbox{
-    height: 200px;
     width: 200px;
     background-color: white;
     border-width: 1px;
@@ -107,7 +129,7 @@ fieldset {
 }
 
 #helpbox-unitlist-addunit{
-   top: 70px;
+   top: 97px;
 }
 #helpbox-unitlist-help{
    top: 300px;
