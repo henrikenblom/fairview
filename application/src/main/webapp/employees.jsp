@@ -52,13 +52,10 @@
                             initEmployeeCell(data.node_id, this, datatable);
                         }
                     });
-                    $('td', datatable.fnGetNodes()).hover(function() {
-                        var iCol = $('td').index(this) % 6; // the number to the right of the % must be the correct nr of columns
-                        var nTrs = datatable.fnGetNodes();
-                        $('td:nth-child(' + (iCol + 1) + ')', nTrs).addClass('highlighted');
-                    }, function() {
-                        $('td.highlighted', datatable.fnGetNodes()).removeClass('highlighted');
-                    });
+                      $('td', datatable.fnGetNodes()).hover(function() {
+                         $('td').removeClass('cell_highlight');
+                         $(this).addClass('cell_highlight');
+                      });
                 }
             });
 
