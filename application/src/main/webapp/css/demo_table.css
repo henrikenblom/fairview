@@ -501,6 +501,9 @@ tr.even.gradeU td.sorting_3 {
 	background-color: #DBFF70;
 }
 
+.cell_highlight{
+    background-color: #D5FF59;
+}
 
 /*
  * KeyTable
