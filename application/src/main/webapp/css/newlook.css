@@ -81,10 +81,6 @@ input {
     vertical-align: top;
 }
 
-select {
-    width: 466px;
-}
-
 img {
     border: 0;
 }
@@ -129,7 +125,7 @@ fieldset {
 }
 
 #helpbox-unitlist-addunit{
-   top: 97px;
+   top: 70px;
 }
 #helpbox-unitlist-help{
    top: 300px;
