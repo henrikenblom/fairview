@@ -12,20 +12,17 @@ function generateFunctionMultiSelectForm(unitId){
     multiSelectForm.attr("id", "functionForm");
     multiSelectForm.attr("action", "");
     multiSelectForm.attr("method", "post");
-    var fieldset = $('<fieldset>');
-    var select = createSelect(unitId);
-    fieldset.append(select);
-    var hidden = createHidden(unitId);
-    fieldset.append(hidden);
-    var submitDiv = $('<div>')
-    var submit = createSubmitBtn();
-    submitDiv.append(submit);
-    var span = createSavedSpan();
-    submitDiv.append(span);
-    fieldset.append(submitDiv);
-    multiSelectForm.append(fieldset);
+    multiSelectForm.append(formFieldset(unitId));
 
     return multiSelectForm;
+}
+
+function formFieldset(unitId){
+    var fieldset = $('<fieldset>');
+    fieldset.append(createSelect(unitId));
+    fieldset.append(createHidden(unitId));
+    fieldset.append(createSubmitComponent());
+    return fieldset;
 }
 
 function createSelect(unitId){
@@ -54,19 +51,27 @@ function createHidden(unitId){
     return hidden;
 }
 
-function createSubmitBtn(){
+function createSubmitComponent(){
+    var submitComponent = $('<div>');
+    submitComponent.append(createSubmitButton());
+    submitComponent.append(createSavedSpan());
+    return submitComponent;
+}
+
+function createSubmitButton(){
     var submit = $('<input>');
     submit.attr("type", "submit");
     submit.attr("name", "submit");
     submit.attr("class", "button");
     submit.attr("id", "submit_btn");
-    submit.attr("value", "Skicka");
+    submit.attr("value", "Spara");
     return submit;
 }
 function createSavedSpan(){
-    var span = $('<p>');
-    span.attr("style", "display: none; color: red");
+    var span = $('<span>');
+    span.attr("style", "display: none; color: green");
     span.attr("id", "savedSpan");
+    span.attr("class", "savedSpan");
     span.append("Sparad");
     return span;
 }
