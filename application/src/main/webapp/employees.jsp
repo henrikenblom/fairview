@@ -48,7 +48,7 @@
                         else if (this.cellIndex == '4') { //unit-cell
                             initUnitCell(data.unit_id, this, datatable);
                         }
-                        else if (this.cellIndex == '0' || this.cellIndex == '1') { //firstname & lastname cells
+                        else if (isEmployeeDataColumn(this.cellIndex)) {
                             initEmployeeCell(data.node_id, this, datatable);
                         }
                     });
@@ -65,6 +65,12 @@
 
         });
 
+        function isEmployeeDataColumn(cellIndex){
+            if (cellIndex == '0' || cellIndex == '1' || cellIndex == '2' || cellIndex == '3')
+                return true;
+            else
+                return false;
+        }
 
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
