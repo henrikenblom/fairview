@@ -33,10 +33,6 @@ div {
     padding: 0px;
 }
 
-.datatable{
-    padding-right: 250px;
-}
-
 button {
     background-color: #585c95;
     color: white;
@@ -726,3 +722,10 @@ fieldset {
     text-align: left;
 }
 
+.newpersontop{
+    margin-bottom: 10px;
+}
+
+.newpersonbottom{
+    margin-top: 25px;
+}
