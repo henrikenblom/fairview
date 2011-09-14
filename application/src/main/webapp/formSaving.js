@@ -12,14 +12,13 @@ function disableButtonTemporarily(elementId) {
     });
 }
 
-function showMessage(elementId) {
-    $(elementId).show().fadeOut(5000);
+function showMessage(element) {
+    element.show().fadeOut(3000);
 }
 
 function createSavedSpan() {
     var span = $('<span>');
     span.attr("style", "display: none;");
-    span.attr("id", "savedSpan");
     span.attr("class", "savedSpan");
     span.append("Sparad");
     return span;

@@ -16,10 +16,14 @@ function fadeOutModalizer() {
     $('#modalizer').fadeOut(500);
 }
 
+function closePopup() {
+    $('#popup-dialog').hide(0);
+    $('#modalizer').fadeOut(500);
+}
+
 function setupModalizerClickEvents(reloadPage) {
     $('#modalizer').click(function() {
-        $('#popup-dialog').hide(0);
-        $('#modalizer').fadeOut(500);
+        closePopup();
         if (reloadPage == 'true')
             location.reload();
     });
@@ -34,7 +38,7 @@ function tabLinks(links) {
     $.each(links, function(i) {
         var tabListItem = $('<li>');
         var tabLink = $('<a>');
-        tabLink.attr('href', '#'+links[i][0]);
+        tabLink.attr('href', '#' + links[i][0]);
         tabLink.html(links[i][1]);
         tabListItem.append(tabLink);
         tabList.append(tabListItem);

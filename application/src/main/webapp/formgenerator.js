@@ -123,8 +123,6 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId);
     addEmploymentOptions(properties.employment, employmentDiv.children('#employment-field'));
 
-    var saveButton = saveButtonComponent(formId, assignFunctionCallback(unitId, datatable));
-
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
         hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
@@ -155,7 +153,7 @@ function updateTableCallback(datatable) {
 
 function saveButtonComponent(formId, callback) {
     var saveDiv = $('<div>');
-
+    saveDiv.attr('style', 'padding-bottom: 20px;')
     var messageSpan = createSavedSpan();
     var saveButton = $('<button>');
     saveButton.html('Spara');
@@ -163,7 +161,8 @@ function saveButtonComponent(formId, callback) {
     saveButton.click(function() {
         $('#' + formId).ajaxSubmit(function() {
             disableButtonTemporarily(saveButton);
-            showMessage(messageSpan.attr('id'));
+            showMessage(messageSpan);
+            setTimeout(closePopup,500);
             if (typeof callback == 'function')
                 callback.call();
         });
