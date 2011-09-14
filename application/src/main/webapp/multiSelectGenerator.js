@@ -30,8 +30,8 @@ function createSelect(unitId){
     select.attr("id", "multiSelect");
     select.attr("name", "functionMultiselect");
     select.attr("multiple", "multiple");
-    select.attr("size" , 8);
     var functionData = getAllFunctions(unitId).list["com.fairviewiq.utils.MultiSelectFunctionMember"];
+    var counter = 0;
     $.each(functionData, function(i){
         var option = $('<option>');
         option.attr("value", functionData[i].functionId);
@@ -39,7 +39,13 @@ function createSelect(unitId){
             option.attr("selected", "selected");
         option.append(functionData[i].functionName);
         select.append(option);
+        counter++;
     });
+    if(counter < 6)
+        counter = 6;
+    else if (counter > 20)
+        counter = 20;
+    select.attr("size" , counter);
     return select;
 }
 
@@ -106,8 +112,8 @@ function initDoubleBoxes() {
     $('#multiSelect').multiselect2side({
         selectedPosition: 'right',
         moveOptions: false,
-        labelsx: '',
-        labeldx: '',
+        labelsx: 'Tillgängliga',
+        labeldx: 'Tilldelade',
         autoSort: true,
         autoSortAvailable: true
     });

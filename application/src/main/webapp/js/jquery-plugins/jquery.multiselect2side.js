@@ -109,16 +109,16 @@
 					"<div class='ms2side__div'>" +
 							((o.selectedPosition != 'right' && o.moveOptions) ? divUpDown : "") +
 						"<div class='ms2side__select'>" +
-							((o.labelsx || leftSearch != false) ? ("<div class='ms2side__header'>" + (leftSearch != false ? leftSearch : o.labelsx) + "</div>") : "") +
-							"<select title='" + o.labelsx + "' name='" + nameSx + "' id='" + nameSx + "' size='" + size + "' multiple='multiple' ></select>" +
+							((o.labelsx || leftSearch != false) ? ("<div class='field-label-box'>" + (leftSearch != false ? leftSearch : o.labelsx) + "</div>") : "") +
+							"<select title='" + o.labelsx + "' name='" + nameSx + "' id='" + nameSx + "' size='" + size + "' multiple='multiple' class='text-field-multiple'></select>" +
 						"</div>" +
 						"<div class='ms2side__options'>" +
 							((o.selectedPosition == 'right')
 							?
-							("<p class='AddOne' title='Add Selected'>&rsaquo;</p>" +
-							"<p class='AddAll' title='Add All'>&raquo;</p>" +
-							"<p class='RemoveOne' title='Remove Selected'>&lsaquo;</p>" +
-							"<p class='RemoveAll' title='Remove All'>&laquo;</p>")
+							("<p class='AddOne' title='Add Selected'>Lägg till markerade</p>" +
+							"<p class='AddAll' title='Add All'>Lägg till alla</p>" +
+							"<p class='RemoveOne' title='Remove Selected'>Ta bort markerade</p>" +
+							"<p class='RemoveAll' title='Remove All'>Ta bort alla</p>")
 							:
 							("<p class='AddOne' title='Add Selected'>&lsaquo;</p>" +
 							"<p class='AddAll' title='Add All'>&laquo;</p>" +
@@ -127,8 +127,8 @@
 							) +
 						"</div>" +
 						"<div class='ms2side__select'>" +
-							((o.labeldx || rightSearch != false) ? ("<div class='ms2side__header'>" + (rightSearch != false ? rightSearch : o.labeldx) + "</div>") : "") +
-							"<select title='" + o.labeldx + "' name='" + nameDx + "' id='" + nameDx + "' size='" + size + "' multiple='multiple' ></select>" +
+							((o.labeldx || rightSearch != false) ? ("<div class='field-label-box'>" + (rightSearch != false ? rightSearch : o.labeldx) + "</div>") : "") +
+							"<select title='" + o.labeldx + "' name='" + nameDx + "' id='" + nameDx + "' size='" + size + "' multiple='multiple' class='text-field-multiple'></select>" +
 						"</div>" +
 						((o.selectedPosition == 'right' && o.moveOptions) ? divUpDown : "") +
 					"</div>";
