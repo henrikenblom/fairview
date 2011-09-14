@@ -129,7 +129,7 @@ function generateProfileEmploymentInfoForm(data, datatable) {
         hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
         zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', functionDiv, '<br/>', fromdateDiv, '<br/>',
-        todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv, '<br/>', saveButton);
+        todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     return form;
@@ -154,17 +154,23 @@ function updateTableCallback(datatable) {
 }
 
 function saveButtonComponent(formId, callback) {
-    var saveButton = $('<div>');
+    var saveDiv = $('<div>');
+
+    var messageSpan = createSavedSpan();
+    var saveButton = $('<button>');
     saveButton.html('Spara');
-    saveButton.addClass('button');
     saveButton.attr('id', 'savebutton');
     saveButton.click(function() {
         $('#' + formId).ajaxSubmit(function() {
+            disableButtonTemporarily(saveButton);
+            showMessage(messageSpan.attr('id'));
             if (typeof callback == 'function')
                 callback.call();
         });
     });
-    return saveButton;
+    saveDiv.append(saveButton);
+    saveDiv.append(messageSpan);
+    return saveDiv;
 }
 
 function addFunctionOptions(functionInputElement, unitId, assignedFunctionId) {

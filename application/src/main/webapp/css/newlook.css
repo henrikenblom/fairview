@@ -43,6 +43,10 @@ button {
     cursor: pointer;
 }
 
+#savebutton{
+    float: left;
+}
+
 .button {
     background-color: #585c95;
     color: white;

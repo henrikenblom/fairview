@@ -19,6 +19,7 @@
     <script type="text/javascript" src="popupControls.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="formgenerator.js"></script>
+    <script type="text/javascript" src="formSaving.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="js/datatables_util.js"></script>
     <script type="text/javascript">
@@ -81,6 +82,7 @@
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
             $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data, oTable));
+            $('#profile-employmentinfo').append(saveButtonComponent('profile_form', assignFunctionCallback(unitId, oTable)));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
