@@ -27,6 +27,12 @@
             oTable = $('#datatable').dataTable({
                 "bProcessing": true,
                 "bSortClasses": false,
+                "bStateSave": true,
+                "oLanguage": {
+                    "sSearch": "Sök:",
+                    "sInfo": "Visar _START_ - _END_ av totalt _TOTAL_ rader",
+                    "sLengthMenu": "Visa _MENU_ rader"
+                },
                 "sAjaxSource": "fairview/ajax/datatables/get_employee_data.do",
                 "aoColumns": [
                     { "mDataProp": "firstname"},
@@ -48,14 +54,14 @@
                         else if (this.cellIndex == '4') { //unit-cell
                             initUnitCell(data.unit_id, this, datatable);
                         }
-                        else if (this.cellIndex == '0' || this.cellIndex == '1') { //firstname & lastname cells
+                        else if (isEmployeeDataColumn(this.cellIndex)) {
                             initEmployeeCell(data.node_id, this, datatable);
                         }
                     });
-                      $('td', datatable.fnGetNodes()).hover(function() {
-                         $('td').removeClass('cell_highlight');
-                         $(this).addClass('cell_highlight');
-                      });
+                    $('td', datatable.fnGetNodes()).hover(function() {
+                        $('td').removeClass('cell_highlight');
+                        $(this).addClass('cell_highlight');
+                    });
                 }
             });
 
@@ -65,6 +71,12 @@
 
         });
 
+        function isEmployeeDataColumn(cellIndex) {
+            if (cellIndex == '0' || cellIndex == '1' || cellIndex == '2' || cellIndex == '3')
+                return true;
+            else
+                return false;
+        }
 
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
@@ -101,6 +113,7 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
+        <div class="newpersontop"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span></div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
@@ -128,12 +141,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="helpbox" id="helpbox-unitlist-addunit">
-            <div class="helpbox-header">Lägg till</div>
-            <div class="helpbox-content" onclick="alert('Not yet implemented.')">
-                <img src="images/newperson.png" class="helpbox-image">Lägg till person
-            </div>
-        </div>
+        <div class="newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span></div>
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>

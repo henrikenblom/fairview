@@ -131,12 +131,14 @@ table.display thead th {
 	font-weight: bold;
 	cursor: pointer;
 	* cursor: hand;
+    text-align: left;
 }
 
 table.display tfoot th {
 	padding: 3px 18px 3px 10px;
 	border-top: 1px solid black;
 	font-weight: bold;
+    text-align: left;
 }
 
 table.display tr.heading2 td {

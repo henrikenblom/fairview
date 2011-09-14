@@ -62,7 +62,6 @@
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
     <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
-    <link type="text/css" href="css/jquery.multiselect2side.css" rel="stylesheet">
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
