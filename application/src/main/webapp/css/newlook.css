@@ -32,6 +32,9 @@ div {
     margin: 0px;
     padding: 0px;
 }
+.datatable{
+    padding-right: 250px;
+}
 
 button {
     background-color: #585c95;
@@ -735,7 +738,6 @@ fieldset {
     text-align: left;
 }
 
-<<<<<<< HEAD
 /*Multiselect*/
 .ms2side__div {
 	clear: left;
@@ -784,7 +786,7 @@ fieldset {
 	width: 220px;
 	float: left;
 }
-=======
+
 .newpersontop{
     margin-bottom: 10px;
 }
@@ -792,4 +794,4 @@ fieldset {
 .newpersonbottom{
     margin-top: 25px;
 }
->>>>>>> 8ed23c9950e6fec2092af3698efe4742215fa196
+
