@@ -47,6 +47,14 @@ button {
     cursor: pointer;
 }
 
+form {
+    margin-bottom: 1em;
+}
+
+#savebutton {
+    float: left;
+}
+
 .button {
     background-color: #585c95;
     color: white;
@@ -60,10 +68,14 @@ button {
     float: left;
 }
 
-.savedSpan{
+.savedSpan {
     float: left;
     margin-top: 16px;
     margin-left: 4px;
+}
+
+.saveDiv {
+    padding-bottom: 10px;
 }
 
 .addsubunit-button {
@@ -72,6 +84,12 @@ button {
 }
 
 .dialog-button:disabled {
+    background-color: #9da0ca;
+    border: 1px solid #808080;
+    cursor: default;
+}
+
+button:disabled {
     background-color: #9da0ca;
     border: 1px solid #808080;
     cursor: default;
@@ -511,7 +529,7 @@ fieldset {
     white-space: nowrap;
 }
 
-.list-entry-alternating{
+.list-entry-alternating {
     background-color: #F2F2F2;
 }
 
@@ -644,8 +662,8 @@ fieldset {
     display: block;
 }
 
-.coworker-list-attribute-header-entry{
-   text-decoration: underline;
+.coworker-list-attribute-header-entry {
+    text-decoration: underline;
 }
 
 .unit-list-cell, .goal-list-cell {
@@ -659,7 +677,7 @@ fieldset {
     text-overflow: ellipsis;
 }
 
-.unit-list-image{
+.unit-list-image {
     min-width: 40px;
     cursor: pointer;
     margin-left: 20px;
@@ -727,7 +745,7 @@ fieldset {
     cursor: pointer;
 }
 
-.link{
+.link {
     color: #585C95;
     cursor: pointer;
 }
@@ -738,6 +756,14 @@ fieldset {
     padding-top: 18px;
     padding-bottom: 0px;
     text-align: left;
+}
+
+.newpersontop{
+    margin-bottom: 10px;
+}
+
+.newpersonbottom {
+    margin-top: 25px;
 }
 
 /*Multiselect*/
@@ -789,11 +815,4 @@ fieldset {
 	float: left;
 }
 
-.newpersontop{
-    margin-bottom: 10px;
-}
-
-.newpersonbottom{
-    margin-top: 25px;
-}
 
