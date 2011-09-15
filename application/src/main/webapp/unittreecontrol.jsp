@@ -16,7 +16,6 @@
 
 <button class="imageonly-button" title="Lägg till underenhet" onclick="javascript:generateSubunitPopup(<%=unitId%>); openPopupTab(1);"><img src="images/newunit.png" alt="Ny underenhet"></button>
 <button class="imageonly-button" title="Lägg till funktion" onclick="javascript:generateSubunitPopup(<%=unitId%>); openPopupTab(3);"><img src="images/newfunction.png" alt="Ny funktion"></button>
-<button class="imageonly-button" title="Lägg till mål" onclick="javascript:generateSubunitPopup(<%=unitId%>); openPopupTab(2);"><img src="images/newgoal.png" alt="Nytt mål"></button>
 <%
     for (Relationship entry : unitNode.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
 
