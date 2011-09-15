@@ -47,7 +47,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Infero Quest - Enheter</title>
-
+    <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
+    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
+    <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
@@ -59,9 +61,6 @@
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.multiselect2side.js"></script>
-    <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
-    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
-    <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
