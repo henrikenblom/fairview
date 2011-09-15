@@ -149,7 +149,8 @@
             });
             $('#unitsettings-general').append(saveButton);
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
+            $("#descriptionDiv").append(generateBossSelector(data.node.id));
+//            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
         }
 
