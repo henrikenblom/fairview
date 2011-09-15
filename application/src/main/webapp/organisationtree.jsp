@@ -47,21 +47,20 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Infero Quest - Enheter</title>
-
+    <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
+    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
+    <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript" src="popupControls.js"></script>
     <script type="text/javascript" src="formgenerator.js"></script>
+    <script type="text/javascript" src="formSaving.js"></script>
     <script type="text/javascript" src="multiSelectGenerator.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.multiselect2side.js"></script>
-    <!--<link rel="stylesheet" href="css/reset.css" type="text/css">!-->
-    <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
-    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
-    <link type="text/css" href="css/jquery.qtip.css" rel="stylesheet"/>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
@@ -128,24 +127,30 @@
 
         function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+            var saveButton = saveButtonComponent(getOrganizationFormId());
+            saveButton.click(function() {
+                editTreeNamesOnChange($('#name-field').val(), data.node.id);
+                $('#header-organization-name').html($('#name-field').val());
+                $('#popup-header').html($('#name-field').val());
+            });
+            $('#unitsettings-general').append(saveButton);
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateSingleAddressComponent(data).insertAfter('#web-field');
             generateTabHeader(data.node.properties.name.value);
-            $('#savebutton').click(function(){
-               $('#header-organization-name').html($('#name-field').val());
-               $('#popup-header').html($('#name-field').val());
-            });
         }
 
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+            var saveButton = saveButtonComponent(getOrganizationFormId());
+            saveButton.click(function() {
+                editTreeNamesOnChange($('#name-field').val(), data.node.id);
+                assignManager(data.node.id, $('#manager-selection'));
+                $('#popup-header').html($('#name-field').val());
+            });
+            $('#unitsettings-general').append(saveButton);
             generateSingleAddressComponent(data).insertAfter('#web-field');
             generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
-            $('#savebutton').click(function(){
-               assignManager(data.node.id, $('#manager-selection'));
-               $('#popup-header').html($('#name-field').val());
-            });
         }
 
         function generateFunctionTab(data) {

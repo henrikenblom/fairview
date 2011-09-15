@@ -60,7 +60,11 @@ function createHidden(unitId){
 function createSubmitComponent(){
     var submitComponent = $('<div>');
     submitComponent.append(createSubmitButton());
-    submitComponent.append(createSavedSpan());
+    var span = createSavedSpan()
+    span.attr('savedSpan');
+    span.attr('style', 'display: none; margin-top: 16px');
+    span.attr('id', 'savedSpan');
+    submitComponent.append(span);
     return submitComponent;
 }
 
@@ -72,14 +76,6 @@ function createSubmitButton(){
     submit.attr("id", "submit_btn");
     submit.attr("value", "Spara");
     return submit;
-}
-function createSavedSpan(){
-    var span = $('<span>');
-    span.attr("style", "display: none; color: green");
-    span.attr("id", "savedSpan");
-    span.attr("class", "savedSpan");
-    span.append("Sparad");
-    return span;
 }
 
 /////////////////// Logic /////////////////////////////////
@@ -99,10 +95,7 @@ function getDataUpdateDatabase(_unitId) {
         });
         data += "]";
         $.getJSON('fairview/ajax/set_multiselect_functions.do', {_functionIds:data, _unitId:_unitId}, function(json){
-                                    $("#submit_btn").attr('disabled', true).css({ opacity: 0.5 }).delay('2000').queue(function(n){
-                                        $(this).removeAttr('disabled').css({ opacity: 1 });
-                                        n();
-                                    });
+                                    disableButtonTemporarily('#submit_btn');
                                     $("#savedSpan").show().fadeOut(5000);
         });
     });
