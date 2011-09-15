@@ -43,7 +43,11 @@ button {
     cursor: pointer;
 }
 
-#savebutton{
+form {
+    margin-bottom: 1em;
+}
+
+#savebutton {
     float: left;
 }
 
@@ -60,9 +64,13 @@ button {
     float: left;
 }
 
-.savedSpan{
+.savedSpan {
     float: left;
     margin-left: 4px;
+}
+
+.saveDiv {
+    padding-bottom: 10px;
 }
 
 .addsubunit-button {
@@ -71,6 +79,12 @@ button {
 }
 
 .dialog-button:disabled {
+    background-color: #9da0ca;
+    border: 1px solid #808080;
+    cursor: default;
+}
+
+button:disabled {
     background-color: #9da0ca;
     border: 1px solid #808080;
     cursor: default;
@@ -109,7 +123,7 @@ fieldset {
     padding: 0;
 }
 
-.helpbox{
+.helpbox {
     width: 200px;
     background-color: white;
     border-width: 1px;
@@ -123,14 +137,15 @@ fieldset {
     border-radius: 7px;
 }
 
-#helpbox-unitlist-addunit{
-   top: 70px;
-}
-#helpbox-unitlist-help{
-   top: 300px;
+#helpbox-unitlist-addunit {
+    top: 70px;
 }
 
-.helpbox-header{
+#helpbox-unitlist-help {
+    top: 300px;
+}
+
+.helpbox-header {
     text-align: left;
     padding: 10px;
     background-color: #E8ECF5;
@@ -139,15 +154,15 @@ fieldset {
     border-radius: 7px 7px 0px 0px;
 }
 
-.helpbox-content{
+.helpbox-content {
     padding: 5px;
 }
 
-.helpbox-image{
+.helpbox-image {
     padding-right: 5px;
 }
 
-.helpbox-listentry{
+.helpbox-listentry {
     padding: 5px;
 }
 
@@ -307,7 +322,7 @@ fieldset {
     min-width: 300px;
 }
 
-#unit-tree-icons{
+#unit-tree-icons {
     position: relative;
     bottom: 4px;
 }
@@ -326,7 +341,7 @@ fieldset {
     z-index: 500;
 }
 
-#popup-header{
+#popup-header {
     text-align: left;
     font-size: 20px;
     padding-left: 17px;
@@ -336,6 +351,7 @@ fieldset {
     border-top: 1px solid #DDD;
     background-color: #E8ECF5;
 }
+
 .login-field {
     width: 300px;
 }
@@ -455,7 +471,7 @@ fieldset {
 
 }
 
-.coworker-list-attribute-header{
+.coworker-list-attribute-header {
     padding-top: 5px;
 }
 
@@ -510,7 +526,7 @@ fieldset {
     white-space: nowrap;
 }
 
-.list-entry-alternating{
+.list-entry-alternating {
     background-color: #F2F2F2;
 }
 
@@ -629,8 +645,8 @@ fieldset {
     display: block;
 }
 
-.coworker-list-attribute-header-entry{
-   text-decoration: underline;
+.coworker-list-attribute-header-entry {
+    text-decoration: underline;
 }
 
 .unit-list-cell, .goal-list-cell {
@@ -644,7 +660,7 @@ fieldset {
     text-overflow: ellipsis;
 }
 
-.unit-list-image{
+.unit-list-image {
     min-width: 40px;
     cursor: pointer;
     margin-left: 20px;
@@ -712,7 +728,7 @@ fieldset {
     cursor: pointer;
 }
 
-.link{
+.link {
     color: #585C95;
     cursor: pointer;
 }
@@ -725,10 +741,10 @@ fieldset {
     text-align: left;
 }
 
-.newpersontop{
+.newpersontop {
     margin-bottom: 10px;
 }
 
-.newpersonbottom{
+.newpersonbottom {
     margin-top: 25px;
 }
