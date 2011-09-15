@@ -22,6 +22,7 @@
     <script type="text/javascript" src="formSaving.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="js/datatables_util.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {

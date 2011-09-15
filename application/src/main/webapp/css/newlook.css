@@ -124,7 +124,7 @@ fieldset {
     padding: 0;
 }
 
-.helpbox{
+.helpbox {
     width: 200px;
     background-color: white;
     border-width: 1px;
@@ -138,14 +138,15 @@ fieldset {
     border-radius: 7px;
 }
 
-#helpbox-unitlist-addunit{
-   top: 70px;
-}
-#helpbox-unitlist-help{
-   top: 300px;
+#helpbox-unitlist-addunit {
+    top: 70px;
 }
 
-.helpbox-header{
+#helpbox-unitlist-help {
+    top: 300px;
+}
+
+.helpbox-header {
     text-align: left;
     padding: 10px;
     background-color: #E8ECF5;
@@ -154,15 +155,15 @@ fieldset {
     border-radius: 7px 7px 0px 0px;
 }
 
-.helpbox-content{
+.helpbox-content {
     padding: 5px;
 }
 
-.helpbox-image{
+.helpbox-image {
     padding-right: 5px;
 }
 
-.helpbox-listentry{
+.helpbox-listentry {
     padding: 5px;
 }
 
@@ -322,7 +323,7 @@ fieldset {
     min-width: 300px;
 }
 
-#unit-tree-icons{
+#unit-tree-icons {
     position: relative;
     bottom: 4px;
 }
@@ -341,7 +342,7 @@ fieldset {
     z-index: 500;
 }
 
-#popup-header{
+#popup-header {
     text-align: left;
     font-size: 20px;
     padding-left: 17px;
@@ -351,6 +352,7 @@ fieldset {
     border-top: 1px solid #DDD;
     background-color: #E8ECF5;
 }
+
 .login-field {
     width: 300px;
 }
@@ -403,6 +405,12 @@ fieldset {
     line-height: 1.4em;
     font-weight: bold;
     color: #606060;
+}
+
+label.error {
+    float: none;
+    color: red;
+    padding-left: .5em;
 }
 
 .field-preview {
@@ -470,7 +478,7 @@ fieldset {
 
 }
 
-.coworker-list-attribute-header{
+.coworker-list-attribute-header {
     padding-top: 5px;
 }
 
@@ -754,7 +762,7 @@ fieldset {
     text-align: left;
 }
 
-.newpersontop{
+.newpersontop {
     margin-bottom: 10px;
 }
 
@@ -764,51 +772,52 @@ fieldset {
 
 /*Multiselect*/
 .ms2side__div {
-	clear: left;
-	width: 100%;
-	padding: 1px;
-	float: left;
-	background : url('') repeat-x;  HACK FOR CHROME
+    clear: left;
+    width: 100%;
+    padding: 1px;
+    float: left;
+    background: url('') repeat-x;
+    HACK FOR CHROME
 }
 
 .ms2side__select {
-	float: left;
+    float: left;
 }
 
 .ms2side__options, .ms2side__updown {
-	float: left;
-	font-size: 10pt;
-	margin: 0;
-	padding: 0 8px;
-	width: 150px;
-	text-align: center;
-	overflow: hidden;
+    float: left;
+    font-size: 10pt;
+    margin: 0;
+    padding: 0 8px;
+    width: 150px;
+    text-align: center;
+    overflow: hidden;
     margin-top: 38px;
 }
 
 .ms2side__options p, .ms2side__updown p {
-	margin: 2px 0;
-	padding: 0;
-	cursor: pointer;
-	border: 1px solid black;
+    margin: 2px 0;
+    padding: 0;
+    cursor: pointer;
+    border: 1px solid black;
 }
 
 .ms2side__options p.ms2side_hover, .ms2side__updown p.ms2side_hover {
-	background-color: #DADBE9;
-	border-color: #585C95/*#0000FF*/;
-	cursor: pointer;
+    background-color: #DADBE9;
+    border-color: #585C95 /*#0000FF*/;
+    cursor: pointer;
 }
 
 .ms2side__options p.ms2side__hide, .ms2side__updown p.ms2side__hide {
-	cursor: default;
-	color: gray;
-	border: 1px solid gray;
-	background-color: #F0F0F0;
+    cursor: default;
+    color: gray;
+    border: 1px solid gray;
+    background-color: #F0F0F0;
 }
 
 .ms2side__div select {
-	width: 220px;
-	float: left;
+    width: 220px;
+    float: left;
 }
 
 
