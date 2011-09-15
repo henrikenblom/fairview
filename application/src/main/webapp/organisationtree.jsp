@@ -88,7 +88,7 @@
 
             $('#imageonly-buttonAddFunction').click(function() {
                 generateMainOrganizationPopup(unitId);
-                openPopupTab(3);
+                openPopupTab(2);
             });
 
 
