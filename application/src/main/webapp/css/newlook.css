@@ -26,6 +26,7 @@ body {
     font-family: Trebuchet MS, Arial, sans-serif;
     font-size: 14px;
     color: #404040;
+    overflow: auto;
 }
 
 div {
@@ -601,6 +602,7 @@ fieldset {
     border-top-style: inset;
     border-top-width: 2px;
     color: #404040;
+    overflow: auto;
 }
 
 .digits-3 {
