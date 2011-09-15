@@ -92,10 +92,6 @@
                 openPopupTab(3);
             });
 
-            $('#imageonly-buttonAddGoal').click(function() {
-                generateMainOrganizationPopup(unitId);
-                openPopupTab(2);
-            });
 
         });
 
@@ -254,8 +250,6 @@
                         <button class="imageonly-button" title="Lägg till funktion" id="imageonly-buttonAddFunction">
                             <img
                                     src="images/newfunction.png" alt="Ny funktion"></button>
-                        <button class="imageonly-button" title="Lägg till mål" id="imageonly-buttonAddGoal"><img
-                                src="images/newgoal.png" alt="Nytt mål"></button>
                     </h3>
                     <%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
@@ -280,9 +274,6 @@
                         <br/></div>
                     <div class="helpbox-listentry"><img src="images/newfunction.png" class="helpbox-image">Lägg till
                         funktion <br/></div>
-                    <div class="helpbox-listentry"><img src="images/newgoal.png" class="helpbox-image">Lägg till nytt
-                        mål
-                    </div>
                 </div>
             </div>
         </div>
@@ -297,21 +288,13 @@
         <ul>
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
-            <li><a href="#unitsettings-goals">Lägg till Mål</a></li>
             <li><a href="#unitsettings-functions">Funktioner</a></li>
-            <li><a href="#unitsettings-persons">Lägg till Person</a></li>
         </ul>
         <div id="popup-header"></div>
         <div class="unitsettings" id="unitsettings-general"></div>
         <div class="unitsettings" id="unitsettings-subunits">
         </div>
-        <div id="unitsettings-goals">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi
-            urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
-        </div>
         <div id="unitsettings-functions">
-        </div>
-        <div id="unitsettings-persons">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque
-            nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
         </div>
     </div>
 </div>
