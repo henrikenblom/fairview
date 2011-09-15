@@ -220,7 +220,7 @@ table.display tr.even.gradeU {
 
 
 tr.odd {
-	background-color: #E2E4FF;
+	background-color: #D1D2E9;
 }
 
 tr.even {
@@ -464,15 +464,18 @@ tr.even.gradeU td.sorting_3 {
  * Row highlighting example
  */
 .ex_highlight #datatable tbody tr.even:hover, #datatable tbody tr.even td.highlighted {
-	background-color: #ECFFB3;
+	background-color: #87899E;
+    color: #FFFFFF;
 }
 
 .ex_highlight #datatable tbody tr.odd:hover, #datatable tbody tr.odd td.highlighted {
-	background-color: #E6FF99;
+	background-color: #87899E;
+    color: #FFFFFF;
 }
 
 .ex_highlight_row #datatable tr.even:hover {
-	background-color: #ECFFB3;
+	background-color: #87899E;
+    color: #FFFFFF;
 }
 
 .ex_highlight_row #datatable tr.even:hover td.sorting_1 {
@@ -488,7 +491,8 @@ tr.even.gradeU td.sorting_3 {
 }
 
 .ex_highlight_row #datatable tr.odd:hover {
-	background-color: #E6FF99;
+	background-color: #87899E;
+    color: #FFFFFF;
 }
 
 .ex_highlight_row #datatable tr.odd:hover td.sorting_1 {
@@ -504,7 +508,8 @@ tr.even.gradeU td.sorting_3 {
 }
 
 .cell_highlight{
-    background-color: #D5FF59;
+    background-color: #6A6B77;
+    color: #FFFFFF;
 }
 
 /*
@@ -540,4 +545,8 @@ div.box {
 	overflow: auto;
 	border: 1px solid #8080FF;
 	background-color: #E5E5FF;
+}
+
+tbody{
+    font-size: 0.8em;
 }
