@@ -47,6 +47,9 @@ button {
 form {
     margin-bottom: 1em;
 }
+table{
+    white-space: nowrap;
+}
 
 #saveButton {
     float: left;
@@ -87,6 +90,7 @@ button:disabled {
 }
 
 input {
+    font-size: 0.9em;
     vertical-align: top;
 }
 
@@ -111,6 +115,7 @@ textarea {
     color: #404040;
     width: 459px;
     height: 8em;
+    font-size: 0.9em;
 }
 
 fieldset {
@@ -331,15 +336,19 @@ fieldset {
 }
 
 #popup-tabs {
-    left: 200px;
-    top: 140px;
+    /*left: 200px;
+    top: 140px;*/
+    top: -75px;
+    margin-left: auto;
+    margin-right: auto;
     width: 800px;
     z-index: 500;
 }
 
 #popup-header {
     text-align: left;
-    font-size: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
     padding-left: 17px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -396,9 +405,10 @@ fieldset {
     vertical-align: bottom;
     text-align: left;
     margin-top: 9px;
-    font-size: 1.1em;
+    /*font-size: 1.1em;*/
+    font-size: 0.9em;
     line-height: 1.4em;
-    font-weight: bold;
+    /*font-weight: bold;*/
     color: #606060;
     /*width: 468px;*/
 }
