@@ -21,14 +21,6 @@ function closePopup() {
     $('#modalizer').fadeOut(500);
 }
 
-function setupModalizerClickEvents(reloadPage) {
-    $('#modalizer').click(function() {
-        closePopup();
-        if (reloadPage == 'true')
-            location.reload();
-    });
-}
-
 function bindTabs() {
     $("#popup-tabs").tabs();
 }

@@ -73,7 +73,6 @@
 
             adjustViewPort();
             fadeOutModalizer();
-            setupModalizerClickEvents();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
