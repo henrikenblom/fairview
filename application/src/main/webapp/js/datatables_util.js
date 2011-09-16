@@ -46,7 +46,8 @@ function initFunctionCell(functionId, cell) {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
         $(cell).click(function() {
-            alert('Not yet implemented.');
+            //alert('Not yet implemented.');
+            openFunctionForm(functionId);
         });
     }
 }

@@ -96,18 +96,28 @@
             generateProfileForm(nodeId)
             openPopupTab(0);
         }
-        function openUnitForm(unitId) {
+
+        function linkDataUnitForm(){
             var linkData = [
                 ['unitsettings-general', 'Avdelningsinställningar'],
                 ['unitsettings-subunits', 'Lägg till Underavdelning'],
                 ['unitsettings-functions', 'Funktioner']
             ];
+
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
+        }
+        function openUnitForm(unitId, tab) {
+            linkDataUnitForm();
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            openPopupTab(0);
+            openPopupTab(tab);
+        }
+        function openFunctionForm(functionId, tab){
+            linkDataUnitForm();
+            //var data = getNodeData(functionId);
+            openPopupTab(tab);
         }
     </script>
 </head>
