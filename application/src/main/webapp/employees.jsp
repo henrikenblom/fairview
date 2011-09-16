@@ -82,7 +82,7 @@
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
             $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data, oTable));
-            $('#profile-employmentinfo').append(saveButtonComponent('profile_form', assignFunctionCallback(unitId, oTable)));
+            $('#profile-employmentinfo').append(footerButtonsComponent('profile_form', assignFunctionCallback(unitId, oTable)));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
@@ -147,7 +147,6 @@
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>
-<div id="popup-dialog" style="display: none;">
-</div>
+<div id="popup-dialog" style="display: none;"></div>
 </body>
 </html>
