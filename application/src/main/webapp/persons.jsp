@@ -130,8 +130,6 @@
             alternateRowColors();
             bindTabs();
 
-            setupModalizerClickEvents();
-
             $('.profilelink-manager').click(function() {
                 openPopupTab(0);
             });
