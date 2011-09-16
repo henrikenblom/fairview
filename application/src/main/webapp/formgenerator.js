@@ -150,15 +150,15 @@ function updateTableCallback(datatable) {
         }
 }
 
-function generateSaveButton(formId, messageSpan, callback) {
+function generateSaveButton(formId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
     saveButton.attr('id', 'saveButton');
     saveButton.attr('disabled', 'disabled');
     saveButton.click(function() {
         $('#' + formId).ajaxSubmit(function() {
-            disableButtonTemporarily(saveButton);
-            showMessage(messageSpan);
+            disableSaveButton();
+            saveButton.html('Sparar...');
             setTimeout(closePopup, 500);
             if (typeof callback == 'function')
                 callback.call();
@@ -177,10 +177,8 @@ function disableSaveButton(){
 function saveButtonComponent(formId, callback) {
     var saveDiv = $('<div>');
     saveDiv.addClass('saveDiv');
-    var messageSpan = createSavedSpan();
-    var saveButton = generateSaveButton(formId, messageSpan, callback);
+    var saveButton = generateSaveButton(formId, callback);
     saveDiv.append(saveButton);
-    saveDiv.append(messageSpan);
     return saveDiv;
 }
 
