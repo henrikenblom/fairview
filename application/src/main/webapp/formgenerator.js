@@ -6,12 +6,14 @@
  * To change this template use File | Settings | File Templates.
  */
 var assignedFunctionId;
+var formChanged = false;
 
 function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
     var formId = getOrganizationFormId();
     var properties = data.node.properties;
+    formChanged = false;
 
     var updateForm = generateUpdateForm(formId);
 
@@ -43,6 +45,7 @@ function generateSubunitCreationForm() {
     var formId = 'subunitform';
     var form = generateUpdateForm(formId);
     var fieldSet = $('<fieldset>');
+    formChanged = false;
 
     var hiddenField_id = hiddenField('_id', '');
     var hiddenField_type = hiddenField('_type', 'node');
@@ -75,6 +78,7 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     var formId = 'profile_form';
     var unitId = data.node.id;
     var properties = data.node.properties;
+    formChanged = false;
 
     var form = generateUpdateForm(formId);
     var fieldSet = $('<fieldset>');
@@ -167,18 +171,54 @@ function generateSaveButton(formId, callback) {
     return saveButton;
 }
 
+function generateCancelButton() {
+    var cancelButton = $('<button>');
+    cancelButton.html('Avbryt');
+    cancelButton.attr('id', 'cancelButton');
+    cancelButton.click(function() {
+        if (formChanged == true) {
+           generateCancelDialog();
+        } else {
+            closePopup();
+        }
+    });
+    return cancelButton;
+}
+
+function generateCancelDialog(){
+    var cancelDialog = $('<div>');
+    cancelDialog.attr('title', 'Är du säker?');
+    cancelDialog.html('Du har osparade ändringar. Är du säker på att du vill stänga formuläret?');
+    cancelDialog.dialog({
+                resizable: false,
+                height:140,
+                modal: true,
+                buttons: {
+                    "Ja": function() {
+                        $(this).dialog("close");
+                        closePopup();
+                    },
+                    "Avbryt": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+}
+
+
 function enableSaveButton() {
     $('#saveButton').removeAttr('disabled');
 }
 
-function disableSaveButton(){
-   $('#saveButton').attr('disabled', 'disabled');
+function disableSaveButton() {
+    $('#saveButton').attr('disabled', 'disabled');
 }
-function saveButtonComponent(formId, callback) {
+function footerButtonsComponent(formId, callback) {
     var saveDiv = $('<div>');
     saveDiv.addClass('saveDiv');
     var saveButton = generateSaveButton(formId, callback);
-    saveDiv.append(saveButton);
+    var cancelButton = generateCancelButton();
+    saveDiv.append(saveButton, cancelButton);
     return saveDiv;
 }
 
@@ -295,6 +335,9 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
+    textInput.change(function() {
+        formChanged = true;
+    });
     textInput.keyup(function() {
         validateForm(formId);
     });
@@ -305,7 +348,7 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     return inputDiv;
 }
 
-function civicInputComponent(labelText, inputName, value, formId) {
+function civicInputComponent(labelText, inputName, value, formId, required) {
     var inputDiv = fieldBox();
     var inputLabel = fieldLabelBox();
     inputLabel.append(labelText);
@@ -314,10 +357,16 @@ function civicInputComponent(labelText, inputName, value, formId) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
+    textInput.keyup(function(){
+       validateForm(formId);
+    });
     textInput.change(function() {
+        formChanged = true;
         $('#birthday-field').val(makeBirthdate(this.value));
     });
-
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
     inputDiv.append(inputLabel, textInput);
     return inputDiv;
 }
@@ -365,6 +414,9 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("name", inputName);
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
+    textareaInput.change(function() {
+        formChanged = true;
+    });
     textareaInput.keyup(function() {
         validateForm(formId);
     });
@@ -387,6 +439,7 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
+        formChanged = true;
         validateForm(formId);
     });
     if (required == true) {
@@ -406,6 +459,7 @@ function functionSelectInputComponent(labelText, inputName, divId, formId, requi
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
         validateForm(formId);
+        formChanged = true;
     });
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
