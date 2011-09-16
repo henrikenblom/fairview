@@ -88,7 +88,7 @@
 
             $('#imageonly-buttonAddFunction').click(function() {
                 generateMainOrganizationPopup(unitId);
-                openPopupTab(3);
+                openPopupTab(2);
             });
 
 
@@ -149,7 +149,8 @@
             });
             $('#unitsettings-general').append(saveButton);
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
+            $("#descriptionDiv").append(generateBossSelector(data.node.id));
+//            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
         }
 
@@ -225,8 +226,7 @@
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
 <div id="main">
     <div id="content">
-        <div class="header"><input type="text" class="text-field filter-field" onkeyup="unitTextFilter(event)"
-                                   placeholder="Organisation/Enhet/Beskrivning" id="unit-text-filter"></div>
+        <div class="header"></div>
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">

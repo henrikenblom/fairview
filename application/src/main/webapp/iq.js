@@ -257,22 +257,6 @@ function companyPolicyTextFilter(event) {
 
 }
 
-function unitTextFilter(event) {
-
-    if (event.target.value.length > 0) {
-
-        $(".unit-list-entry:visible:not(:containsi('" + event.target.value.toLowerCase() + "'))").hide('fast');
-        $(".unit-list-entry:hidden:containsi('" + event.target.value.toLowerCase() + "')").show();
-
-    } else {
-
-        $(".unit-list-entry:hidden").show();
-
-    }
-
-
-}
-
 function functionTextFilter(event) {
 
     if (event.target.value.length > 0) {
