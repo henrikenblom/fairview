@@ -7,7 +7,7 @@
  */
 
 ///////////////// creating html ////////////////////
-function generateFunctionMultiSelectForm(unitId){
+function generateFunctionMultiSelectForm(unitId) {
     var multiSelectForm = $('<form>');
     multiSelectForm.attr("id", "functionFormTest");
     multiSelectForm.attr("action", "");
@@ -17,7 +17,7 @@ function generateFunctionMultiSelectForm(unitId){
     return multiSelectForm;
 }
 
-function formFieldset(unitId){
+function formFieldset(unitId) {
     var fieldset = $('<fieldset>');
     fieldset.append(createSelect(unitId));
     fieldset.append(createHidden(unitId));
@@ -25,31 +25,31 @@ function formFieldset(unitId){
     return fieldset;
 }
 
-function createSelect(unitId){
+function createSelect(unitId) {
     var select = $('<select>');
     select.attr("id", "multiSelect");
     select.attr("name", "functionMultiselect");
     select.attr("multiple", "multiple");
     var functionData = getAllFunctions(unitId).list["com.fairviewiq.utils.MultiSelectFunctionMember"];
     var counter = 0;
-    $.each(functionData, function(i){
+    $.each(functionData, function(i) {
         var option = $('<option>');
         option.attr("value", functionData[i].functionId);
-        if(functionData[i].selected)
+        if (functionData[i].selected)
             option.attr("selected", "selected");
         option.append(functionData[i].functionName);
         select.append(option);
         counter++;
     });
-    if(counter < 6)
+    if (counter < 6)
         counter = 6;
     else if (counter > 20)
         counter = 20;
-    select.attr("size" , counter);
+    select.attr("size", counter);
     return select;
 }
 
-function createHidden(unitId){
+function createHidden(unitId) {
     var hidden = $('<input>');
     hidden.attr("type", "hidden");
     hidden.attr("value", unitId);
@@ -57,18 +57,13 @@ function createHidden(unitId){
     return hidden;
 }
 
-function createSubmitComponent(){
+function createSubmitComponent() {
     var submitComponent = $('<div>');
     submitComponent.append(createSubmitButton());
-    var span = createSavedSpan()
-    span.attr('savedSpan');
-    span.attr('style', 'display: none; margin-top: 16px');
-    span.attr('id', 'savedSpan');
-    submitComponent.append(span);
     return submitComponent;
 }
 
-function createSubmitButton(){
+function createSubmitButton() {
     var submit = $('<input>');
     submit.attr("type", "submit");
     submit.attr("name", "submit");
@@ -94,9 +89,9 @@ function getDataUpdateDatabase(_unitId) {
             multi = true;
         });
         data += "]";
-        $.getJSON('fairview/ajax/set_multiselect_functions.do', {_functionIds:data, _unitId:_unitId}, function(json){
-                                    disableButtonTemporarily('#submit_btn');
-                                    $("#savedSpan").show().fadeOut(5000);
+        $.getJSON('fairview/ajax/set_multiselect_functions.do', {_functionIds:data, _unitId:_unitId}, function(json) {
+            $('#submit_btn').attr('disabled', true).css({ opacity: 0.5 }).val('Sparar...');
+            setTimeout(closePopup, 500);
         });
     });
 }
@@ -112,7 +107,7 @@ function initDoubleBoxes() {
     });
 }
 
-function getAllFunctions(unitId){
+function getAllFunctions(unitId) {
     var data = $.parseJSON($.ajax({
         url:"/fairview/ajax/get_multiselect_functions.do",
         data:{_unitId:unitId},

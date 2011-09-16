@@ -19,9 +19,9 @@
     <script type="text/javascript" src="popupControls.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
     <script type="text/javascript" src="formgenerator.js"></script>
-    <script type="text/javascript" src="formSaving.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
     <script type="text/javascript" src="js/datatables_util.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
