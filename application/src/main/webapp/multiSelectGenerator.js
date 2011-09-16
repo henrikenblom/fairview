@@ -9,7 +9,7 @@
 ///////////////// creating html ////////////////////
 function generateFunctionMultiSelectForm(unitId){
     var multiSelectForm = $('<form>');
-    multiSelectForm.attr("id", "functionForm");
+    multiSelectForm.attr("id", "functionFormTest");
     multiSelectForm.attr("action", "");
     multiSelectForm.attr("method", "post");
     multiSelectForm.append(formFieldset(unitId));
@@ -81,7 +81,7 @@ function createSubmitButton(){
 /////////////////// Logic /////////////////////////////////
 
 function getDataUpdateDatabase(_unitId) {
-    $('#functionForm').click().ajaxForm(function() {
+    $('#functionFormTest').click().ajaxForm(function() {
         var functionIds = new Array();
         var data = "[";
         var multi = false;
