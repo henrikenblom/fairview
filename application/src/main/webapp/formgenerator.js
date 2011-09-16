@@ -24,17 +24,18 @@ function generateBaseUnitEditForm(data, datatable) {
 
     var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', propValue(properties.description), formId, 'descriptionDiv');
 
-    var nameDiv = textInputComponent('Namn', 'name', propValue(properties.name), formId);
+    var nameDiv = textInputComponent('Namn', 'name', propValue(properties.name), formId, true);
 
-    var phoneDiv = textInputComponent('Telefonnummer', 'phone', propValue(properties.phone), formId);
-    var faxDiv = textInputComponent('Faxnummer', 'fax', propValue(properties.fax), formId);
-    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
-    var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId);
+    var phoneDiv = textInputComponent('Telefonnummer', 'phone', propValue(properties.phone), formId, false);
+    var faxDiv = textInputComponent('Faxnummer', 'fax', propValue(properties.fax), formId, false);
+    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId, false);
+    var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId, false);
 
     //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
         emailDiv, '<br/>', webDiv, '<br/>');
     updateForm.append(fieldSet);
+    updateForm.validate();
     return updateForm;
 }
 
@@ -51,11 +52,11 @@ function generateSubunitCreationForm() {
 
     var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', '', formId, 'descriptionDiv');
 
-    var nameDiv = textInputComponent('Namn', 'name', '', formId);
-    var phoneDiv = textInputComponent('Telefonnummer', 'phone', '', formId);
-    var faxDiv = textInputComponent('Faxnummer', 'fax', '', formId);
-    var emailDiv = textInputComponent('E-post', 'email', '', formId);
-    var webDiv = textInputComponent('Hemsida', 'web', '', formId);
+    var nameDiv = textInputComponent('Namn', 'name', '', formId, true);
+    var phoneDiv = textInputComponent('Telefonnummer', 'phone', '', formId, false);
+    var faxDiv = textInputComponent('Faxnummer', 'fax', '', formId, false);
+    var emailDiv = textInputComponent('E-post', 'email', '', formId, false);
+    var webDiv = textInputComponent('Hemsida', 'web', '', formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', '', getOrganizationFormId());
     var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getOrganizationFormId());
@@ -66,6 +67,7 @@ function generateSubunitCreationForm() {
         hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
         '<br/>', webDiv, '<br/>', addressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>');
     form.append(fieldSet);
+    form.validate();
     return form;
 }
 
@@ -88,34 +90,34 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     var hiddenField_ownresultresponsibility = hiddenField('own-result-responsibility', boolPropValue(properties['own-result-responsibility']));
 
 
-    var firstNameDiv = textInputComponent('Förnamn', 'firstname', propValue(properties.firstname), formId);
-    var lastNameDiv = textInputComponent('Efternamn', 'lastname', propValue(properties.lastname), formId);
-    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', propValue(properties.nationality), formId);
-    var employmentIdDiv = textInputComponent('Anställningsnummer', 'employmentid', propValue(properties.employmentid), formId);
-    var civicDiv = civicInputComponent('Personnummer', 'civic', propValue(properties.civic), formId);
+    var firstNameDiv = textInputComponent('Förnamn', 'firstname', propValue(properties.firstname), formId, true);
+    var lastNameDiv = textInputComponent('Efternamn', 'lastname', propValue(properties.lastname), formId, true);
+    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', propValue(properties.nationality), formId, false);
+    var employmentIdDiv = textInputComponent('Anställningsnummer', 'employmentid', propValue(properties.employmentid), formId, false);
+    var civicDiv = civicInputComponent('Personnummer', 'civic', propValue(properties.civic), formId, false);
 
-    var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), formId);
-    var zipDiv = textInputComponent('Postnummer', 'zip', propValue(properties.zip), formId);
+    var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), formId, false);
+    var zipDiv = textInputComponent('Postnummer', 'zip', propValue(properties.zip), formId, false);
 
-    var cityDiv = textInputComponent('Postort', 'city', propValue(properties.city), formId);
-    var countryDiv = textInputComponent('Land', 'country', propValue(properties.country), formId);
-    var phoneDiv = textInputComponent('Telefon', 'phone', propValue(properties.phone), formId);
-    var cellDiv = textInputComponent('Mobiltelefon', 'cell', propValue(properties.cell), formId);
-    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId);
+    var cityDiv = textInputComponent('Postort', 'city', propValue(properties.city), formId, false);
+    var countryDiv = textInputComponent('Land', 'country', propValue(properties.country), formId, false);
+    var phoneDiv = textInputComponent('Telefon', 'phone', propValue(properties.phone), formId, false);
+    var cellDiv = textInputComponent('Mobiltelefon', 'cell', propValue(properties.cell), formId, false);
+    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId, false);
 
-    var fromdateDiv = textInputComponent('Från datum', 'fromdate', propValue(properties.fromdate), formId);
-    var todateDiv = textInputComponent('Till datum', 'todate', propValue(properties.todate), formId);
+    var fromdateDiv = textInputComponent('Från datum', 'fromdate', propValue(properties.fromdate), formId, false);
+    var todateDiv = textInputComponent('Till datum', 'todate', propValue(properties.todate), formId, false);
 
     var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', propValue(properties.additional__info), formId, 'additional_infoDiv');
 
-    var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId);
+    var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId, true);
     addGenderOptions(properties.gender, genderDiv.children('#gender-field'));
 
     assignedFunctionId = getFunctionId(unitId).long;
-    var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv');
+    var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv', formId, false);
     addFunctionOptions(functionDiv.children('#function-field'), unitId, assignedFunctionId);
 
-    var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId);
+    var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId, false);
     addEmploymentOptions(properties.employment, employmentDiv.children('#employment-field'));
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
@@ -125,6 +127,8 @@ function generateProfileEmploymentInfoForm(data, datatable) {
         todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
+    form.validate();
+
     return form;
 }
 
@@ -146,15 +150,15 @@ function updateTableCallback(datatable) {
         }
 }
 
-function generateSaveButton(formId, messageSpan, callback) {
+function generateSaveButton(formId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
     saveButton.attr('id', 'saveButton');
     saveButton.attr('disabled', 'disabled');
     saveButton.click(function() {
         $('#' + formId).ajaxSubmit(function() {
-            disableButtonTemporarily(saveButton);
-            showMessage(messageSpan);
+            disableSaveButton();
+            saveButton.html('Sparar...');
             setTimeout(closePopup, 500);
             if (typeof callback == 'function')
                 callback.call();
@@ -163,16 +167,18 @@ function generateSaveButton(formId, messageSpan, callback) {
     return saveButton;
 }
 
-function enableSaveButton(){
+function enableSaveButton() {
     $('#saveButton').removeAttr('disabled');
+}
+
+function disableSaveButton(){
+   $('#saveButton').attr('disabled', 'disabled');
 }
 function saveButtonComponent(formId, callback) {
     var saveDiv = $('<div>');
     saveDiv.addClass('saveDiv');
-    var messageSpan = createSavedSpan();
-    var saveButton = generateSaveButton(formId, messageSpan, callback);
+    var saveButton = generateSaveButton(formId, callback);
     saveDiv.append(saveButton);
-    saveDiv.append(messageSpan);
     return saveDiv;
 }
 
@@ -227,6 +233,7 @@ function addGenderOptions(gender, genderInputElement) {
     else {
         var optionChooseGender = $('<option>');
         optionChooseGender.html('Välj...');
+        optionChooseGender.attr('value', '');
         genderInputElement.append(optionChooseGender, optionMan, optionFemale);
         return;
     }
@@ -272,7 +279,14 @@ function fieldLabelBox() {
 function fieldBox() {
     return $('<div class="field-box">');
 }
-function textInputComponent(labelText, inputName, value, formId) {
+function formIsValid(formId) {
+    return $('#' + formId).valid();
+}
+function makeInputRequired(label, input) {
+    label.append(' (* Obligatoriskt fält.)');
+    input.addClass('required');
+}
+function textInputComponent(labelText, inputName, value, formId, required) {
     var inputDiv = fieldBox();
     var inputLabel = fieldLabelBox();
     inputLabel.append(labelText);
@@ -281,9 +295,12 @@ function textInputComponent(labelText, inputName, value, formId) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
-    textInput.keyup(function(){
-            enableSaveButton();
+    textInput.keyup(function() {
+        validateForm(formId);
     });
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
     inputDiv.append(inputLabel, textInput);
     return inputDiv;
 }
@@ -348,14 +365,20 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("name", inputName);
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
-    textareaInput.keyup(function(){
-       enableSaveButton();
+    textareaInput.keyup(function() {
+        validateForm(formId);
     });
     textareaDiv.append(textareaLabel, textareaInput, $('<br>'));
     return textareaDiv;
 }
 
-function selectInputComponent(labelText, inputName, divId, formId) {
+function validateForm(formId) {
+    if (formIsValid(formId))
+        enableSaveButton();
+    else
+        disableSaveButton();
+}
+function selectInputComponent(labelText, inputName, divId, formId, required) {
     var selectDiv = fieldBox();
     selectDiv.attr("id", divId);
     var selectLabel = fieldLabelBox();
@@ -363,14 +386,17 @@ function selectInputComponent(labelText, inputName, divId, formId) {
     var selectInput = $('<select>');
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
-    selectInput.change(function(){
-       enableSaveButton();
+    selectInput.change(function() {
+        validateForm(formId);
     });
+    if (required == true) {
+        makeInputRequired(selectLabel, selectInput);
+    }
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
 }
 
-function functionSelectInputComponent(labelText, inputName, divId) {
+function functionSelectInputComponent(labelText, inputName, divId, formId, required) {
     var selectDiv = fieldBox();
     selectDiv.attr("id", divId);
     var selectLabel = fieldLabelBox();
@@ -378,8 +404,8 @@ function functionSelectInputComponent(labelText, inputName, divId) {
     var selectInput = $('<select>');
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
-    selectInput.change(function(){
-       enableSaveButton();
+    selectInput.change(function() {
+        validateForm(formId);
     });
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
