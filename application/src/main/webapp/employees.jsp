@@ -65,11 +65,7 @@
                     });
                 }
             });
-
-
             fadeOutModalizer();
-            setupModalizerClickEvents();
-
         });
 
         function isEmployeeDataColumn(cellIndex) {
