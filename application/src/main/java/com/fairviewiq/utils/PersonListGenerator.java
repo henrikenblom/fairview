@@ -22,13 +22,11 @@ public class PersonListGenerator {
     public static final int UNORDERED = 0;
     public static final int ALPHABETICAL = 1;
 
-    private Node organization;
     private EmbeddedGraphDatabase neo;
 
     public PersonListGenerator(EmbeddedGraphDatabase neo) {
 
         this.neo = neo;
-        organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
 
     }
 
@@ -38,6 +36,8 @@ public class PersonListGenerator {
         ArrayList<String> employeeNames = new ArrayList<String>();
         ArrayList<Node> retval = new ArrayList<Node>();
         ArrayList<Node> zombieNodes = new ArrayList<Node>();
+
+        Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
 
         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_EMPLOYEE"), Direction.OUTGOING)) {
 
