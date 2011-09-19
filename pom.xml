@@ -13,6 +13,12 @@
     <packaging>pom</packaging>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.9</maven-surefire-plugin.version>
+        <maven-dependency-plugin.version>2.3</maven-dependency-plugin.version>
+        <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
+        <jrebel-maven-plugin.version>1.0.7</jrebel-maven-plugin.version>
         <spring.version>2.5.6</spring.version>
         <testng.version>5.8</testng.version>
         <servlet-api.version>2.5</servlet-api.version>
@@ -41,6 +47,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <source>1.6</source>
@@ -50,6 +57,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/data/testng.xml</suiteXmlFile>
@@ -58,10 +66,10 @@
                 </configuration>
             </plugin>
             <plugin>
-  <groupId>org.zeroturnaround</groupId>
-  <artifactId>jrebel-maven-plugin</artifactId>
-
-</plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <version>${jrebel-maven-plugin.version}</version>
+            </plugin>
         </plugins>
 
         <extensions>

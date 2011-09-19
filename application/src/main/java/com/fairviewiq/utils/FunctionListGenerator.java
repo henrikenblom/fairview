@@ -22,13 +22,11 @@ public class FunctionListGenerator {
     public static final int UNORDERED = 0;
     public static final int ALPHABETICAL = 1;
 
-    private Node organization;
     private EmbeddedGraphDatabase neo;
 
     public FunctionListGenerator(EmbeddedGraphDatabase neo) {
 
         this.neo = neo;
-        organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
 
     }
 
@@ -38,6 +36,8 @@ public class FunctionListGenerator {
         HashMap<String, Node> unorderedFunctionMap = new HashMap<String, Node>();
         ArrayList<String> functionKeys = new ArrayList<String>();
         ArrayList<Node> zombieNodes = new ArrayList<Node>();
+
+        Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
 
         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_FUNCTION"), Direction.OUTGOING)) {
 
