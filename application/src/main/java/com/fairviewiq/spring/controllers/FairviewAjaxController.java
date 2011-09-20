@@ -110,14 +110,27 @@ public class FairviewAjaxController {
 
     @RequestMapping(value= {"/fairview/ajax/set_employment.do"})
     public ModelAndView setEmployment(HttpServletRequest request,
-                                   @RequestParam("_nodeId") Long nodeId,
+                                   @RequestParam("_employeeId") Long employeeId,
+                                   @RequestParam(value = "_employmentId", required = false) Long employmentId,
                                    @RequestParam(value = "_strict", required = false) Boolean strict) {
 
-        if (nodeId == null) {
-            neo.createNode();
+        Node employmentNode = null;
+
+        if (employmentId == null) {
+
+            employmentNode = neo.createNode();
+
+        } else {
+
+            employmentNode = neo.getNodeById(employmentId);
+
         }
 
-        return neoAjaxController.updatePropertyContainer(request, nodeId, TYPE_NODE, strict);
+        neo.getNodeById(employeeId).createRelationshipTo(employmentNode, new SimpleRelationshipType("HAS_EMPLOYMENT"));
+
+        ModelAndView mav = neoAjaxController.updatePropertyContainer(request, employmentNode.getId(), TYPE_NODE, strict);
+
+        return mav;
 
     }
 
