@@ -5,7 +5,6 @@
  * Time: 11:09 AM
  * To change this template use File | Settings | File Templates.
  */
-var assignedFunctionId;
 var formChanged = false;
 
 function generateBaseUnitEditForm(data, datatable) {
@@ -97,7 +96,6 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     var firstNameDiv = textInputComponent('Förnamn', 'firstname', propValue(properties.firstname), formId, true);
     var lastNameDiv = textInputComponent('Efternamn', 'lastname', propValue(properties.lastname), formId, true);
     var nationalityDiv = textInputComponent('Nationalitet', 'nationality', propValue(properties.nationality), formId, false);
-    var employmentIdDiv = textInputComponent('Anställningsnummer', 'employmentid', propValue(properties.employmentid), formId, false);
     var civicDiv = civicInputComponent('Personnummer', 'civic', propValue(properties.civic), formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), formId, false);
@@ -109,42 +107,20 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     var cellDiv = textInputComponent('Mobiltelefon', 'cell', propValue(properties.cell), formId, false);
     var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId, false);
 
-    var fromdateDiv = textInputComponent('Från datum', 'fromdate', propValue(properties.fromdate), formId, false);
-    var todateDiv = textInputComponent('Till datum', 'todate', propValue(properties.todate), formId, false);
-
     var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', propValue(properties.additional__info), formId, 'additional_infoDiv');
 
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId, true);
     addGenderOptions(properties.gender, genderDiv.children('#gender-field'));
 
-    assignedFunctionId = getFunctionId(unitId).long;
-    var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv', formId, false);
-    addFunctionOptions(functionDiv.children('#function-field'), unitId, assignedFunctionId);
-
-    var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId, false);
-    addEmploymentOptions(properties.employment, employmentDiv.children('#employment-field'));
-
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
         hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
-        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
-        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', functionDiv, '<br/>', fromdateDiv, '<br/>',
-        todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv, '<br/>');
+        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
+        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     form.validate();
 
     return form;
-}
-
-function assignFunctionCallback(unitId, datatable) {
-    return function response() {
-        var selectedFunctionId = $('#function-field').val();
-        if (assignedFunctionId != selectedFunctionId) {
-            assignFunction(unitId, selectedFunctionId, updateTableCallback(datatable));
-        } else {
-            updateTable(datatable);
-        }
-    }
 }
 
 function updateTableCallback(datatable) {
@@ -510,16 +486,6 @@ function getRelationshipData(parentNode) {
 function getFunctions(unitId) {
     var data = $.parseJSON($.ajax({
         url:"fairview/ajax/get_functions.do",
-        data: {_nodeId: unitId},
-        async:false,
-        dataType:"json"
-    }).responseText);
-    return data;
-}
-
-function getFunctionId(unitId) {
-    var data = $.parseJSON($.ajax({
-        url:"fairview/ajax/get_functionId.do",
         data: {_nodeId: unitId},
         async:false,
         dataType:"json"

@@ -78,7 +78,7 @@
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
             $('#profile-general').empty().append(generateProfileEmploymentInfoForm(data, oTable));
-            $('#profile-general').append(footerButtonsComponent('profile_form', assignFunctionCallback(unitId, oTable)));
+            $('#profile-general').append(footerButtonsComponent('profile_form', updateTableCallback(oTable)));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
