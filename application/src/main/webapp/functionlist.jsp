@@ -54,7 +54,7 @@
         });
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
-            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+            $('#profile-general').empty().append(generateProfileEmploymentInfoForm(data));
         }
     </script>
 </head>

@@ -77,14 +77,13 @@
 
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
-            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data, oTable));
-            $('#profile-employmentinfo').append(footerButtonsComponent('profile_form', assignFunctionCallback(unitId, oTable)));
+            $('#profile-general').empty().append(generateProfileEmploymentInfoForm(data, oTable));
+            $('#profile-general').append(footerButtonsComponent('profile_form', assignFunctionCallback(unitId, oTable)));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
-                ['profile-employmentinfo', 'Anställningsuppgifter'],
-                ['profile-responsibility', 'Arbetsbeskrivning'],
-                ['profile-competence', 'Kompetens'],
+                ['profile-general', 'Allmänt'],
+                ['profile-education', 'Utbildning'],
                 ['profile-experience', 'Erfarenhet']
             ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
@@ -103,6 +102,7 @@
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
+            $('#unitsettings-general').append(footerButtonsComponent(getOrganizationFormId(), updateTableCallback(oTable)));
             openPopupTab(0);
         }
     </script>
