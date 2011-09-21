@@ -98,7 +98,9 @@
 
 
             addExistingWorkExperiences(unitId);
+            addExistingMilitaryServices(unitId);
             $('#profile-experience').append(addWorkExperienceButton(unitId));
+            $('#profile-experience').append(addMilitaryServiceButton(unitId));
             $('#profile-experience').append(footerButtonsComponent(updateTableCallback(oTable)));
         }
         function openEmployeeForm(nodeId) {

@@ -307,6 +307,36 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     return div;
 }
 
+function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var descriptionString = '';
+
+    if (!$.isEmptyObject(militaryServiceNode)) {
+        var properties = militaryServiceNode.properties;
+        nameString = propValue(properties.name);
+        descriptionString = propValue(properties.description);
+    }
+
+    var form = generateUpdateForm(formId);
+    var div = $('<div>');
+    div.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_id', form_Id);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+
+    var nameComponent = textInputComponent('Militärtjänst', 'name', nameString, formId, false);
+    var descriptionComponent = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'description-field');
+
+    form.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+        nameComponent, '<br/>', descriptionComponent);
+    div.append(form);
+    return div;
+}
+
 
 function addEducationButton(nodeId) {
     var button = $('<button>');
@@ -344,6 +374,16 @@ function addWorkExperienceButton(nodeId) {
     button.html('Lägg till tidigare befattning');
     button.click(function() {
         addWorkExperienceRelationship(nodeId, '#addWorkExperienceButton');
+    });
+    return button;
+}
+
+function addMilitaryServiceButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addMilitaryServiceButton')
+    button.html('Lägg till Militärtjänst');
+    button.click(function() {
+        addMilitaryServiceRelationship(nodeId, '#addMilitaryServiceButton');
     });
     return button;
 }
@@ -412,6 +452,22 @@ function addExistingWorkExperiences(nodeId) {
     });
 }
 
+function addExistingMilitaryServices(nodeId) {
+    $.getJSON("fairview/ajax/get_military_services.do", {_nodeId: nodeId}, function(data) {
+        if (!$.isEmptyObject(data.list)) {
+            var data = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+            if (data.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+                $.each(data, function(x, object) {
+                    generateMilitaryServiceForm(object.id, object).prependTo('#profile-experience');
+                });
+            }
+            else {
+                generateMilitaryServiceForm(data.id, data).prependTo('#profile-experience');
+            }
+        }
+    });
+}
+
 function addCertificateRelationship(nodeId, insertBeforeThisDiv) {
     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_CERTIFICATE" }, function(data) {
         var div = generateCertificateForm(data.relationship.endNode);
@@ -436,6 +492,13 @@ function addLanguageRelationship(nodeId, insertBeforeThisDiv) {
 function addWorkExperienceRelationship(nodeId, insertBeforeThisDiv) {
     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_WORK_EXPERIENCE" }, function(data) {
         var div = generateWorkExperienceForm(data.relationship.endNode);
+        div.insertBefore(insertBeforeThisDiv);
+    });
+}
+
+function addMilitaryServiceRelationship(nodeId, insertBeforeThisDiv) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_MILITARY_SERVICE" }, function(data) {
+        var div = generateMilitaryServiceForm(data.relationship.endNode);
         div.insertBefore(insertBeforeThisDiv);
     });
 }
