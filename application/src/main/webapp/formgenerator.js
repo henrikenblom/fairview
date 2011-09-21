@@ -129,7 +129,7 @@ function generateLanguageForm(form_Id, languageNode) {
     var languageString = '';
     var spokenString = '';
     var writtenString = '';
-    if (!$.isEmptyObject(languageNode)){
+    if (!$.isEmptyObject(languageNode)) {
         var properties = languageNode.properties;
         languageString = propValue(properties.language);
         spokenString = propValue(properties.spoken);
@@ -154,14 +154,84 @@ function generateLanguageForm(form_Id, languageNode) {
     written.children('#written-field').append(generateOption('advanced', writtenString, 'Advancerad'));
 
     var spoken = selectInputComponent('Kunskapsnivå - muntlig', 'spoken', 'spoken-field', formId, false);
-    spoken.children('#spoken-field').append(generateOption('some', spokenString ,'Viss'));
+    spoken.children('#spoken-field').append(generateOption('some', spokenString, 'Viss'));
     spoken.children('#spoken-field').append(generateOption('good', spokenString, 'God'));
-    spoken.children('#spoken-field').append(generateOption('advanced', spokenString ,'Advancerad'));
+    spoken.children('#spoken-field').append(generateOption('advanced', spokenString, 'Advancerad'));
 
     languageForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
         language, '<br/>', written, '<br/>', spoken);
     languageDiv.append(languageForm);
     return languageDiv;
+}
+
+function generateEducationForm(form_Id, educationNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var levelString = '';
+    var directionString = '';
+    var scopeString = '';
+    var fromString = '';
+    var toString = '';
+    var countryString = '';
+    var descriptionString = '';
+    if (!$.isEmptyObject(educationNode)) {
+        var properties = educationNode.properties;
+        nameString = propValue(properties.name);
+        levelString = propValue(properties.level);
+        directionString = propValue(properties.direction);
+        scopeString = propValue(properties.scope);
+        fromString = propValue(properties.from);
+        toString = propValue(properties.to);
+        countryString = propValue(properties.country);
+        descriptionString = propValue(properties.description);
+    }
+
+
+    var educationForm = generateUpdateForm(formId);
+    var educationDiv = $('<div>');
+    educationDiv.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_id', form_Id);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+
+    var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
+    var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
+    var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
+    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
+
+    var levelComponent = selectInputComponent('Utbildningsnivå', 'level', 'level-field', formId, false);
+    levelComponent.children('#level-field').append(generateOption('high_school', levelString, 'Gymnasieskola eller motsvarande'));
+    levelComponent.children('#level-field').append(generateOption('certified', levelString, 'Certifierad'));
+    levelComponent.children('#level-field').append(generateOption('vocational_education', levelString, 'Yrkesutbildad'));
+    levelComponent.children('#level-field').append(generateOption('individual_course', levelString, 'Enstaka kurs'));
+    levelComponent.children('#level-field').append(generateOption('post_highschool_course', levelString, 'Övrig eftergymnasial kurs'));
+    levelComponent.children('#level-field').append(generateOption('bachelor', levelString, 'Kandidatexamen'));
+    levelComponent.children('#level-field').append(generateOption('master', levelString, 'Magister eller civilingenjörsexamen'));
+    levelComponent.children('#level-field').append(generateOption('phd', levelString, 'Licentiat eller doktorsexamen'));
+    levelComponent.children('#level-field').append(generateOption('professional_license', levelString, 'Yrkeslicens'));
+
+    educationForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, nameComponent, '<br/>',
+        levelComponent, '<br/>', directionComponent, '<br/>', scopeComponent, '<br/>', fromComponent, '<br/>', toComponent,
+        '<br/>', countryComponent, '<br/>', descriptionComponent);
+    educationDiv.append(educationForm);
+    return educationDiv;
+}
+
+
+function addEducationButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addEducationButton')
+    button.html('Lägg till utbildning');
+    button.click(function() {
+        addEducationRelationship(nodeId, '#addEducationButton');
+    });
+    return button;
 }
 
 function addLanguageButton(nodeId) {
@@ -174,20 +244,40 @@ function addLanguageButton(nodeId) {
     return button;
 }
 
-function addPreexistingLanguages(nodeId){
-    $.getJSON("fairview/ajax/get_languages.do", {_nodeId: nodeId}, function(languageData){
-         var languages = languageData.list["org.neo4j.kernel.impl.core.NodeProxy"];
-        if (languages.length > 1){  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-         $.each(languages, function(x,language){
-            generateLanguageForm(language.id,language).prependTo('#profile-education');
-         });
+function addPreexistingLanguages(nodeId) {
+    $.getJSON("fairview/ajax/get_languages.do", {_nodeId: nodeId}, function(languageData) {
+        var languages = languageData.list["org.neo4j.kernel.impl.core.NodeProxy"];
+        if (languages.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+            $.each(languages, function(x, language) {
+                generateLanguageForm(language.id, language).prependTo('#profile-education');
+            });
         }
-        else{
-           generateLanguageForm(languages.id,languages).prependTo('#profile-education');
+        else {
+            generateLanguageForm(languages.id, languages).prependTo('#profile-education');
         }
     });
 }
 
+function addPreexistingEducations(nodeId) {
+    $.getJSON("fairview/ajax/get_educations.do", {_nodeId: nodeId}, function(educationData) {
+        var educations = educationData.list["org.neo4j.kernel.impl.core.NodeProxy"];
+        if (educations.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+            $.each(educations, function(x, education) {
+                generateEducationForm(education.id, education).prependTo('#profile-education');
+            });
+        }
+        else {
+            generateEducationForm(educations.id, educations).prependTo('#profile-education');
+        }
+    });
+}
+
+function addEducationRelationship(nodeId, insertBeforeThisDiv) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_EDUCATION" }, function(data) {
+        var languageDiv = generateEducationForm(data.relationship.endNode);
+        languageDiv.insertBefore(insertBeforeThisDiv);
+    });
+}
 
 function addLanguageRelationship(nodeId, insertBeforeThisDiv) {
     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_LANGUAGESKILL" }, function(data) {
@@ -209,7 +299,7 @@ function createLanguageRelationship(nodeId) {
     return $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_LANGUAGESKILL" });
 }
 
-function educationTab(unitId, callback){
+function educationTab(unitId, callback) {
 
 }
 

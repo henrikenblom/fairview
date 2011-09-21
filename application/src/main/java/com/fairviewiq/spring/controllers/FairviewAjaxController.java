@@ -661,6 +661,21 @@ public class FairviewAjaxController {
         return mav;
     }
 
+    @RequestMapping(value = {"/fairview/ajax/get_educations.do"})
+    public ModelAndView getEducations(@RequestParam("_nodeId") long unitId) {
+
+        Node unitNode = neo.getNodeById(unitId);
+        ArrayList<Node> retval = new ArrayList<Node>();
+
+        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("HAS_EDUCATION"), Direction.OUTGOING)) {
+            retval.add(relationship.getEndNode());
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
+        return mav;
+    }
+
 
 }
 

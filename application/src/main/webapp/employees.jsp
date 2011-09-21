@@ -75,14 +75,23 @@
                 return false;
         }
 
+        function clearProfileForm(){
+            $('#profile-general').empty();
+            $('#profile-education').empty();
+        }
+
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
-            $('#profile-general').empty().append(generateProfileGeneralForm(data, oTable));
+            clearProfileForm();
+
+            $('#profile-general').append(generateProfileGeneralForm(data, oTable));
             $('#profile-general').append(footerButtonsComponent(updateTableCallback(oTable)));
 
-            $('#profile-education').empty().append(addLanguageButton(unitId));
             addPreexistingLanguages(unitId);
+            addPreexistingEducations(unitId);
 
+            $('#profile-education').append(addLanguageButton(unitId));
+            $('#profile-education').append(addEducationButton(unitId));
             $('#profile-education').append(footerButtonsComponent(updateTableCallback(oTable)));
         }
         function openEmployeeForm(nodeId) {
