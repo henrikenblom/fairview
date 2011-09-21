@@ -77,8 +77,13 @@
 
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
-            $('#profile-general').empty().append(generateProfileEmploymentInfoForm(data, oTable));
-            $('#profile-general').append(footerButtonsComponent('profile_form', updateTableCallback(oTable)));
+            $('#profile-general').empty().append(generateProfileGeneralForm(data, oTable));
+            $('#profile-general').append(footerButtonsComponent(updateTableCallback(oTable)));
+
+            $('#profile-education').empty().append(addLanguageButton(unitId));
+            addPreexistingLanguages(unitId);
+
+            $('#profile-education').append(footerButtonsComponent(updateTableCallback(oTable)));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
@@ -102,7 +107,7 @@
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            $('#unitsettings-general').append(footerButtonsComponent(getOrganizationFormId(), updateTableCallback(oTable)));
+            $('#unitsettings-general').append(footerButtonsComponent(updateTableCallback(oTable)));
             openPopupTab(0);
         }
     </script>

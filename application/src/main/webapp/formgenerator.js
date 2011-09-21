@@ -73,7 +73,7 @@ function generateSubunitCreationForm() {
     return form;
 }
 
-function generateProfileEmploymentInfoForm(data, datatable) {
+function generateProfileGeneralForm(data, datatable) {
     var formId = 'profile_form';
     var unitId = data.node.id;
     var properties = data.node.properties;
@@ -123,6 +123,96 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     return form;
 }
 
+function generateLanguageForm(form_Id, languageNode) {
+    var formId = form_Id;
+
+    var languageString = '';
+    var spokenString = '';
+    var writtenString = '';
+    if (!$.isEmptyObject(languageNode)){
+        var properties = languageNode.properties;
+        languageString = propValue(properties.language);
+        spokenString = propValue(properties.spoken);
+        writtenString = propValue(properties.written);
+    }
+
+
+    var languageForm = generateUpdateForm(formId);
+    var languageDiv = $('<div>');
+    languageDiv.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_id', form_Id);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+
+    var language = textInputComponent('Språk', 'language', languageString, formId, false);
+
+    var written = selectInputComponent('Kunskapsnivå - skriftlig', 'written', 'written-field', formId, false);
+    written.children('#written-field').append(generateOption('some', writtenString, 'Viss'));
+    written.children('#written-field').append(generateOption('good', writtenString, 'God'));
+    written.children('#written-field').append(generateOption('advanced', writtenString, 'Advancerad'));
+
+    var spoken = selectInputComponent('Kunskapsnivå - muntlig', 'spoken', 'spoken-field', formId, false);
+    spoken.children('#spoken-field').append(generateOption('some', spokenString ,'Viss'));
+    spoken.children('#spoken-field').append(generateOption('good', spokenString, 'God'));
+    spoken.children('#spoken-field').append(generateOption('advanced', spokenString ,'Advancerad'));
+
+    languageForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+        language, '<br/>', written, '<br/>', spoken);
+    languageDiv.append(languageForm);
+    return languageDiv;
+}
+
+function addLanguageButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'languageButton')
+    button.html('Lägg till språk');
+    button.click(function() {
+        addLanguageRelationship(nodeId, '#languageButton');
+    });
+    return button;
+}
+
+function addPreexistingLanguages(nodeId){
+    $.getJSON("fairview/ajax/get_languages.do", {_nodeId: nodeId}, function(languageData){
+         var languages = languageData.list["org.neo4j.kernel.impl.core.NodeProxy"];
+        if (languages.length > 1){  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+         $.each(languages, function(x,language){
+            generateLanguageForm(language.id,language).prependTo('#profile-education');
+         });
+        }
+        else{
+           generateLanguageForm(languages.id,languages).prependTo('#profile-education');
+        }
+    });
+}
+
+
+function addLanguageRelationship(nodeId, insertBeforeThisDiv) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_LANGUAGESKILL" }, function(data) {
+        var languageDiv = generateLanguageForm(data.relationship.endNode);
+        languageDiv.insertBefore(insertBeforeThisDiv);
+    });
+}
+
+function generateOption(value, savedValue, text) {
+    var option = $('<option>');
+    option.attr('value', value);
+    option.html(text);
+    if (value == savedValue)
+        option.attr('selected', 'true');
+    return option;
+}
+
+function createLanguageRelationship(nodeId) {
+    return $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_LANGUAGESKILL" });
+}
+
+function educationTab(unitId, callback){
+
+}
+
 function updateTableCallback(datatable) {
     if (datatable != null)
         return function response() {
@@ -130,19 +220,24 @@ function updateTableCallback(datatable) {
         }
 }
 
-function generateSaveButton(formId, callback) {
+function generateSaveButton(callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
-    saveButton.attr('id', 'saveButton');
+    saveButton.addClass('saveButton');
     saveButton.attr('disabled', 'disabled');
     saveButton.click(function() {
-        $('#' + formId).ajaxSubmit(function() {
-            disableSaveButton();
-            saveButton.html('Sparar...');
-            setTimeout(closePopup, 500);
-            if (typeof callback == 'function')
-                callback.call();
+        disableSaveButton();
+        saveButton.html('Sparar...');
+        setTimeout(closePopup, 500);
+        var forms = $('form');
+        $.each(forms, function(i, form) {
+            $('#' + form.id).ajaxSubmit(function() {
+                if (typeof callback == 'function' && i == 0) //only make the callback once
+                    callback.call();
+            });
         });
+
+
     });
     return saveButton;
 }
@@ -153,7 +248,7 @@ function generateCancelButton() {
     cancelButton.attr('id', 'cancelButton');
     cancelButton.click(function() {
         if (formChanged == true) {
-           generateCancelDialog();
+            generateCancelDialog();
         } else {
             closePopup();
         }
@@ -161,38 +256,38 @@ function generateCancelButton() {
     return cancelButton;
 }
 
-function generateCancelDialog(){
+function generateCancelDialog() {
     var cancelDialog = $('<div>');
     cancelDialog.attr('title', 'Är du säker?');
     cancelDialog.html('Du har osparade ändringar. Är du säker på att du vill stänga formuläret?');
     cancelDialog.dialog({
-                resizable: false,
-                height:140,
-                modal: true,
-                buttons: {
-                    "Ja": function() {
-                        $(this).dialog("close");
-                        closePopup();
-                    },
-                    "Avbryt": function() {
-                        $(this).dialog("close");
-                    }
-                }
-            });
+        resizable: false,
+        height:140,
+        modal: true,
+        buttons: {
+            "Ja": function() {
+                $(this).dialog("close");
+                closePopup();
+            },
+            "Avbryt": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
 }
 
 
 function enableSaveButton() {
-    $('#saveButton').removeAttr('disabled');
+    $('.saveButton').removeAttr('disabled');
 }
 
 function disableSaveButton() {
-    $('#saveButton').attr('disabled', 'disabled');
+    $('.saveButton').attr('disabled', 'disabled');
 }
-function footerButtonsComponent(formId, callback) {
+function footerButtonsComponent(callback) {
     var saveDiv = $('<div>');
     saveDiv.addClass('saveDiv');
-    var saveButton = generateSaveButton(formId, callback);
+    var saveButton = generateSaveButton(callback);
     var cancelButton = generateCancelButton();
     saveDiv.append(saveButton, cancelButton);
     return saveDiv;
@@ -333,8 +428,8 @@ function civicInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
-    textInput.keyup(function(){
-       validateForm(formId);
+    textInput.keyup(function() {
+        validateForm(formId);
     });
     textInput.change(function() {
         formChanged = true;

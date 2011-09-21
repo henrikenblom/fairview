@@ -646,6 +646,22 @@ public class FairviewAjaxController {
         return mav;
     }
 
+    @RequestMapping(value = {"/fairview/ajax/get_languages.do"})
+    public ModelAndView getLanguages(@RequestParam("_nodeId") long unitId) {
+
+        Node unitNode = neo.getNodeById(unitId);
+        ArrayList<Node> retval = new ArrayList<Node>();
+
+        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.OUTGOING)) {
+            retval.add(relationship.getEndNode());
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
+        return mav;
+    }
+
+
 }
 
 

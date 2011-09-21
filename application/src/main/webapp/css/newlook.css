@@ -52,7 +52,7 @@ table{
     white-space: nowrap;
 }
 
-#saveButton {
+.saveButton {
     float: left;
 }
 
@@ -616,7 +616,6 @@ label.error {
     border-top-width: 2px;
     color: #404040;
     width: 460px;
-    height: 15px;
     /*    margin: 5px;*/
 }
 
@@ -825,6 +824,10 @@ label.error {
 .ms2side__div select {
     width: 220px;
     float: left;
+}
+
+.delimitedForm{
+  border-bottom: 1px solid #DDD;
 }
 
 
