@@ -75,7 +75,7 @@
                 return false;
         }
 
-        function clearProfileForm(){
+        function clearProfileForm() {
             $('#profile-general').empty();
             $('#profile-education').empty();
         }
@@ -87,14 +87,19 @@
             $('#profile-general').append(generateProfileGeneralForm(data, oTable));
             $('#profile-general').append(footerButtonsComponent(updateTableCallback(oTable)));
 
-            addPreexistingLanguages(unitId);
-            addPreexistingEducations(unitId);
-            addPreexistingCertificates(unitId);
+            addExistingLanguages(unitId);
+            addExistingEducations(unitId);
+            addExistingCertificates(unitId);
 
             $('#profile-education').append(addLanguageButton(unitId));
             $('#profile-education').append(addEducationButton(unitId));
             $('#profile-education').append(addCertificateButton(unitId));
             $('#profile-education').append(footerButtonsComponent(updateTableCallback(oTable)));
+
+
+            addExistingWorkExperiences(unitId);
+            $('#profile-experience').append(addWorkExperienceButton(unitId));
+            $('#profile-experience').append(footerButtonsComponent(updateTableCallback(oTable)));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
@@ -127,7 +132,8 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="newpersontop"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span></div>
+        <div class="newpersontop"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        </div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
@@ -155,7 +161,8 @@
                 </tfoot>
             </table>
         </div>
-        <div class="newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span></div>
+        <div class="newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        </div>
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>

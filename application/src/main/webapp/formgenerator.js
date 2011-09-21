@@ -262,6 +262,51 @@ function generateCertificateForm(form_Id, certificateNode) {
     return certificateDiv;
 }
 
+function generateWorkExperienceForm(form_Id, workExperienceNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var companyString = '';
+    var tradeString = '';
+    var countryString = '';
+    var fromString = '';
+    var toString = '';
+    var assignmentsString = '';
+    if (!$.isEmptyObject(workExperienceNode)) {
+        var properties = workExperienceNode.properties;
+        nameString = propValue(properties.name);
+        companyString = propValue(properties.description);
+        tradeString = propValue(properties.grade);
+        countryString = propValue(properties.from);
+        fromString = propValue(properties.from);
+        toString = propValue(properties.to);
+        assignmentsString = propValue(properties.assignments);
+    }
+
+    var form = generateUpdateForm(formId);
+    var div = $('<div>');
+    div.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_id', form_Id);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+
+    var nameComponent = textInputComponent('Tidigare befattning', 'name', nameString, formId, false);
+    var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
+    var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
+    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var fromComponent = textInputComponent('Från och med', 'from', countryString, formId, false);
+    var toComponent = textInputComponent('Till och med', 'to', fromString, formId, false);
+    var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
+
+    form.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+        nameComponent, '<br/>', companyComponent, '<br/>', tradeComponent, '<br/>', countryComponent, '<br/>',
+        fromComponent, '<br/>', toComponent, '<br/>', assignmentComponent);
+    div.append(form);
+    return div;
+}
+
 
 function addEducationButton(nodeId) {
     var button = $('<button>');
@@ -293,7 +338,17 @@ function addLanguageButton(nodeId) {
     return button;
 }
 
-function addPreexistingLanguages(nodeId) {
+function addWorkExperienceButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addWorkExperienceButton')
+    button.html('Lägg till tidigare befattning');
+    button.click(function() {
+        addWorkExperienceRelationship(nodeId, '#addWorkExperienceButton');
+    });
+    return button;
+}
+
+function addExistingLanguages(nodeId) {
     $.getJSON("fairview/ajax/get_languages.do", {_nodeId: nodeId}, function(languageData) {
         if (!$.isEmptyObject(languageData.list)) {
             var languages = languageData.list["org.neo4j.kernel.impl.core.NodeProxy"];
@@ -309,7 +364,7 @@ function addPreexistingLanguages(nodeId) {
     });
 }
 
-function addPreexistingEducations(nodeId) {
+function addExistingEducations(nodeId) {
     $.getJSON("fairview/ajax/get_educations.do", {_nodeId: nodeId}, function(educationData) {
         if (!$.isEmptyObject(educationData.list)) {
             var educations = educationData.list["org.neo4j.kernel.impl.core.NodeProxy"];
@@ -325,7 +380,7 @@ function addPreexistingEducations(nodeId) {
     });
 }
 
-function addPreexistingCertificates(nodeId) {
+function addExistingCertificates(nodeId) {
     $.getJSON("fairview/ajax/get_certificates.do", {_nodeId: nodeId}, function(certificatesData) {
         if (!$.isEmptyObject(certificatesData.list)) {
             var certificates = certificatesData.list["org.neo4j.kernel.impl.core.NodeProxy"];
@@ -341,24 +396,47 @@ function addPreexistingCertificates(nodeId) {
     });
 }
 
+function addExistingWorkExperiences(nodeId) {
+    $.getJSON("fairview/ajax/get_work_experiences.do", {_nodeId: nodeId}, function(data) {
+        if (!$.isEmptyObject(data.list)) {
+            var data = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+            if (data.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+                $.each(data, function(x, object) {
+                    generateWorkExperienceForm(object.id, object).prependTo('#profile-experience');
+                });
+            }
+            else {
+                generateWorkExperienceForm(data.id, data).prependTo('#profile-experience');
+            }
+        }
+    });
+}
+
 function addCertificateRelationship(nodeId, insertBeforeThisDiv) {
     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_CERTIFICATE" }, function(data) {
-        var languageDiv = generateCertificateForm(data.relationship.endNode);
-        languageDiv.insertBefore(insertBeforeThisDiv);
+        var div = generateCertificateForm(data.relationship.endNode);
+        div.insertBefore(insertBeforeThisDiv);
     });
 }
 
 function addEducationRelationship(nodeId, insertBeforeThisDiv) {
     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_EDUCATION" }, function(data) {
-        var languageDiv = generateEducationForm(data.relationship.endNode);
-        languageDiv.insertBefore(insertBeforeThisDiv);
+        var div = generateEducationForm(data.relationship.endNode);
+        div.insertBefore(insertBeforeThisDiv);
     });
 }
 
 function addLanguageRelationship(nodeId, insertBeforeThisDiv) {
     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_LANGUAGESKILL" }, function(data) {
-        var languageDiv = generateLanguageForm(data.relationship.endNode);
-        languageDiv.insertBefore(insertBeforeThisDiv);
+        var div = generateLanguageForm(data.relationship.endNode);
+        div.insertBefore(insertBeforeThisDiv);
+    });
+}
+
+function addWorkExperienceRelationship(nodeId, insertBeforeThisDiv) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_WORK_EXPERIENCE" }, function(data) {
+        var div = generateWorkExperienceForm(data.relationship.endNode);
+        div.insertBefore(insertBeforeThisDiv);
     });
 }
 
@@ -369,10 +447,6 @@ function generateOption(value, savedValue, text) {
     if (value == savedValue)
         option.attr('selected', 'true');
     return option;
-}
-
-function createLanguageRelationship(nodeId) {
-    return $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_LANGUAGESKILL" });
 }
 
 function educationTab(unitId, callback) {
