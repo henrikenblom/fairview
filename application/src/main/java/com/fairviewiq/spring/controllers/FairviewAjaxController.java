@@ -646,73 +646,13 @@ public class FairviewAjaxController {
         return mav;
     }
 
-    @RequestMapping(value = {"/fairview/ajax/get_languages.do"})
-    public ModelAndView getLanguages(@RequestParam("_nodeId") long unitId) {
+    @RequestMapping(value = {"/fairview/ajax/get_relationship_endnodes.do"})
+    public ModelAndView getRelationshipEndNodes(@RequestParam("_nodeId") long unitId, @RequestParam("_type") String type) {
 
         Node unitNode = neo.getNodeById(unitId);
         ArrayList<Node> retval = new ArrayList<Node>();
 
-        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.OUTGOING)) {
-            retval.add(relationship.getEndNode());
-        }
-
-        ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
-        return mav;
-    }
-
-    @RequestMapping(value = {"/fairview/ajax/get_educations.do"})
-    public ModelAndView getEducations(@RequestParam("_nodeId") long unitId) {
-
-        Node unitNode = neo.getNodeById(unitId);
-        ArrayList<Node> retval = new ArrayList<Node>();
-
-        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("HAS_EDUCATION"), Direction.OUTGOING)) {
-            retval.add(relationship.getEndNode());
-        }
-
-        ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
-        return mav;
-    }
-
-    @RequestMapping(value = {"/fairview/ajax/get_certificates.do"})
-    public ModelAndView getCertificates(@RequestParam("_nodeId") long unitId) {
-
-        Node unitNode = neo.getNodeById(unitId);
-        ArrayList<Node> retval = new ArrayList<Node>();
-
-        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("HAS_CERTIFICATE"), Direction.OUTGOING)) {
-            retval.add(relationship.getEndNode());
-        }
-
-        ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
-        return mav;
-    }
-
-    @RequestMapping(value = {"/fairview/ajax/get_work_experiences.do"})
-    public ModelAndView getWorkExperiences(@RequestParam("_nodeId") long unitId) {
-
-        Node unitNode = neo.getNodeById(unitId);
-        ArrayList<Node> retval = new ArrayList<Node>();
-
-        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.OUTGOING)) {
-            retval.add(relationship.getEndNode());
-        }
-
-        ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
-        return mav;
-    }
-
-    @RequestMapping(value = {"/fairview/ajax/get_military_services.do"})
-    public ModelAndView getMilitaryServices(@RequestParam("_nodeId") long unitId) {
-
-        Node unitNode = neo.getNodeById(unitId);
-        ArrayList<Node> retval = new ArrayList<Node>();
-
-        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("HAS_MILITARY_SERVICE"), Direction.OUTGOING)) {
+        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType(type), Direction.OUTGOING)) {
             retval.add(relationship.getEndNode());
         }
 

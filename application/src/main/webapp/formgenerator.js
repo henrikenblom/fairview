@@ -388,81 +388,17 @@ function addMilitaryServiceButton(nodeId) {
     return button;
 }
 
-function addExistingLanguages(nodeId) {
-    $.getJSON("fairview/ajax/get_languages.do", {_nodeId: nodeId}, function(languageData) {
-        if (!$.isEmptyObject(languageData.list)) {
-            var languages = languageData.list["org.neo4j.kernel.impl.core.NodeProxy"];
-            if (languages.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-                $.each(languages, function(x, language) {
-                    generateLanguageForm(language.id, language).prependTo('#profile-education');
-                });
-            }
-            else {
-                generateLanguageForm(languages.id, languages).prependTo('#profile-education');
-            }
-        }
-    });
-}
-
-function addExistingEducations(nodeId) {
-    $.getJSON("fairview/ajax/get_educations.do", {_nodeId: nodeId}, function(educationData) {
-        if (!$.isEmptyObject(educationData.list)) {
-            var educations = educationData.list["org.neo4j.kernel.impl.core.NodeProxy"];
-            if (educations.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-                $.each(educations, function(x, education) {
-                    generateEducationForm(education.id, education).prependTo('#profile-education');
-                });
-            }
-            else {
-                generateEducationForm(educations.id, educations).prependTo('#profile-education');
-            }
-        }
-    });
-}
-
-function addExistingCertificates(nodeId) {
-    $.getJSON("fairview/ajax/get_certificates.do", {_nodeId: nodeId}, function(certificatesData) {
-        if (!$.isEmptyObject(certificatesData.list)) {
-            var certificates = certificatesData.list["org.neo4j.kernel.impl.core.NodeProxy"];
-            if (certificates.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-                $.each(certificates, function(x, certificate) {
-                    generateCertificateForm(certificate.id, certificate).prependTo('#profile-education');
-                });
-            }
-            else {
-                generateCertificateForm(certificates.id, certificates).prependTo('#profile-education');
-            }
-        }
-    });
-}
-
-function addExistingWorkExperiences(nodeId) {
-    $.getJSON("fairview/ajax/get_work_experiences.do", {_nodeId: nodeId}, function(data) {
+function addExistingValues(nodeId, type, formGeneratingFunction, divToPrepend) {
+    $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
         if (!$.isEmptyObject(data.list)) {
-            var data = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
-            if (data.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-                $.each(data, function(x, object) {
-                    generateWorkExperienceForm(object.id, object).prependTo('#profile-experience');
+            var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+            if (array.length > 1) {
+                $.each(array, function(count, object) {
+                    formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
                 });
             }
-            else {
-                generateWorkExperienceForm(data.id, data).prependTo('#profile-experience');
-            }
-        }
-    });
-}
-
-function addExistingMilitaryServices(nodeId) {
-    $.getJSON("fairview/ajax/get_military_services.do", {_nodeId: nodeId}, function(data) {
-        if (!$.isEmptyObject(data.list)) {
-            var data = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
-            if (data.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-                $.each(data, function(x, object) {
-                    generateMilitaryServiceForm(object.id, object).prependTo('#profile-experience');
-                });
-            }
-            else {
-                generateMilitaryServiceForm(data.id, data).prependTo('#profile-experience');
+            else { //an array containing only one entry is a single object
+                formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
             }
         }
     });
@@ -510,10 +446,6 @@ function generateOption(value, savedValue, text) {
     if (value == savedValue)
         option.attr('selected', 'true');
     return option;
-}
-
-function educationTab(unitId, callback) {
-
 }
 
 function updateTableCallback(datatable) {
