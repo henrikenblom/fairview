@@ -89,9 +89,11 @@
 
             addPreexistingLanguages(unitId);
             addPreexistingEducations(unitId);
+            addPreexistingCertificates(unitId);
 
             $('#profile-education').append(addLanguageButton(unitId));
             $('#profile-education').append(addEducationButton(unitId));
+            $('#profile-education').append(addCertificateButton(unitId));
             $('#profile-education').append(footerButtonsComponent(updateTableCallback(oTable)));
         }
         function openEmployeeForm(nodeId) {

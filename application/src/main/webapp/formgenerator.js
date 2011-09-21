@@ -223,6 +223,45 @@ function generateEducationForm(form_Id, educationNode) {
     return educationDiv;
 }
 
+function generateCertificateForm(form_Id, certificateNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var descriptionString = '';
+    var gradeString = '';
+    var fromString = '';
+    var toString = '';
+    if (!$.isEmptyObject(certificateNode)) {
+        var properties = certificateNode.properties;
+        nameString = propValue(properties.name);
+        descriptionString = propValue(properties.description);
+        gradeString = propValue(properties.grade);
+        fromString = propValue(properties.from);
+        toString = propValue(properties.to);
+    }
+
+    var certificateForm = generateUpdateForm(formId);
+    var certificateDiv = $('<div>');
+    certificateDiv.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_id', form_Id);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+
+    var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
+    var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
+    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
+
+    certificateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+        nameComponent, '<br/>', descriptionComponent, '<br/>', fromComponent, '<br/>', toComponent
+        , '<br/>', gradeComponent);
+    certificateDiv.append(certificateForm);
+    return certificateDiv;
+}
+
 
 function addEducationButton(nodeId) {
     var button = $('<button>');
@@ -230,6 +269,16 @@ function addEducationButton(nodeId) {
     button.html('Lägg till utbildning');
     button.click(function() {
         addEducationRelationship(nodeId, '#addEducationButton');
+    });
+    return button;
+}
+
+function addCertificateButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addCertificateButton')
+    button.html('Lägg till certifikat');
+    button.click(function() {
+        addCertificateRelationship(nodeId, '#addCertificateButton');
     });
     return button;
 }
@@ -246,29 +295,56 @@ function addLanguageButton(nodeId) {
 
 function addPreexistingLanguages(nodeId) {
     $.getJSON("fairview/ajax/get_languages.do", {_nodeId: nodeId}, function(languageData) {
-        var languages = languageData.list["org.neo4j.kernel.impl.core.NodeProxy"];
-        if (languages.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-            $.each(languages, function(x, language) {
-                generateLanguageForm(language.id, language).prependTo('#profile-education');
-            });
-        }
-        else {
-            generateLanguageForm(languages.id, languages).prependTo('#profile-education');
+        if (!$.isEmptyObject(languageData.list)) {
+            var languages = languageData.list["org.neo4j.kernel.impl.core.NodeProxy"];
+            if (languages.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+                $.each(languages, function(x, language) {
+                    generateLanguageForm(language.id, language).prependTo('#profile-education');
+                });
+            }
+            else {
+                generateLanguageForm(languages.id, languages).prependTo('#profile-education');
+            }
         }
     });
 }
 
 function addPreexistingEducations(nodeId) {
     $.getJSON("fairview/ajax/get_educations.do", {_nodeId: nodeId}, function(educationData) {
-        var educations = educationData.list["org.neo4j.kernel.impl.core.NodeProxy"];
-        if (educations.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
-            $.each(educations, function(x, education) {
-                generateEducationForm(education.id, education).prependTo('#profile-education');
-            });
+        if (!$.isEmptyObject(educationData.list)) {
+            var educations = educationData.list["org.neo4j.kernel.impl.core.NodeProxy"];
+            if (educations.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+                $.each(educations, function(x, education) {
+                    generateEducationForm(education.id, education).prependTo('#profile-education');
+                });
+            }
+            else {
+                generateEducationForm(educations.id, educations).prependTo('#profile-education');
+            }
         }
-        else {
-            generateEducationForm(educations.id, educations).prependTo('#profile-education');
+    });
+}
+
+function addPreexistingCertificates(nodeId) {
+    $.getJSON("fairview/ajax/get_certificates.do", {_nodeId: nodeId}, function(certificatesData) {
+        if (!$.isEmptyObject(certificatesData.list)) {
+            var certificates = certificatesData.list["org.neo4j.kernel.impl.core.NodeProxy"];
+            if (certificates.length > 1) {  //if an array containing only one entry is returned, javascript sees it as an object rather than a list
+                $.each(certificates, function(x, certificate) {
+                    generateCertificateForm(certificate.id, certificate).prependTo('#profile-education');
+                });
+            }
+            else {
+                generateCertificateForm(certificates.id, certificates).prependTo('#profile-education');
+            }
         }
+    });
+}
+
+function addCertificateRelationship(nodeId, insertBeforeThisDiv) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_CERTIFICATE" }, function(data) {
+        var languageDiv = generateCertificateForm(data.relationship.endNode);
+        languageDiv.insertBefore(insertBeforeThisDiv);
     });
 }
 
