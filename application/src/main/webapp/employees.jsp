@@ -65,10 +65,10 @@
                     });
                 }
             });
-            $('.newpersontop').click(function(){
+            $('.newpersontop').click(function() {
                 openEmployeeForm();
             })
-            $('.newpersonbottom').click(function(){
+            $('.newpersonbottom').click(function() {
                 openEmployeeForm();
             })
             fadeOutModalizer();
@@ -86,31 +86,56 @@
             $('#profile-education').empty();
         }
 
+        function addFormContainers() {
+            var languageDiv = $('<div>');
+            languageDiv.attr('id', 'languages');
+            languageDiv.addClass('groupedFormsContainer');
+            var certificateDiv = $('<div>');
+            certificateDiv.attr('id', 'certificates');
+            certificateDiv.addClass('groupedFormsContainer');
+            var educationDiv = $('<div>');
+            educationDiv.addClass('groupedFormsContainer');
+            educationDiv.attr('id', 'educations');
+
+            var workExperienceDiv = $('<div>');
+            workExperienceDiv.addClass('groupedFormsContainer');
+            workExperienceDiv.attr('id', 'workexperiences');
+            var militaryServiceDiv = $('<div>');
+            militaryServiceDiv.addClass('groupedFormsContainer');
+            militaryServiceDiv.attr('id', 'militaryservices');
+
+            $('#profile-education').append(languageDiv, certificateDiv, educationDiv);
+            $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
+        }
+        function loadFormValues(unitId, data) {
+            if (!$.isEmptyObject(unitId)) {
+                data = getNodeData(unitId);
+                addExistingValues(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
+                addExistingValues(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
+                addExistingValues(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
+                addExistingValues(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
+                addExistingValues(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
+            }
+            return data;
+        }
         function generateProfileForm(unitId) {
             var data;
 
             clearProfileForm();
-
-            if (!$.isEmptyObject(unitId)) {
-                data = getNodeData(unitId);
-                addExistingValues(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#profile-education');
-                addExistingValues(unitId, 'HAS_EDUCATION', generateEducationForm, '#profile-education');
-                addExistingValues(unitId, 'HAS_CERTIFICATES', generateCertificateForm, '#profile-education');
-                addExistingValues(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#profile-experience');
-                addExistingValues(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#profile-experience');
-            }
+            data = loadFormValues(unitId, data);
+            addFormContainers();
 
             $('#profile-general').append(generateProfileGeneralForm(data));
             $('#profile-general').append(footerButtonsComponent(updateTableCallback(oTable)));
 
-            $('#profile-education').append(addLanguageButton(unitId));
-            $('#profile-education').append(addEducationButton(unitId));
-            $('#profile-education').append(addCertificateButton(unitId));
+            $('#languages').append(addLanguageButton(unitId));
+            $('#educations').append(addEducationButton(unitId));
+            $('#certificates').append(addCertificateButton(unitId));
             $('#profile-education').append(footerButtonsComponent(updateTableCallback(oTable)));
 
 
-            $('#profile-experience').append(addWorkExperienceButton(unitId));
-            $('#profile-experience').append(addMilitaryServiceButton(unitId));
+            $('#workexperiences').append(addWorkExperienceButton(unitId));
+            $('#militaryservices').append(addMilitaryServiceButton(unitId));
             $('#profile-experience').append(footerButtonsComponent(updateTableCallback(oTable)));
 
 
