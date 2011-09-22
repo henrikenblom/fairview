@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import se.codemate.neo4j.*;
+import se.codemate.spring.controllers.NeoAjaxController;
 import se.codemate.spring.mvc.ModelMapConverter;
 import se.codemate.spring.mvc.XStreamView;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ import java.util.Set;
 
 @Controller
 public class FairviewAjaxController {
+
+    private static String TYPE_NODE = "node";
+    private static String TYPE_RELATIONSHIP = "relationship";
 
     @Resource
     private GraphDatabaseService neo;
@@ -38,6 +43,7 @@ public class FairviewAjaxController {
     private NeoUtils neoUtils;
     private FunctionListGenerator functionListGenerator;
     private Gson gson = new Gson();
+    private NeoAjaxController neoAjaxController = new NeoAjaxController();
 
     @PostConstruct
     public void initialize() {
@@ -74,7 +80,7 @@ public class FairviewAjaxController {
     }
 
     @RequestMapping(value = {"/fairview/ajax/update_position.do"})
-    public ModelAndView updatePropertyContainer(@RequestParam("_id") Long id,
+    public ModelAndView updatePosition(@RequestParam("_id") Long id,
                                                 @RequestParam("name") String name,
                                                 @RequestParam("reports_to") Long reportsTo) throws IOException {
 
@@ -97,6 +103,33 @@ public class FairviewAjaxController {
 
         ModelAndView mav = new ModelAndView(xstreamView);
         mav.addObject(XStreamView.XSTREAM_ROOT, node);
+        return mav;
+
+    }
+
+
+    @RequestMapping(value= {"/fairview/ajax/set_employment.do"})
+    public ModelAndView setEmployment(HttpServletRequest request,
+                                   @RequestParam("_employeeId") Long employeeId,
+                                   @RequestParam(value = "_employmentId", required = false) Long employmentId,
+                                   @RequestParam(value = "_strict", required = false) Boolean strict) {
+
+        Node employmentNode = null;
+
+        if (employmentId == null) {
+
+            employmentNode = neo.createNode();
+
+        } else {
+
+            employmentNode = neo.getNodeById(employmentId);
+
+        }
+
+        neo.getNodeById(employeeId).createRelationshipTo(employmentNode, new SimpleRelationshipType("HAS_EMPLOYMENT"));
+
+        ModelAndView mav = neoAjaxController.updatePropertyContainer(request, employmentNode.getId(), TYPE_NODE, strict);
+
         return mav;
 
     }
@@ -155,8 +188,6 @@ public class FairviewAjaxController {
 
     }
 
-
-    // Additions made by Henrik Enblom.
 
     @RequestMapping(value = {"/fairview/ajax/get_assigned_tasks.do"})
     public ModelAndView getAssignedGoals(@RequestParam("_nodeId") Long nodeId) {
