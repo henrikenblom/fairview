@@ -73,47 +73,78 @@ function generateSubunitCreationForm() {
     return form;
 }
 
-function generateProfileGeneralForm(data, datatable) {
+function generateProfileGeneralForm(data) {
     var formId = 'profile_form';
-    var unitId = data.node.id;
-    var properties = data.node.properties;
     formChanged = false;
+
+    var idString = '';
+    var birthdayString = '';
+    var authorizationString = '';
+
+    var firstNameString = '';
+    var lastNameString = '';
+    var nationalityString = '';
+    var civicString = '';
+    var addressString = '';
+    var zipString = '';
+    var cityString = '';
+    var countryString = '';
+    var phoneString = '';
+    var cellString = '';
+    var emailString = '';
+    var additionalInfoString = '';
+    var genderString = '';
+
+    if (!$.isEmptyObject(data)) {
+        var properties = data.node.properties;
+        idString = data.node.id;
+        birthdayString = makeBirthdate(propValue(properties.civic));
+        authorizationString = boolPropValue(properties.authorization);
+        firstNameString = propValue(properties.firstname);
+        lastNameString = propValue(properties.lastname);
+        nationalityString = propValue(properties.nationality);
+        civicString = propValue(properties.civic);
+        addressString = propValue(properties.address);
+        zipString = propValue(properties.zip);
+        cityString = propValue(properties.city);
+        countryString = propValue(properties.country);
+        phoneString = propValue(properties.phone);
+        cellString = propValue(properties.cell);
+        emailString = propValue(properties.email);
+        additionalInfoString = propValue(properties.additional__info);
+        genderString = propValue(properties.gender);
+    }
 
     var form = generateUpdateForm(formId);
     var fieldSet = $('<fieldset>');
 
-    var hiddenField_id = hiddenField('_id', unitId);
+    var hiddenField_id = hiddenField('_id', idString);
     var hiddenField_type = hiddenField('_type', 'node');
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_birthday = hiddenField('birthday', makeBirthdate(propValue(properties.civic)));
-    var hiddenField_authorization = hiddenField('authorization', boolPropValue(properties.authorization));
-    var hiddenField_executive = hiddenField('executive', boolPropValue(properties.executive));
-    var hiddenField_budgetresponsibility = hiddenField('budget-responsibility', boolPropValue(properties['budget-responsibility']));
-    var hiddenField_ownresultresponsibility = hiddenField('own-result-responsibility', boolPropValue(properties['own-result-responsibility']));
+    var hiddenField_birthday = hiddenField('birthday', civicString);
+    var hiddenField_authorization = hiddenField('authorization', authorizationString);
 
+    var firstNameDiv = textInputComponent('Förnamn', 'firstname', firstNameString, formId, true);
+    var lastNameDiv = textInputComponent('Efternamn', 'lastname', lastNameString, formId, true);
+    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', nationalityString, formId, false);
+    var civicDiv = civicInputComponent('Personnummer', 'civic', civicString, formId, false);
 
-    var firstNameDiv = textInputComponent('Förnamn', 'firstname', propValue(properties.firstname), formId, true);
-    var lastNameDiv = textInputComponent('Efternamn', 'lastname', propValue(properties.lastname), formId, true);
-    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', propValue(properties.nationality), formId, false);
-    var civicDiv = civicInputComponent('Personnummer', 'civic', propValue(properties.civic), formId, false);
+    var addressDiv = textInputComponent('Adress', 'address', addressString, formId, false);
+    var zipDiv = textInputComponent('Postnummer', 'zip', zipString, formId, false);
 
-    var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), formId, false);
-    var zipDiv = textInputComponent('Postnummer', 'zip', propValue(properties.zip), formId, false);
+    var cityDiv = textInputComponent('Postort', 'city', cityString, formId, false);
+    var countryDiv = textInputComponent('Land', 'country', countryString, formId, false);
+    var phoneDiv = textInputComponent('Telefon', 'phone', phoneString, formId, false);
+    var cellDiv = textInputComponent('Mobiltelefon', 'cell', cellString, formId, false);
+    var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
 
-    var cityDiv = textInputComponent('Postort', 'city', propValue(properties.city), formId, false);
-    var countryDiv = textInputComponent('Land', 'country', propValue(properties.country), formId, false);
-    var phoneDiv = textInputComponent('Telefon', 'phone', propValue(properties.phone), formId, false);
-    var cellDiv = textInputComponent('Mobiltelefon', 'cell', propValue(properties.cell), formId, false);
-    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId, false);
-
-    var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', propValue(properties.additional__info), formId, 'additional_infoDiv');
+    var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', additionalInfoString, formId, 'additional_infoDiv');
 
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId, true);
-    addGenderOptions(properties.gender, genderDiv.children('#gender-field'));
+    addGenderOptions(genderString, genderDiv.children('#gender-field'));
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
-        hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
         zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', additional_infoDiv, '<br/>');
 
@@ -337,6 +368,9 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
     return div;
 }
 
+function addEmployee() {
+    openEmployeeForm();
+}
 
 function addEducationButton(nodeId) {
     var button = $('<button>');
@@ -572,9 +606,9 @@ function addGenderOptions(gender, genderInputElement) {
     var optionFemale = $('<option>');
     optionFemale.attr('value', 'F');
     optionFemale.html('Kvinna');
-    if (propValue(gender) == 'M')
+    if (gender == 'M')
         optionMan.attr('selected', 'true');
-    else if (propValue(gender) == 'F')
+    else if (gender == 'F')
         optionFemale.attr('selected', 'true');
     else {
         var optionChooseGender = $('<option>');

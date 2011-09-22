@@ -65,6 +65,12 @@
                     });
                 }
             });
+            $('.newpersontop').click(function(){
+                openEmployeeForm();
+            })
+            $('.newpersonbottom').click(function(){
+                openEmployeeForm();
+            })
             fadeOutModalizer();
         });
 
@@ -81,26 +87,33 @@
         }
 
         function generateProfileForm(unitId) {
-            var data = getNodeData(unitId);
+            var data;
+
             clearProfileForm();
 
-            $('#profile-general').append(generateProfileGeneralForm(data, oTable));
-            $('#profile-general').append(footerButtonsComponent(updateTableCallback(oTable)));
+            if (!$.isEmptyObject(unitId)) {
+                data = getNodeData(unitId);
+                addExistingValues(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#profile-education');
+                addExistingValues(unitId, 'HAS_EDUCATION', generateEducationForm, '#profile-education');
+                addExistingValues(unitId, 'HAS_CERTIFICATES', generateCertificateForm, '#profile-education');
+                addExistingValues(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#profile-experience');
+                addExistingValues(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#profile-experience');
+            }
 
-            addExistingValues(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#profile-education');
-            addExistingValues(unitId, 'HAS_EDUCATION', generateEducationForm, '#profile-education');
-            addExistingValues(unitId, 'HAS_CERTIFICATES', generateCertificateForm, '#profile-education');
+            $('#profile-general').append(generateProfileGeneralForm(data));
+            $('#profile-general').append(footerButtonsComponent(updateTableCallback(oTable)));
 
             $('#profile-education').append(addLanguageButton(unitId));
             $('#profile-education').append(addEducationButton(unitId));
             $('#profile-education').append(addCertificateButton(unitId));
             $('#profile-education').append(footerButtonsComponent(updateTableCallback(oTable)));
 
-            addExistingValues(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#profile-experience');
-            addExistingValues(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#profile-experience');
+
             $('#profile-experience').append(addWorkExperienceButton(unitId));
             $('#profile-experience').append(addMilitaryServiceButton(unitId));
             $('#profile-experience').append(footerButtonsComponent(updateTableCallback(oTable)));
+
+
         }
         function openEmployeeForm(nodeId) {
             var linkData = [

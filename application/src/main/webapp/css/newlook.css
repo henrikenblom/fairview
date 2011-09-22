@@ -770,10 +770,12 @@ label.error {
 
 .newpersontop {
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .newpersonbottom {
     margin-top: 25px;
+    cursor: pointer;
 }
 
 /*Multiselect*/

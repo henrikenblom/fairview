@@ -661,6 +661,24 @@ public class FairviewAjaxController {
         return mav;
     }
 
+     @RequestMapping(value = {"/fairview/ajax/get_organization_node.do"})
+    public ModelAndView getOrganizationNode() {
+
+        Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, organization);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_reference_node.do"})
+    public ModelAndView getReferenceNode() {
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, neo.getReferenceNode());
+        return mav;
+    }
+
 
 }
 
