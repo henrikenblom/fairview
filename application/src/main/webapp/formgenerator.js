@@ -435,6 +435,9 @@ function addExistingValues(nodeId, type, formGeneratingFunction, divToPrepend) {
                 formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
             }
         }
+        else{
+            formGeneratingFunction.call(this, type).prependTo(divToPrepend);
+        }
     });
 }
 

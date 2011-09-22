@@ -137,8 +137,6 @@
             $('#workexperiences').append(addWorkExperienceButton(unitId));
             $('#militaryservices').append(addMilitaryServiceButton(unitId));
             $('#profile-experience').append(footerButtonsComponent(updateTableCallback(oTable)));
-
-
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
