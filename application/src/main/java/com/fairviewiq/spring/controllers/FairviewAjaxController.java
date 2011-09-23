@@ -40,7 +40,6 @@ public class FairviewAjaxController {
     private NeoUtils neoUtils;
     private FunctionListGenerator functionListGenerator;
     private Gson gson = new Gson();
-    //private NeoAjaxController neoAjaxController = new NeoAjaxController();
 
     @PostConstruct
     public void initialize() {
@@ -78,8 +77,8 @@ public class FairviewAjaxController {
 
     @RequestMapping(value = {"/fairview/ajax/update_position.do"})
     public ModelAndView updatePosition(@RequestParam("_id") Long id,
-                                                @RequestParam("name") String name,
-                                                @RequestParam("reports_to") Long reportsTo) throws IOException {
+                                       @RequestParam("name") String name,
+                                       @RequestParam("reports_to") Long reportsTo) throws IOException {
 
         Node node = neo.getNodeById(id);
 
@@ -105,11 +104,11 @@ public class FairviewAjaxController {
     }
 
 
-    @RequestMapping(value= {"/fairview/ajax/set_employment.do"})
+    @RequestMapping(value = {"/fairview/ajax/set_employment.do"})
     public ModelAndView setEmployment(HttpServletRequest request,
-                                   @RequestParam("_employeeId") Long employeeId,
-                                   @RequestParam(value = "_employmentId", required = false) Long employmentId,
-                                   @RequestParam(value = "_strict", required = false) Boolean strict) {
+                                      @RequestParam("_employeeId") Long employeeId,
+                                      @RequestParam(value = "_employmentId", required = false) Long employmentId,
+                                      @RequestParam(value = "_strict", required = false) Boolean strict) {
 
         Node employmentNode = null;
 
@@ -257,7 +256,6 @@ public class FairviewAjaxController {
         return retval;
 
     }
-
 
 
     @RequestMapping(value = {"/fairview/ajax/unassign_function.do"})
@@ -665,10 +663,43 @@ public class FairviewAjaxController {
         return mav;
     }
 
+    @RequestMapping(value = {"/fairview/ajax/get_relationship_endnodes.do"})
+    public ModelAndView getRelationshipEndNodes(@RequestParam("_nodeId") long unitId, @RequestParam("_type") String type) {
+
+        Node unitNode = neo.getNodeById(unitId);
+        ArrayList<Node> retval = new ArrayList<Node>();
+
+        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType(type), Direction.OUTGOING)) {
+            retval.add(relationship.getEndNode());
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_organization_node.do"})
+    public ModelAndView getOrganizationNode() {
+
+        Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, organization);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_reference_node.do"})
+    public ModelAndView getReferenceNode() {
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, neo.getReferenceNode());
+        return mav;
+    }
+
     private ModelAndView updatePropertyContainer(HttpServletRequest request,
-                                                @RequestParam("_id") Long id,
-                                                @RequestParam("_type") String type,
-                                                @RequestParam(value = "_strict", required = false) Boolean strict) {
+                                                 @RequestParam("_id") Long id,
+                                                 @RequestParam("_type") String type,
+                                                 @RequestParam(value = "_strict", required = false) Boolean strict) {
 
         PropertyContainer propertyContainer = TYPE_NODE.equalsIgnoreCase(type.trim()) ? neo.getNodeById(id) : neo.getRelationshipById(id);
 
@@ -741,6 +772,7 @@ public class FairviewAjaxController {
         return mav;
 
     }
+
 
 }
 

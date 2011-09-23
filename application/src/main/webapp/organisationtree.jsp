@@ -114,11 +114,11 @@
             submitButton.addClass('addsubunit-button')
             submitButton.html('Lägg till underenhet till ' + data.node.properties.name.value);
             submitButton.click(function() {
-                var createdSubunit = getRelationshipData(getNodeData(unitId).node.id);
-                var createdSubunitId = createdSubunit.relationship.endNode;
-                $('#subunitform').children().children('input[name="_id"]').val(createdSubunitId);
-                $('#subunitform').ajaxSubmit(function() {
-                    location.reload();  //reloads the page to make the newly created subunit to be visible in the organization tree
+                $('#subunitform').ajaxSubmit(function(data) {
+                    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _endNodeId: data.node.id,_type:"HAS_UNIT" },
+                            function() {
+                                location.reload();
+                            });
                 });
             });
             submitButton.appendTo($('#unitsettings-subunits'));
@@ -126,7 +126,7 @@
 
         function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            var saveButton = footerButtonsComponent(getOrganizationFormId());
+            var saveButton = footerButtonsComponent();
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 $('#header-organization-name').html($('#name-field').val());
@@ -140,7 +140,7 @@
 
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            var saveButton = footerButtonsComponent(getOrganizationFormId());
+            var saveButton = footerButtonsComponent();
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 assignManager(data.node.id, $('#manager-selection'));

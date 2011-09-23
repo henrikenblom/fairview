@@ -119,7 +119,7 @@
 
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
-            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+            $('#profile-employmentinfo').empty().append(generateProfileGeneralForm(data));
         }
 
         $(document).ready(function() {

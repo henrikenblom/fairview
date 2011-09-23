@@ -25,8 +25,7 @@
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
-
-           oTable = $('#datatable').dataTable({
+            oTable = $('#datatable').dataTable({
                 "bProcessing": true,
                 "bSortClasses": false,
                 "bStateSave": true,
@@ -64,7 +63,6 @@
                     });
                 }
             });
-
             fadeOutModalizer();
         });
 
@@ -75,10 +73,62 @@
                 return false;
         }
 
+        function clearProfileForm() {
+            $('#profile-general').empty();
+            $('#profile-education').empty();
+        }
+
+        function addFormContainers() {
+            var languageDiv = $('<div>');
+            languageDiv.attr('id', 'languages');
+            languageDiv.addClass('groupedFormsContainer');
+            var certificateDiv = $('<div>');
+            certificateDiv.attr('id', 'certificates');
+            certificateDiv.addClass('groupedFormsContainer');
+            var educationDiv = $('<div>');
+            educationDiv.addClass('groupedFormsContainer');
+            educationDiv.attr('id', 'educations');
+
+            var workExperienceDiv = $('<div>');
+            workExperienceDiv.addClass('groupedFormsContainer');
+            workExperienceDiv.attr('id', 'workexperiences');
+            var militaryServiceDiv = $('<div>');
+            militaryServiceDiv.addClass('groupedFormsContainer');
+            militaryServiceDiv.attr('id', 'militaryservices');
+
+            $('#profile-education').append(languageDiv, certificateDiv, educationDiv);
+            $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
+        }
+        function loadFormValues(unitId, data) {
+            if (!$.isEmptyObject(unitId)) {
+                data = getNodeData(unitId);
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
+            }
+            return data;
+        }
         function generateProfileForm(unitId) {
-            var data = getNodeData(unitId);
-            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data, oTable));
-            //$('#profile-employmentinfo').append(footerButtonsComponent('profile_form', assignFunctionCallback(unitId, oTable)));
+            var data;
+
+            clearProfileForm();
+            data = loadFormValues(unitId, data);
+            addFormContainers();
+
+            $('#profile-general').append(generateProfileGeneralForm(data));
+            $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+
+            $('#languages').append(addLanguageButton(unitId));
+            $('#educations').append(addEducationButton(unitId));
+            $('#certificates').append(addCertificateButton(unitId));
+            $('#profile-education').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+
+
+            $('#workexperiences').append(addWorkExperienceButton(unitId));
+            $('#militaryservices').append(addMilitaryServiceButton(unitId));
+            $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
 
         function generateEmploymentForm(unitId, employmentId){
@@ -90,9 +140,8 @@
 
         function createEmployeeTab(nodeId, employmentId){
             var linkData = [
-                ['profile-employmentinfo', 'Anställningsuppgifter'],
-                ['profile-responsibility', 'Arbetsbeskrivning'],
-                ['profile-competence', 'Kompetens'],
+                ['profile-general', 'Allmänt'],
+                ['profile-education', 'Utbildning'],
                 ['profile-experience', 'Erfarenhet'],
                 ['employment-general', 'Anställningsvillkor']
             ];
@@ -107,7 +156,6 @@
 //            generateProfileForm(nodeId);
             openPopupTab(0);
         }
-
         function openUnitForm(unitId) {
             var linkData = [
                                 ['unitsettings-general', 'Avdelningsinställningar'],
@@ -118,10 +166,10 @@
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
+            $('#unitsettings-general').append(unitId, footerButtonsComponent(updateTableCallback(oTable)));
             openPopupTab(0);
         }
         function openEmploymentForm(employmentId, nodeId){
-
 //            $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, nodeId));
 //            $('#employment-general').append(footerButtonsComponent('employment_form', assignFunctionCallback(employmentId, oTable)));
             openPopupTab(4);
@@ -132,7 +180,8 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="newpersontop"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span></div>
+        <div class="newpersontop"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        </div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
@@ -156,7 +205,8 @@
                 </tfoot>
             </table>
         </div>
-        <div class="newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span></div>
+        <div class="newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        </div>
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>

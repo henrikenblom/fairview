@@ -27,7 +27,7 @@
                 "bProcessing": true,
                 "sAjaxSource": "fairview/ajax/datatables/get_function_data.do",
                 "aoColumns": [
-                    { "mDataProp": "function_name"},
+                    { "mDataProp": "employment_title"},
                     { "mDataProp": "description" },
                     { "mDataProp": "unit_name" }
                 ]
@@ -54,7 +54,7 @@
         });
         function generateProfileForm(unitId) {
             var data = getNodeData(unitId);
-            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+            $('#profile-general').empty().append(generateProfileGeneralForm(data));
         }
     </script>
 </head>

@@ -5,22 +5,18 @@
  * Time: 11:09 AM
  * To change this template use File | Settings | File Templates.
  */
-var assignedFunctionId;
-var formChanged = false;
 
 function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
     var formId = getOrganizationFormId();
     var properties = data.node.properties;
-    formChanged = false;
 
     var updateForm = buildUpdateForm(formId);
 
     var fieldSet = $('<fieldset>');
 
-    var hiddenField_id = hiddenField('_id', unitId);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', unitId);
     var hiddenField_strict = hiddenField('_strict', 'true');
     var hiddenField_username = hiddenField('_username', 'admin');
 
@@ -34,7 +30,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId, false);
 
     //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
         emailDiv, '<br/>', webDiv, '<br/>');
     updateForm.append(fieldSet);
     updateForm.validate();
@@ -45,13 +41,9 @@ function generateSubunitCreationForm() {
     var formId = 'subunitform';
     var form = buildUpdateForm(formId);
     var fieldSet = $('<fieldset>');
-    formChanged = false;
 
-    var hiddenField_id = hiddenField('_id', '');
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', null);
     var hiddenField_strict = hiddenField('_strict', 'true');
-    var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_nodeClass = hiddenField('nodeClass', 'unit');
 
     var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', '', formId, 'descriptionDiv');
 
@@ -66,69 +58,84 @@ function generateSubunitCreationForm() {
     var cityDiv = textInputComponent('Ort', 'city', '', getOrganizationFormId());
     var countryDiv = textInputComponent('Land', 'country', '', getOrganizationFormId());
 
-    fieldSet.append(hiddenField_id, hiddenField_nodeClass, hiddenField_strict, hiddenField_type, hiddenField_type,
-        hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
+    fieldSet.append(hiddenField_id, hiddenField_strict, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
         '<br/>', webDiv, '<br/>', addressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>');
     form.append(fieldSet);
     form.validate();
     return form;
 }
 
-function generateProfileEmploymentInfoForm(data, datatable) {
+function generateProfileGeneralForm(data) {
     var formId = 'profile_form';
-    var unitId = data.node.id;
-    var properties = data.node.properties;
-    formChanged = false;
+
+    var idString = '';
+    var birthdayString = '';
+    var authorizationString = '';
+
+    var firstNameString = '';
+    var lastNameString = '';
+    var nationalityString = '';
+    var civicString = '';
+    var addressString = '';
+    var zipString = '';
+    var cityString = '';
+    var countryString = '';
+    var phoneString = '';
+    var cellString = '';
+    var emailString = '';
+    var additionalInfoString = '';
+    var genderString = '';
+
+    if (!$.isEmptyObject(data)) {
+        var properties = data.node.properties;
+        idString = data.node.id;
+        birthdayString = makeBirthdate(propValue(properties.civic));
+        authorizationString = boolPropValue(properties.authorization);
+        firstNameString = propValue(properties.firstname);
+        lastNameString = propValue(properties.lastname);
+        nationalityString = propValue(properties.nationality);
+        civicString = propValue(properties.civic);
+        addressString = propValue(properties.address);
+        zipString = propValue(properties.zip);
+        cityString = propValue(properties.city);
+        countryString = propValue(properties.country);
+        phoneString = propValue(properties.phone);
+        cellString = propValue(properties.cell);
+        emailString = propValue(properties.email);
+        additionalInfoString = propValue(properties.additional__info);
+        genderString = propValue(properties.gender);
+    }
 
     var form = buildUpdateForm(formId);
     var fieldSet = $('<fieldset>');
 
-    var hiddenField_id = hiddenField('_id', unitId);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
-    var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_birthday = hiddenField('birthday', makeBirthdate(propValue(properties.civic)));
-    var hiddenField_authorization = hiddenField('authorization', boolPropValue(properties.authorization));
-    var hiddenField_executive = hiddenField('executive', boolPropValue(properties.executive));
-    var hiddenField_budgetresponsibility = hiddenField('budget-responsibility', boolPropValue(properties['budget-responsibility']));
-    var hiddenField_ownresultresponsibility = hiddenField('own-result-responsibility', boolPropValue(properties['own-result-responsibility']));
+    var hiddenField_birthday = hiddenField('birthday', civicString);
+    var hiddenField_authorization = hiddenField('authorization', authorizationString);
 
+    var firstNameDiv = textInputComponent('Förnamn', 'firstname', firstNameString, formId, true);
+    var lastNameDiv = textInputComponent('Efternamn', 'lastname', lastNameString, formId, true);
+    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', nationalityString, formId, false);
+    var civicDiv = civicInputComponent('Personnummer', 'civic', civicString, formId, false);
 
-    var firstNameDiv = textInputComponent('Förnamn', 'firstname', propValue(properties.firstname), formId, true);
-    var lastNameDiv = textInputComponent('Efternamn', 'lastname', propValue(properties.lastname), formId, true);
-    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', propValue(properties.nationality), formId, false);
-    var employmentIdDiv = textInputComponent('Anställningsnummer', 'employmentid', propValue(properties.employmentid), formId, false);
-    var civicDiv = civicInputComponent('Personnummer', 'civic', propValue(properties.civic), formId, false);
+    var addressDiv = textInputComponent('Adress', 'address', addressString, formId, false);
+    var zipDiv = textInputComponent('Postnummer', 'zip', zipString, formId, false);
 
-    var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), formId, false);
-    var zipDiv = textInputComponent('Postnummer', 'zip', propValue(properties.zip), formId, false);
+    var cityDiv = textInputComponent('Postort', 'city', cityString, formId, false);
+    var countryDiv = textInputComponent('Land', 'country', countryString, formId, false);
+    var phoneDiv = textInputComponent('Telefon', 'phone', phoneString, formId, false);
+    var cellDiv = textInputComponent('Mobiltelefon', 'cell', cellString, formId, false);
+    var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
 
-    var cityDiv = textInputComponent('Postort', 'city', propValue(properties.city), formId, false);
-    var countryDiv = textInputComponent('Land', 'country', propValue(properties.country), formId, false);
-    var phoneDiv = textInputComponent('Telefon', 'phone', propValue(properties.phone), formId, false);
-    var cellDiv = textInputComponent('Mobiltelefon', 'cell', propValue(properties.cell), formId, false);
-    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId, false);
-
-    var fromdateDiv = textInputComponent('Från datum', 'fromdate', propValue(properties.fromdate), formId, false);
-    var todateDiv = textInputComponent('Till datum', 'todate', propValue(properties.todate), formId, false);
-
-    var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', propValue(properties.additional__info), formId, 'additional_infoDiv');
+    var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', additionalInfoString, formId, 'additional_infoDiv');
 
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId, true);
-    addGenderOptions(properties.gender, genderDiv.children('#gender-field'));
+    addGenderOptions(genderString, genderDiv.children('#gender-field'));
 
-    assignedFunctionId = getFunctionId(unitId).long;
-    var functionDiv = functionSelectInputComponent('Funktion', 'function', 'functionDiv', formId, false);
-    addFunctionOptions(functionDiv.children('#function-field'), unitId, assignedFunctionId);
-
-    var employmentDiv = selectInputComponent('Anställningsform', 'employment', 'employmentDiv', formId, false);
-    addEmploymentOptions(properties.employment, employmentDiv.children('#employment-field'));
-
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
-        hiddenField_executive, hiddenField_budgetresponsibility, hiddenField_ownresultresponsibility,
-        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', employmentIdDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
-        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', functionDiv, '<br/>', fromdateDiv, '<br/>',
-        todateDiv, '<br/>', employmentDiv, '<br/>', additional_infoDiv, '<br/>');
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization,
+        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
+        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     form.validate();
@@ -139,9 +146,6 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
 
     var properties = new Array();
     var data;
-
-
-    formChanged = false;
 
     var form = buildEmploymentForm();
     var formId = 'employment_form';
@@ -193,6 +197,47 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     return form;
 }
 
+function generateLanguageForm(form_Id, languageNode) {
+    var formId = form_Id;
+
+    var languageString = '';
+    var spokenString = '';
+    var writtenString = '';
+    var idString;
+    if (!$.isEmptyObject(languageNode)) {
+        var properties = languageNode.properties;
+        languageString = propValue(properties.language);
+        spokenString = propValue(properties.spoken);
+        writtenString = propValue(properties.written);
+        idString = languageNode.id;
+    }
+
+
+    var languageForm = buildUpdateForm(formId);
+    var languageDiv = $('<div>');
+    languageDiv.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_nodeId', idString);
+    var hiddenField_strict = hiddenField('_strict', 'false');
+
+    var language = textInputComponent('Språk', 'language', languageString, formId, false);
+
+    var written = selectInputComponent('Kunskapsnivå - skriftlig', 'written', 'written-field', formId, false);
+    written.children('#written-field').append(generateOption('some', writtenString, 'Viss'));
+    written.children('#written-field').append(generateOption('good', writtenString, 'God'));
+    written.children('#written-field').append(generateOption('advanced', writtenString, 'Advancerad'));
+
+    var spoken = selectInputComponent('Kunskapsnivå - muntlig', 'spoken', 'spoken-field', formId, false);
+    spoken.children('#spoken-field').append(generateOption('some', spokenString, 'Viss'));
+    spoken.children('#spoken-field').append(generateOption('good', spokenString, 'God'));
+    spoken.children('#spoken-field').append(generateOption('advanced', spokenString, 'Advancerad'));
+
+    languageForm.append(hiddenField_id, hiddenField_strict,
+        language, '<br/>', written, '<br/>', spoken);
+    languageDiv.append(languageForm);
+    return languageDiv;
+}
+
 function assignFunctionCallback(unitId, datatable) {
     return function response() {
         var selectedFunctionId = $('#function-field').val();
@@ -204,6 +249,278 @@ function assignFunctionCallback(unitId, datatable) {
     }
 }
 
+function generateEducationForm(form_Id, educationNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var levelString = '';
+    var directionString = '';
+    var scopeString = '';
+    var fromString = '';
+    var toString = '';
+    var countryString = '';
+    var descriptionString = '';
+    var idString = '';
+    if (!$.isEmptyObject(educationNode)) {
+        var properties = educationNode.properties;
+        nameString = propValue(properties.name);
+        levelString = propValue(properties.level);
+        directionString = propValue(properties.direction);
+        scopeString = propValue(properties.scope);
+        fromString = propValue(properties.from);
+        toString = propValue(properties.to);
+        countryString = propValue(properties.country);
+        descriptionString = propValue(properties.description);
+        idString = educationNode.id;
+    }
+
+
+    var educationForm = buildUpdateForm(formId);
+    var educationDiv = $('<div>');
+    educationDiv.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_nodeId', idString);
+    var hiddenField_strict = hiddenField('_strict', 'false');
+
+    var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
+    var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
+    var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
+    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
+
+    var levelComponent = selectInputComponent('Utbildningsnivå', 'level', 'level-field', formId, false);
+    levelComponent.children('#level-field').append(generateOption('high_school', levelString, 'Gymnasieskola eller motsvarande'));
+    levelComponent.children('#level-field').append(generateOption('certified', levelString, 'Certifierad'));
+    levelComponent.children('#level-field').append(generateOption('vocational_education', levelString, 'Yrkesutbildad'));
+    levelComponent.children('#level-field').append(generateOption('individual_course', levelString, 'Enstaka kurs'));
+    levelComponent.children('#level-field').append(generateOption('post_highschool_course', levelString, 'Övrig eftergymnasial kurs'));
+    levelComponent.children('#level-field').append(generateOption('bachelor', levelString, 'Kandidatexamen'));
+    levelComponent.children('#level-field').append(generateOption('master', levelString, 'Magister eller civilingenjörsexamen'));
+    levelComponent.children('#level-field').append(generateOption('phd', levelString, 'Licentiat eller doktorsexamen'));
+    levelComponent.children('#level-field').append(generateOption('professional_license', levelString, 'Yrkeslicens'));
+
+    educationForm.append(hiddenField_id, hiddenField_strict, nameComponent, '<br/>',
+        levelComponent, '<br/>', directionComponent, '<br/>', scopeComponent, '<br/>', fromComponent, '<br/>', toComponent,
+        '<br/>', countryComponent, '<br/>', descriptionComponent);
+    educationDiv.append(educationForm);
+    return educationDiv;
+}
+
+function generateCertificateForm(form_Id, certificateNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var descriptionString = '';
+    var gradeString = '';
+    var fromString = '';
+    var toString = '';
+    var idString = '';
+    if (!$.isEmptyObject(certificateNode)) {
+        var properties = certificateNode.properties;
+        nameString = propValue(properties.name);
+        descriptionString = propValue(properties.description);
+        gradeString = propValue(properties.grade);
+        fromString = propValue(properties.from);
+        toString = propValue(properties.to);
+        idString = certificateNode.id;
+    }
+
+    var certificateForm = buildUpdateForm(formId);
+    var certificateDiv = $('<div>');
+    certificateDiv.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_nodeId', idString);
+    var hiddenField_strict = hiddenField('_strict', 'false');
+
+    var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
+    var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
+    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
+
+    certificateForm.append(hiddenField_id, hiddenField_strict,
+        nameComponent, '<br/>', descriptionComponent, '<br/>', fromComponent, '<br/>', toComponent
+        , '<br/>', gradeComponent);
+    certificateDiv.append(certificateForm);
+    return certificateDiv;
+}
+
+function generateWorkExperienceForm(form_Id, workExperienceNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var companyString = '';
+    var tradeString = '';
+    var countryString = '';
+    var fromString = '';
+    var toString = '';
+    var assignmentsString = '';
+    var idString = '';
+    if (!$.isEmptyObject(workExperienceNode)) {
+        var properties = workExperienceNode.properties;
+        nameString = propValue(properties.name);
+        companyString = propValue(properties.description);
+        tradeString = propValue(properties.grade);
+        countryString = propValue(properties.from);
+        fromString = propValue(properties.from);
+        toString = propValue(properties.to);
+        assignmentsString = propValue(properties.assignments);
+        idString = workExperienceNode.id;
+    }
+
+    var form = buildUpdateForm(formId);
+    var div = $('<div>');
+    div.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_nodeId', idString);
+    var hiddenField_strict = hiddenField('_strict', 'false');
+
+    var nameComponent = textInputComponent('Tidigare befattning', 'name', nameString, formId, false);
+    var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
+    var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
+    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var fromComponent = textInputComponent('Från och med', 'from', countryString, formId, false);
+    var toComponent = textInputComponent('Till och med', 'to', fromString, formId, false);
+    var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
+
+    form.append(hiddenField_id, hiddenField_strict,
+        nameComponent, '<br/>', companyComponent, '<br/>', tradeComponent, '<br/>', countryComponent, '<br/>',
+        fromComponent, '<br/>', toComponent, '<br/>', assignmentComponent);
+    div.append(form);
+    return div;
+}
+
+function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var descriptionString = '';
+    var idString;
+    if (!$.isEmptyObject(militaryServiceNode)) {
+        var properties = militaryServiceNode.properties;
+        nameString = propValue(properties.name);
+        descriptionString = propValue(properties.description);
+        idString = militaryServiceNode.id;
+    }
+
+    var form = buildUpdateForm(formId);
+    var div = $('<div>');
+    div.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_nodeId', idString);
+    var hiddenField_strict = hiddenField('_strict', 'false');
+
+    var nameComponent = textInputComponent('Militärtjänst', 'name', nameString, formId, false);
+    var descriptionComponent = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'description-field');
+
+    form.append(hiddenField_id, hiddenField_strict,
+        nameComponent, '<br/>', descriptionComponent);
+    div.append(form);
+    return div;
+}
+
+function addEmployee() {
+    openEmployeeForm();
+}
+
+function addEducationButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addEducationButton')
+    button.html('Lägg till utbildning');
+    button.click(function() {
+        var formId = getFormId("HAS_EDUCATION", 0);
+        generateEducationForm(formId).prependTo("#educations");
+    });
+    return button;
+}
+
+function addCertificateButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addCertificateButton')
+    button.html('Lägg till certifikat');
+    button.click(function() {
+        var formId = getFormId("HAS_CERTIFICATE", 0);
+        generateCertificateForm(formId).prependTo('#certificates');
+    });
+    return button;
+}
+
+function addLanguageButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'languageButton')
+    button.html('Lägg till språk');
+    button.click(function() {
+        var formId = getFormId("HAS_LANGUAGESKILL", 0);
+        generateLanguageForm(formId).prependTo('#languages');
+    });
+    return button;
+}
+
+function addWorkExperienceButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addWorkExperienceButton')
+    button.html('Lägg till tidigare befattning');
+    button.click(function() {
+        var formId = getFormId("HAS_WORK_EXPERIENCE", 0);
+        generateWorkExperienceForm(formId).prependTo('#workexperiences');
+    });
+    return button;
+}
+
+function addMilitaryServiceButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'addMilitaryServiceButton')
+    button.html('Lägg till Militärtjänst');
+    button.click(function() {
+        var formId = getFormId("HAS_MILITARY_SERVICE", 0);
+        generateMilitaryServiceForm(formId).prependTo('#militaryservices');
+    });
+    return button;
+}
+
+function getFormId(formId, count) {
+    var form = $('#' + formId + count);
+    if (form.val() == null) {
+        return formId + count;
+    }
+    else
+        return getFormId(formId, (count + 1));
+}
+
+function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunction, divToPrepend) {
+    $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
+        if (!$.isEmptyObject(data.list)) {
+            var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+            if (array.length > 1) {
+                $.each(array, function(count, object) {
+                    formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
+                });
+            }
+            else { //an array containing only one entry is a single object
+                formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
+            }
+        }
+        else { //no values of the type exists so create empty form
+            formGeneratingFunction.call(this, type).prependTo(divToPrepend);
+        }
+    });
+}
+
+function createRelationship(startNodeId, endNodeId, type) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:startNodeId, _endNodeId: endNodeId,_type:type });
+}
+
+function generateOption(value, savedValue, text) {
+    var option = $('<option>');
+    option.attr('value', value);
+    option.html(text);
+    if (value == savedValue)
+        option.attr('selected', 'true');
+    return option;
+}
+
 function updateTableCallback(datatable) {
     if (datatable != null)
         return function response() {
@@ -211,18 +528,42 @@ function updateTableCallback(datatable) {
         }
 }
 
-function generateSaveButton(formId, callback) {
+function generateSaveButton(nodeId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
-    saveButton.attr('id', 'saveButton');
+    saveButton.addClass('saveButton');
     saveButton.attr('disabled', 'disabled');
     saveButton.click(function() {
-        $('#' + formId).ajaxSubmit(function() {
-            disableSaveButton();
-            saveButton.html('Sparar...');
-            setTimeout(closePopup, 500);
-            if (typeof callback == 'function')
-                callback.call();
+        disableSaveButton();
+        saveButton.html('Sparar...');
+        setTimeout(closePopup, 500);
+        var forms = $('form');
+        $.each(forms, function(i, form) {
+            if ($(form).data('edited') == 'true') {
+                $(form).ajaxSubmit(function(data) {
+                    var formId = $(form).attr('id').replace(/\d+/, '');
+                    switch (formId) {
+                        case "HAS_MILITARY_SERVICE":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_EDUCATION":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_LANGUAGESKILL":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_CERTIFICATE":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_WORK_EXPERIENCE":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        default:
+                    }
+                    if (typeof callback == 'function' && i == 0) //only make the callback once
+                        callback.call();
+                });
+            }
         });
     });
     return saveButton;
@@ -233,7 +574,14 @@ function generateCancelButton() {
     cancelButton.html('Avbryt');
     cancelButton.attr('id', 'cancelButton');
     cancelButton.click(function() {
-        if (formChanged == true) {
+        var edited;
+        var forms = $('form');
+        $.each(forms, function(i, form) {
+           if ($(form).data('edited') == 'true') {
+             edited = 'true';
+           }
+        });
+        if (edited == 'true') {
             generateCancelDialog();
         } else {
             closePopup();
@@ -264,16 +612,16 @@ function generateCancelDialog() {
 
 
 function enableSaveButton() {
-    $('#saveButton').removeAttr('disabled');
+    $('.saveButton').removeAttr('disabled');
 }
 
 function disableSaveButton() {
-    $('#saveButton').attr('disabled', 'disabled');
+    $('.saveButton').attr('disabled', 'disabled');
 }
-function footerButtonsComponent(formId, callback) {
+function footerButtonsComponent(nodeId, callback) {
     var saveDiv = $('<div>');
     saveDiv.addClass('saveDiv');
-    var saveButton = generateSaveButton(formId, callback);
+    var saveButton = generateSaveButton(nodeId, callback);
     var cancelButton = generateCancelButton();
     saveDiv.append(saveButton, cancelButton);
     return saveDiv;
@@ -323,9 +671,9 @@ function addGenderOptions(gender, genderInputElement) {
     var optionFemale = $('<option>');
     optionFemale.attr('value', 'F');
     optionFemale.html('Kvinna');
-    if (propValue(gender) == 'M')
+    if (gender == 'M')
         optionMan.attr('selected', 'true');
-    else if (propValue(gender) == 'F')
+    else if (gender == 'F')
         optionFemale.attr('selected', 'true');
     else {
         var optionChooseGender = $('<option>');
@@ -413,7 +761,6 @@ function generateTabHeader(name) {
 function fieldLabelBox() {
     return $('<div class="field-label-box">');
 }
-
 function fieldBox() {
     return $('<div class="field-box">');
 }
@@ -443,7 +790,7 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("name", inputName);
     textInput.val(value);
     textInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
     });
     textInput.keyup(function() {
         validateForm(formId);
@@ -469,7 +816,7 @@ function radioButtonInputComponent(labelText, inputName, formId, radioButtonData
             validateForm(formId);
         });
         radioButton.change(function() {
-            formChanged = true;
+            $('#' + formId).data('edited', 'true');
         });
         if (radioButtonData[i][1] == selected)
             radioButton.attr('checked', 'checked');
@@ -495,8 +842,8 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
         var checkbox = $('<input type="checkbox">');
         checkbox.attr('id', 'pseudo-' + checkboxData[i][0]);
         checkbox.addClass('checkbox');
-        if(checkboxData[i][2] == true)
-            checkbox.attr('checked','checked');
+        if (checkboxData[i][2] == true)
+            checkbox.attr('checked', 'checked');
         checkbox.change(function(event) {
             var checkbox = event.target.id.toString().replace("pseudo-", "");
 
@@ -522,7 +869,7 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
             validateForm(formId);
         });
         checkbox.change(function() {
-            formChanged = true;
+            $('#' + formId).data('edited', 'true');
         });
 
         inputBoxDiv.append(hidden);
@@ -545,7 +892,7 @@ function civicInputComponent(labelText, inputName, value, formId, required) {
         validateForm(formId);
     });
     textInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
         $('#birthday-field').val(makeBirthdate(this.value));
     });
     if (required == true) {
@@ -561,7 +908,6 @@ function hiddenField(name, value) {
     hiddenField.attr("id", name + "-field");
     return hiddenField;
 }
-
 function propValue(prop) {
     if ($.isEmptyObject(prop))
         return "";
@@ -586,7 +932,7 @@ function getNodeData(unitId) {
 function buildUpdateForm(id) {
     var updateForm = $('<form>');
     updateForm.attr("id", id);
-    updateForm.attr("action", "neo/ajax/update_properties.do");
+    updateForm.attr("action", "neo/ajax/update_node.do");
     updateForm.attr("method", "post");
     return updateForm;
 }
@@ -612,7 +958,7 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
     textareaInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
     });
     textareaInput.keyup(function() {
         validateForm(formId);
@@ -636,7 +982,7 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
         validateForm(formId);
     });
     if (required == true) {
@@ -656,7 +1002,7 @@ function functionSelectInputComponent(labelText, inputName, divId, formId, requi
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
         validateForm(formId);
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
     });
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
@@ -707,16 +1053,6 @@ function getRelationshipData(parentNode) {
 function getFunctions(unitId) {
     var data = $.parseJSON($.ajax({
         url:"fairview/ajax/get_functions.do",
-        data: {_nodeId: unitId},
-        async:false,
-        dataType:"json"
-    }).responseText);
-    return data;
-}
-
-function getFunctionId(unitId) {
-    var data = $.parseJSON($.ajax({
-        url:"fairview/ajax/get_functionId.do",
         data: {_nodeId: unitId},
         async:false,
         dataType:"json"

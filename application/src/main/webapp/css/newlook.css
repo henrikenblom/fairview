@@ -52,7 +52,7 @@ table{
     white-space: nowrap;
 }
 
-#saveButton {
+.saveButton {
     float: left;
 }
 
@@ -778,10 +778,12 @@ label.error {
 
 .newpersontop {
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .newpersonbottom {
     margin-top: 25px;
+    cursor: pointer;
 }
 
 /*Multiselect*/
@@ -832,6 +834,14 @@ label.error {
 .ms2side__div select {
     width: 220px;
     float: left;
+}
+
+.delimitedForm{
+  border-top: 1px solid #DDD;
+}
+
+.groupedFormsContainer{
+  border: 1px solid #DDD;
 }
 
 
