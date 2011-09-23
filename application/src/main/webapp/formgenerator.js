@@ -5,14 +5,12 @@
  * Time: 11:09 AM
  * To change this template use File | Settings | File Templates.
  */
-var formChanged = false;
 
 function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
     var formId = getOrganizationFormId();
     var properties = data.node.properties;
-    formChanged = false;
 
     var updateForm = generateUpdateForm(formId);
 
@@ -44,7 +42,6 @@ function generateSubunitCreationForm() {
     var formId = 'subunitform';
     var form = generateUpdateForm(formId);
     var fieldSet = $('<fieldset>');
-    formChanged = false;
 
     var hiddenField_id = hiddenField('_id', '');
     var hiddenField_type = hiddenField('_type', 'node');
@@ -75,7 +72,6 @@ function generateSubunitCreationForm() {
 
 function generateProfileGeneralForm(data) {
     var formId = 'profile_form';
-    formChanged = false;
 
     var idString = '';
     var birthdayString = '';
@@ -435,7 +431,7 @@ function addExistingValues(nodeId, type, formGeneratingFunction, divToPrepend) {
                 formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
             }
         }
-        else{
+        else {
             formGeneratingFunction.call(this, type).prependTo(divToPrepend);
         }
     });
@@ -503,10 +499,12 @@ function generateSaveButton(callback) {
         setTimeout(closePopup, 500);
         var forms = $('form');
         $.each(forms, function(i, form) {
-            $('#' + form.id).ajaxSubmit(function() {
-                if (typeof callback == 'function' && i == 0) //only make the callback once
-                    callback.call();
-            });
+            if ($(form).data('edited') == 'true') {
+                $(form).ajaxSubmit(function() {
+                    if (typeof callback == 'function' && i == 0) //only make the callback once
+                        callback.call();
+                });
+            }
         });
 
 
@@ -519,7 +517,16 @@ function generateCancelButton() {
     cancelButton.html('Avbryt');
     cancelButton.attr('id', 'cancelButton');
     cancelButton.click(function() {
-        if (formChanged == true) {
+        var edited;
+        var forms = $('form');
+        $.each(forms, function(i, form) {
+            if ($(form).data('edited') == 'true') {
+               edited = 'true';
+               return false;
+            }
+        });
+
+        if (edited == 'true') {
             generateCancelDialog();
         } else {
             closePopup();
@@ -679,7 +686,8 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("name", inputName);
     textInput.val(value);
     textInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
+        $('#' + formId).data('edited', 'true');
     });
     textInput.keyup(function() {
         validateForm(formId);
@@ -704,7 +712,7 @@ function civicInputComponent(labelText, inputName, value, formId, required) {
         validateForm(formId);
     });
     textInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
         $('#birthday-field').val(makeBirthdate(this.value));
     });
     if (required == true) {
@@ -758,7 +766,7 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
     textareaInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
     });
     textareaInput.keyup(function() {
         validateForm(formId);
@@ -782,7 +790,7 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
         validateForm(formId);
     });
     if (required == true) {
@@ -802,7 +810,7 @@ function functionSelectInputComponent(labelText, inputName, divId, formId, requi
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
         validateForm(formId);
-        formChanged = true;
+        $('#' + formId).data('edited', 'true');
     });
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
