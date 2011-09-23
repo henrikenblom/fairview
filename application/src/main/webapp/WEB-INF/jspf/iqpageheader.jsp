@@ -64,8 +64,8 @@
 
             <button <%=  request.getRequestURI().endsWith("/index.jsp") ? "disabled=\"true\"" : "" %> class="top-button" <%=buttonStyle%> onclick="changeView('index.jsp')" name="navigate-home">Startsida</button>
             <sec:authorize ifAnyGranted="ROLE_MANAGER">
-                <button <%=  request.getRequestURI().endsWith("/organisationunits.jsp") ? "disabled=\"true\"" : "" %> class="top-button" <%=buttonStyle%> name="organisation"
-                        onclick="changeView('organisationunits.jsp')">Organisation
+                <button <%=  request.getRequestURI().endsWith("/organisationtree.jsp") ? "disabled=\"true\"" : "" %> class="top-button" <%=buttonStyle%> name="organisation"
+                        onclick="changeView('organisationtree.jsp')">Organisation
                 </button>
             </sec:authorize>
             <sec:authorize ifNotGranted="ROLE_MANAGER">
@@ -73,11 +73,11 @@
                         onclick="changeView('organisationinfo.jsp')">Organisation
                 </button>
             </sec:authorize>
-                <button <%=  request.getRequestURI().endsWith("/functions.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="company-functions"
-                        onclick="changeView('functions.jsp')">Funktioner
+                <button <%=  request.getRequestURI().endsWith("/functionlist.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="company-functions"
+                        onclick="changeView('functionlist.jsp')">Anställningar
                 </button>
-                <button <%=  request.getRequestURI().endsWith("/persons.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="persons"
-                        onclick="changeView('persons.jsp')">Personer
+                <button <%=  request.getRequestURI().endsWith("/employees.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="persons"
+                        onclick="changeView('employees.jsp')">Personer
                 </button>
             <sec:authorize ifAnyGranted="ROLE_MANAGER">
                 <button <%=  request.getRequestURI().endsWith("/users.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="company-functions"
