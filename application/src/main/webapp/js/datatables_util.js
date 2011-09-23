@@ -41,23 +41,29 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 }
 
-function initFunctionCell(functionId, cell) {
-    if (functionId != "") {
+function initEmploymentCell(employmentId, nodeId, cell) {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
+
         $(cell).click(function() {
-            //alert('Not yet implemented.');
-            openFunctionForm(functionId);
+            createEmployeeTab(nodeId, employmentId);
+
+            openEmploymentForm(employmentId, nodeId);
         });
-    }
+
+        if ($(cell).html().length < 1) {
+            $(cell).html('Lägg till');
+        }
+
 }
 
-function initEmployeeCell(nodeId, cell, datatable) {
+function initEmployeeCell(nodeId, employmentId, cell, datatable) {
     if (nodeId != "") {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
         $(cell).click(function() {
-            openEmployeeForm(nodeId);
+            createEmployeeTab(nodeId, employmentId);
+            openEmployeeForm();
         })
     }
 }
