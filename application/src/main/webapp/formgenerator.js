@@ -6,14 +6,16 @@
  * To change this template use File | Settings | File Templates.
  */
 var assignedFunctionId;
+var formChanged = false;
 
 function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
     var formId = getOrganizationFormId();
     var properties = data.node.properties;
+    formChanged = false;
 
-    var updateForm = generateUpdateForm(formId);
+    var updateForm = buildUpdateForm(formId);
 
     var fieldSet = $('<fieldset>');
 
@@ -41,8 +43,9 @@ function generateBaseUnitEditForm(data, datatable) {
 
 function generateSubunitCreationForm() {
     var formId = 'subunitform';
-    var form = generateUpdateForm(formId);
+    var form = buildUpdateForm(formId);
     var fieldSet = $('<fieldset>');
+    formChanged = false;
 
     var hiddenField_id = hiddenField('_id', '');
     var hiddenField_type = hiddenField('_type', 'node');
@@ -75,8 +78,9 @@ function generateProfileEmploymentInfoForm(data, datatable) {
     var formId = 'profile_form';
     var unitId = data.node.id;
     var properties = data.node.properties;
+    formChanged = false;
 
-    var form = generateUpdateForm(formId);
+    var form = buildUpdateForm(formId);
     var fieldSet = $('<fieldset>');
 
     var hiddenField_id = hiddenField('_id', unitId);
@@ -131,6 +135,63 @@ function generateProfileEmploymentInfoForm(data, datatable) {
 
     return form;
 }
+function generateEmploymentCreationForm(employmentId, employeeId) {
+
+    var properties = new Array();
+    var data;
+
+
+    formChanged = false;
+
+    var form = buildEmploymentForm();
+    var formId = 'employment_form';
+    var fieldSet = $('<fieldset>');
+
+    if (employmentId != null
+        && employmentId.length > 0) {
+
+        data = getNodeData(employmentId);
+        fieldSet.append(hiddenField('_employmentId', data.node.id));
+        properties = data.node.properties;
+
+    }
+
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+    var hiddenField_employeeId = hiddenField('_employeeId', employeeId);
+
+    var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
+    var workPhoneDiv = textInputComponent('Arbetstelefon', 'workPhone', propValue(properties.workPhone), formId, false);
+    var workingHoursDiv = textInputComponent('Arbetstider', 'workHours', propValue(properties.workHours), formId, false);
+    var responsibilitys = [
+        ['managementTeam', 'Ledningsgrupp', boolPropValue(properties.managementTeam)],
+        ['budgetResponsibility', 'Budgetansvar', boolPropValue(properties.budgetResponsibility)],
+        ['ownResultResponsibility', 'Eget resultatansvar', boolPropValue(properties.ownResultResponsibility)],
+        ['authorizationRight', 'Attesträtt', boolPropValue(properties.authorizationRight)]
+    ];
+    var responsibilityDiv = checkboxInputComponent('Ansvar/Befogenheter', formId, responsibilitys);
+    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationAmount', propValue(properties.authorizationAmount), formId, false);
+
+    var paymentFormDiv = selectInputComponent('Löneform', 'paymentForm', 'paymentFormDiv', formId, false);
+    addPaymentFormOption(properties.paymentForm, paymentFormDiv.children('#paymentForm-field'));
+    var salaryDiv = textInputComponent('Aktuell lön', 'salary', propValue(properties.salary), formId, false);
+    var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimeCompensation', formId, yesNo(), propValue(properties.overtimeCompensation));
+    var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelCompensation', formId, yesNo(), propValue(properties.travelCompensation));
+    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationDays', propValue(properties.vacationDays), formId, false);
+    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalPeriodEmployee', 'dismissalPeriodEmployeeDiv', formId, false);
+    addDismissalPeriod(properties.dismissalPeriodEmployee, dismissalPeriodEmployeeDiv.children('#dismissalPeriodEmployee-field'));
+    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalPeriodEmployer', 'dismissalPeriodEmployerDiv', formId, false);
+    addDismissalPeriod(properties.dismissalPeriodEmployer, dismissalPeriodEmployerDiv.children('#dismissalPeriodEmployer-field'));
+    var companyCarDiv = textInputComponent('Tjänstebil', 'companyCar', propValue(properties.companyCar), formId, false);
+
+    var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensionInsurances', propValue(properties.pensionInsurances), formId, false);
+    fieldSet.append(hiddenField_employeeId, hiddenField_type, hiddenField_strict, hiddenField_username, titleDiv, '<br />', workPhoneDiv, '<br />', workingHoursDiv, '<br />', responsibilityDiv, '<br />', attestationRightsDiv, '<br />', paymentFormDiv, '<br />', salaryDiv
+        , '<br />', overtimeCompensationDiv, '<br />', travelCompensationDiv, '<br />', vacationDaysDiv, '<br />', dismissalPeriodEmployeeDiv, '<br />', dismissalPeriodEmployerDiv, '<br />',
+        companyCarDiv, '<br />', pensionInsurancesDiv);
+    form.append(fieldSet);
+    return form;
+}
 
 function assignFunctionCallback(unitId, datatable) {
     return function response() {
@@ -167,18 +228,54 @@ function generateSaveButton(formId, callback) {
     return saveButton;
 }
 
+function generateCancelButton() {
+    var cancelButton = $('<button>');
+    cancelButton.html('Avbryt');
+    cancelButton.attr('id', 'cancelButton');
+    cancelButton.click(function() {
+        if (formChanged == true) {
+            generateCancelDialog();
+        } else {
+            closePopup();
+        }
+    });
+    return cancelButton;
+}
+
+function generateCancelDialog() {
+    var cancelDialog = $('<div>');
+    cancelDialog.attr('title', 'Är du säker?');
+    cancelDialog.html('Du har osparade ändringar. Är du säker på att du vill stänga formuläret?');
+    cancelDialog.dialog({
+        resizable: false,
+        height:140,
+        modal: true,
+        buttons: {
+            "Ja": function() {
+                $(this).dialog("close");
+                closePopup();
+            },
+            "Avbryt": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+}
+
+
 function enableSaveButton() {
     $('#saveButton').removeAttr('disabled');
 }
 
-function disableSaveButton(){
-   $('#saveButton').attr('disabled', 'disabled');
+function disableSaveButton() {
+    $('#saveButton').attr('disabled', 'disabled');
 }
-function saveButtonComponent(formId, callback) {
+function footerButtonsComponent(formId, callback) {
     var saveDiv = $('<div>');
     saveDiv.addClass('saveDiv');
     var saveButton = generateSaveButton(formId, callback);
-    saveDiv.append(saveButton);
+    var cancelButton = generateCancelButton();
+    saveDiv.append(saveButton, cancelButton);
     return saveDiv;
 }
 
@@ -262,6 +359,46 @@ function addEmploymentOptions(employment, employmentInputElement) {
     });
 }
 
+function addPaymentFormOption(paymentForm, paymentFormInputElement) {
+    var salaryFormOptions = new Array('Månadslön', 'Tvåveckorslön', 'Veckolön', 'Timlön');
+
+    if (propValue(paymentForm) == '' || propValue(paymentForm) == 'Välj...') {
+        var optionChoose = $('<option>');
+        optionChoose.html('Välj...');
+        optionChoose.attr('selected', 'true');
+        paymentFormInputElement.append(optionChoose);
+    }
+
+    $.each(salaryFormOptions, function(i, data) {
+        var optionDiv = $('<option>');
+        optionDiv.attr('value', data);
+        optionDiv.html(data);
+        if (propValue(paymentForm) == data)
+            optionDiv.attr('selected', 'true');
+        paymentFormInputElement.append(optionDiv);
+    });
+}
+function addDismissalPeriod(dismissalPeriod, dismissalPeriodInputElement) {
+    if (propValue(dismissalPeriod) == '' || propValue(dismissalPeriod) == 'Välj...');
+    {
+        var optionChoose = $('<option>');
+        optionChoose.html('Välj...');
+        optionChoose.attr('selected', 'true');
+        dismissalPeriodInputElement.append(optionChoose);
+    }
+    for (var i = 1; i < 13; i++) {
+        var optionDiv = $('<option>');
+        optionDiv.attr('value', i);
+        if (i == 1)
+            optionDiv.html(i + " månad");
+        else
+            optionDiv.html(i + " månader");
+        if (propValue(dismissalPeriod) == i)
+            optionDiv.attr('selected', 'true');
+        dismissalPeriodInputElement.append(optionDiv);
+    }
+}
+
 function makeBirthdate(civicnumber) {
     if (civicnumber.toString().length > 6)
         return civicnumber.toString().substr(0, 6);
@@ -276,9 +413,19 @@ function generateTabHeader(name) {
 function fieldLabelBox() {
     return $('<div class="field-label-box">');
 }
+
 function fieldBox() {
     return $('<div class="field-box">');
 }
+
+function fieldCheckboxBox() {
+    return $('<div class="field-checkbox-box">')
+}
+
+function fieldInputBox() {
+    return $('<div class="field-input-box">')
+}
+
 function formIsValid(formId) {
     return $('#' + formId).valid();
 }
@@ -295,6 +442,9 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
+    textInput.change(function() {
+        formChanged = true;
+    });
     textInput.keyup(function() {
         validateForm(formId);
     });
@@ -305,7 +455,84 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     return inputDiv;
 }
 
-function civicInputComponent(labelText, inputName, value, formId) {
+function radioButtonInputComponent(labelText, inputName, formId, radioButtonData, selected) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    var inputBox = fieldInputBox();
+    inputLabel.append(labelText);
+    inputDiv.append(inputLabel);
+    $.each(radioButtonData, function(i) {
+        var radioButton = $('<input type="radio">');
+        radioButton.attr('name', inputName);
+        radioButton.attr('value', radioButtonData[i][1]);
+        radioButton.click(function() {
+            validateForm(formId);
+        });
+        radioButton.change(function() {
+            formChanged = true;
+        });
+        if (radioButtonData[i][1] == selected)
+            radioButton.attr('checked', 'checked');
+        radioButton.addClass('radiobutton');
+        radioButton.append(radioButtonData[i][0]);
+        inputBox.append(radioButton);
+    });
+    inputDiv.append(inputBox);
+    return inputDiv;
+}
+
+function checkboxInputComponent(labelText, formId, checkboxData) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    inputLabel.append(labelText);
+    inputDiv.append(inputLabel);
+    $.each(checkboxData, function(i) {
+        var inputBoxDiv = fieldCheckboxBox();
+        var hidden = $('<input type="hidden">');
+        hidden.attr('id', checkboxData[i][0] + "-field");
+        hidden.attr('name', checkboxData[i][0]);
+        hidden.attr('value', (checkboxData[i][2]));
+        var checkbox = $('<input type="checkbox">');
+        checkbox.attr('id', 'pseudo-' + checkboxData[i][0]);
+        checkbox.addClass('checkbox');
+        if(checkboxData[i][2] == true)
+            checkbox.attr('checked','checked');
+        checkbox.change(function(event) {
+            var checkbox = event.target.id.toString().replace("pseudo-", "");
+
+            $('#' + checkbox + '-field').val(event.target.checked);
+
+            if (checkbox == "authorization") {
+
+                if (event.target.checked) {
+
+                    $('#authorization-amount-field').show();
+
+                } else {
+
+                    $('#authorization-amount-field').hide();
+
+                }
+
+            }
+
+        });
+        checkbox.append(checkboxData[i][1]);
+        checkbox.click(function() {
+            validateForm(formId);
+        });
+        checkbox.change(function() {
+            formChanged = true;
+        });
+
+        inputBoxDiv.append(hidden);
+        hidden.after(checkbox);
+        inputDiv.append(inputBoxDiv);
+    });
+    return inputDiv;
+}
+
+function civicInputComponent(labelText, inputName, value, formId, required) {
     var inputDiv = fieldBox();
     var inputLabel = fieldLabelBox();
     inputLabel.append(labelText);
@@ -314,10 +541,16 @@ function civicInputComponent(labelText, inputName, value, formId) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
+    textInput.keyup(function() {
+        validateForm(formId);
+    });
     textInput.change(function() {
+        formChanged = true;
         $('#birthday-field').val(makeBirthdate(this.value));
     });
-
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
     inputDiv.append(inputLabel, textInput);
     return inputDiv;
 }
@@ -328,6 +561,7 @@ function hiddenField(name, value) {
     hiddenField.attr("id", name + "-field");
     return hiddenField;
 }
+
 function propValue(prop) {
     if ($.isEmptyObject(prop))
         return "";
@@ -349,13 +583,25 @@ function getNodeData(unitId) {
     }).responseText);
     return data;
 }
-function generateUpdateForm(id) {
+function buildUpdateForm(id) {
     var updateForm = $('<form>');
     updateForm.attr("id", id);
     updateForm.attr("action", "neo/ajax/update_properties.do");
     updateForm.attr("method", "post");
     return updateForm;
 }
+
+function buildEmploymentForm() {
+
+    var employmentForm = $('<form>');
+
+    employmentForm.attr("id", 'employment_form');
+
+    employmentForm.attr("action", "fairview/ajax/set_employment.do");
+    employmentForm.attr("method", "post");
+    return employmentForm;
+}
+
 function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     var textareaDiv = fieldBox();
     textareaDiv.attr("id", divId);
@@ -365,6 +611,9 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("name", inputName);
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
+    textareaInput.change(function() {
+        formChanged = true;
+    });
     textareaInput.keyup(function() {
         validateForm(formId);
     });
@@ -387,6 +636,7 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
+        formChanged = true;
         validateForm(formId);
     });
     if (required == true) {
@@ -406,6 +656,7 @@ function functionSelectInputComponent(labelText, inputName, divId, formId, requi
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
         validateForm(formId);
+        formChanged = true;
     });
     selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
@@ -479,4 +730,35 @@ function assignFunction(unitId, functionId, callback) {
             $.getJSON("fairview/ajax/assign_function.do", {employment:dataEmployment.relationship.endNode, "function:relationship":functionId, percent:100}, callback);
         });
     });
+}
+
+function yesNo() {
+    return  [
+        ['Ja', 'Yes'],
+        ['Nej', 'No']
+    ];
+}
+
+function translatePseudoCheckbox(event, form_name) {
+
+    var checkbox = event.target.id.toString().replace("pseudo-", "");
+
+    $('#' + checkbox + '-field').val(event.target.checked);
+
+    if (checkbox == "authorization") {
+
+        if (event.target.checked) {
+
+            $('#authorization-amount-field').show();
+
+        } else {
+
+            $('#authorization-amount-field').hide();
+
+        }
+
+    }
+
+    $('#' + form_name).ajaxSubmit();
+
 }

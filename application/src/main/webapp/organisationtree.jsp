@@ -73,7 +73,6 @@
 
             adjustViewPort();
             fadeOutModalizer();
-            setupModalizerClickEvents();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
@@ -127,7 +126,7 @@
 
         function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            var saveButton = saveButtonComponent(getOrganizationFormId());
+            var saveButton = footerButtonsComponent(getOrganizationFormId());
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 $('#header-organization-name').html($('#name-field').val());
@@ -141,7 +140,7 @@
 
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            var saveButton = saveButtonComponent(getOrganizationFormId());
+            var saveButton = footerButtonsComponent(getOrganizationFormId());
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 assignManager(data.node.id, $('#manager-selection'));

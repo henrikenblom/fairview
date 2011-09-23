@@ -1,6 +1,7 @@
 package com.fairviewiq.spring.controllers;
 
 
+import com.fairviewiq.utils.DBUtility;
 import com.fairviewiq.utils.FunctionListGenerator;
 import com.fairviewiq.utils.PersonListGenerator;
 
@@ -12,6 +13,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import se.codemate.neo4j.SimpleRelationshipType;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -40,12 +42,14 @@ public class DatatablesController {
 
     private FunctionListGenerator functionListGenerator;
     private PersonListGenerator personListGenerator;
+    private DBUtility dbUtility;
 
     @PostConstruct
     public void initialize() {
 
         functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
         personListGenerator = new PersonListGenerator((EmbeddedGraphDatabase) neo);
+        dbUtility = DBUtility.getInstance(neo);
 
     }
 
@@ -74,9 +78,9 @@ public class DatatablesController {
     }
 
     private void loadFunctionData(Node functionNode, HashMap<String, String> row) {
-        addFunctionValuesToRow(row, String.valueOf(functionNode.getId()), functionNode.getProperty("name", "").toString());
+        addEmploymentValuesToRow(row, String.valueOf(functionNode.getId()), functionNode.getProperty("name", "").toString());
         row.put("description", functionNode.getProperty("description", "").toString());
-        Node unitNode = getUnitOfFunction(functionNode);
+        Node unitNode = dbUtility.getUnitOfEmployment(functionNode);
         if (unitNode != null) {
             addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name").toString());
         } else {
@@ -107,23 +111,37 @@ public class DatatablesController {
     private void loadEmployeeData(Node employeeNode, HashMap<String, String> row) {
         row.put("firstname", employeeNode.getProperty("firstname", "").toString());
         row.put("lastname", employeeNode.getProperty("lastname", "").toString());
-        row.put("phone", employeeNode.getProperty("phone", "").toString());
-        row.put("email", employeeNode.getProperty("email", "").toString());
         row.put("node_id", String.valueOf(employeeNode.getId()));
 
-        Node functionNode = getFunctionOfEmployee(employeeNode);
-        if (functionNode != null) {
-            addFunctionValuesToRow(row, String.valueOf(functionNode.getId()), functionNode.getProperty("name").toString());
+        Node employmentNode = getEmploymentNode(employeeNode);
+        if (employmentNode != null) {
+            addEmploymentValuesToRow(row, String.valueOf(employmentNode.getId()), employmentNode.getProperty("title", "").toString());
         } else {
-            addFunctionValuesToRow(row, "", "");
+            addEmploymentValuesToRow(row, "", "");
         }
 
-        Node unitNode = getUnitOfFunction(functionNode);
+        Node unitNode = dbUtility.getUnitOfEmployment(employmentNode);
         if (unitNode != null) {
-            addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name").toString());
+            addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name", "").toString());
         } else {
             addUnitValuesToRow(row, "", "");
         }
+    }
+
+    private Node getEmploymentNode(Node employeeNode) {
+
+        Node retval = null;
+
+        try {
+
+            retval = employeeNode.getRelationships(new SimpleRelationshipType("HAS_EMPLOYMENT")).iterator().next().getEndNode();
+
+        } catch (Exception ex) {
+            // no-op
+        }
+
+        return retval;
+
     }
 
     private void addUnitValuesToRow(HashMap<String, String> row, String unitId, String unitName) {
@@ -131,9 +149,9 @@ public class DatatablesController {
         row.put("unit_name", unitName);
     }
 
-    private void addFunctionValuesToRow(HashMap<String, String> row, String functionId, String functionName) {
-        row.put("function_id", functionId);
-        row.put("function_name", functionName);
+    private void addEmploymentValuesToRow(HashMap<String, String> row, String employmentId, String employmentTitle) {
+        row.put("employment_id", employmentId);
+        row.put("employment_title", employmentTitle);
     }
 
 }

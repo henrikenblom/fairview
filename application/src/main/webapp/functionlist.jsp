@@ -10,7 +10,7 @@
 
 <html>
 <head>
-    <title>Infero Quest - Personer</title>
+    <title>Infero Quest - Funktioner</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
@@ -32,24 +32,23 @@
                     { "mDataProp": "unit_name" }
                 ]
             });
-<%--
-            $('#datatable tbody tr td').live('click', function () {
-                var data = oTable.fnGetData(this.parentElement);
-                if (this.cellIndex == '5') {
-                    alert(data.function_id);
-                }
-                else if (this.cellIndex == '4') {
-                    alert(data.unit_id);
-                }
-                else if (this.cellIndex == '0' || this.cellIndex == '1') {
-                    generateProfileForm(data.node_id)
-                    openPopupTab(0);
-                }
-            });
-                     --%>
+            <%--
+   $('#datatable tbody tr td').live('click', function () {
+       var data = oTable.fnGetData(this.parentElement);
+       if (this.cellIndex == '5') {
+           alert(data.function_id);
+       }
+       else if (this.cellIndex == '4') {
+           alert(data.unit_id);
+       }
+       else if (this.cellIndex == '0' || this.cellIndex == '1') {
+           generateProfileForm(data.node_id)
+           openPopupTab(0);
+       }
+   });
+            --%>
 
             fadeOutModalizer();
-            setupModalizerClickEvents();
             createTabs();
 
         });
@@ -62,7 +61,9 @@
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
 <body>
 <div id="main">
-    <div style="width: 1000px">
+    <div id="content">
+        <div class="newfunctiontop"><img src="images/newfunction.png"
+                                         class="helpbox-image"><span>Lägg till funktion</span></div>
         <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
             <thead>
             <tr>
@@ -82,6 +83,8 @@
             </tr>
             </tfoot>
         </table>
+        <div class="newfunctionbottom"><img src="images/newfunction.png"
+                                            class="helpbox-image"><span>Lägg till funktion</span></div>
     </div>
 </div>
 <div id="modalizer">&nbsp;</div>
