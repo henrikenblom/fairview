@@ -16,8 +16,7 @@ function generateBaseUnitEditForm(data, datatable) {
 
     var fieldSet = $('<fieldset>');
 
-    var hiddenField_id = hiddenField('_id', unitId);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', unitId);
     var hiddenField_strict = hiddenField('_strict', 'true');
     var hiddenField_username = hiddenField('_username', 'admin');
 
@@ -31,7 +30,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId, false);
 
     //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
         emailDiv, '<br/>', webDiv, '<br/>');
     updateForm.append(fieldSet);
     updateForm.validate();
@@ -43,11 +42,8 @@ function generateSubunitCreationForm() {
     var form = generateUpdateForm(formId);
     var fieldSet = $('<fieldset>');
 
-    var hiddenField_id = hiddenField('_id', '');
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', '');
     var hiddenField_strict = hiddenField('_strict', 'true');
-    var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_nodeClass = hiddenField('nodeClass', 'unit');
 
     var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', '', formId, 'descriptionDiv');
 
@@ -62,8 +58,7 @@ function generateSubunitCreationForm() {
     var cityDiv = textInputComponent('Ort', 'city', '', getOrganizationFormId());
     var countryDiv = textInputComponent('Land', 'country', '', getOrganizationFormId());
 
-    fieldSet.append(hiddenField_id, hiddenField_nodeClass, hiddenField_strict, hiddenField_type, hiddenField_type,
-        hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
+    fieldSet.append(hiddenField_id, hiddenField_nodeClass, hiddenField_strict, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
         '<br/>', webDiv, '<br/>', addressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>');
     form.append(fieldSet);
     form.validate();
@@ -114,10 +109,8 @@ function generateProfileGeneralForm(data) {
     var form = generateUpdateForm(formId);
     var fieldSet = $('<fieldset>');
 
-    var hiddenField_id = hiddenField('_id', idString);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
-    var hiddenField_username = hiddenField('_username', 'admin');
     var hiddenField_birthday = hiddenField('birthday', civicString);
     var hiddenField_authorization = hiddenField('authorization', authorizationString);
 
@@ -140,7 +133,7 @@ function generateProfileGeneralForm(data) {
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId, true);
     addGenderOptions(genderString, genderDiv.children('#gender-field'));
 
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_type, hiddenField_username, hiddenField_birthday, hiddenField_authorization,
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
         zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', additional_infoDiv, '<br/>');
 
@@ -156,11 +149,13 @@ function generateLanguageForm(form_Id, languageNode) {
     var languageString = '';
     var spokenString = '';
     var writtenString = '';
+    var idString;
     if (!$.isEmptyObject(languageNode)) {
         var properties = languageNode.properties;
         languageString = propValue(properties.language);
         spokenString = propValue(properties.spoken);
         writtenString = propValue(properties.written);
+        idString = languageNode.id;
     }
 
 
@@ -168,10 +163,8 @@ function generateLanguageForm(form_Id, languageNode) {
     var languageDiv = $('<div>');
     languageDiv.addClass('delimitedForm');
 
-    var hiddenField_id = hiddenField('_id', form_Id);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
-    var hiddenField_username = hiddenField('_username', 'admin');
 
     var language = textInputComponent('Språk', 'language', languageString, formId, false);
 
@@ -185,7 +178,7 @@ function generateLanguageForm(form_Id, languageNode) {
     spoken.children('#spoken-field').append(generateOption('good', spokenString, 'God'));
     spoken.children('#spoken-field').append(generateOption('advanced', spokenString, 'Advancerad'));
 
-    languageForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+    languageForm.append(hiddenField_id, hiddenField_strict,
         language, '<br/>', written, '<br/>', spoken);
     languageDiv.append(languageForm);
     return languageDiv;
@@ -202,6 +195,7 @@ function generateEducationForm(form_Id, educationNode) {
     var toString = '';
     var countryString = '';
     var descriptionString = '';
+    var idString = '';
     if (!$.isEmptyObject(educationNode)) {
         var properties = educationNode.properties;
         nameString = propValue(properties.name);
@@ -212,6 +206,7 @@ function generateEducationForm(form_Id, educationNode) {
         toString = propValue(properties.to);
         countryString = propValue(properties.country);
         descriptionString = propValue(properties.description);
+        idString = educationNode.id;
     }
 
 
@@ -219,10 +214,8 @@ function generateEducationForm(form_Id, educationNode) {
     var educationDiv = $('<div>');
     educationDiv.addClass('delimitedForm');
 
-    var hiddenField_id = hiddenField('_id', form_Id);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
-    var hiddenField_username = hiddenField('_username', 'admin');
 
     var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
     var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
@@ -243,7 +236,7 @@ function generateEducationForm(form_Id, educationNode) {
     levelComponent.children('#level-field').append(generateOption('phd', levelString, 'Licentiat eller doktorsexamen'));
     levelComponent.children('#level-field').append(generateOption('professional_license', levelString, 'Yrkeslicens'));
 
-    educationForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, nameComponent, '<br/>',
+    educationForm.append(hiddenField_id, hiddenField_strict, nameComponent, '<br/>',
         levelComponent, '<br/>', directionComponent, '<br/>', scopeComponent, '<br/>', fromComponent, '<br/>', toComponent,
         '<br/>', countryComponent, '<br/>', descriptionComponent);
     educationDiv.append(educationForm);
@@ -258,6 +251,7 @@ function generateCertificateForm(form_Id, certificateNode) {
     var gradeString = '';
     var fromString = '';
     var toString = '';
+    var idString = '';
     if (!$.isEmptyObject(certificateNode)) {
         var properties = certificateNode.properties;
         nameString = propValue(properties.name);
@@ -265,16 +259,15 @@ function generateCertificateForm(form_Id, certificateNode) {
         gradeString = propValue(properties.grade);
         fromString = propValue(properties.from);
         toString = propValue(properties.to);
+        idString = certificateNode.id;
     }
 
     var certificateForm = generateUpdateForm(formId);
     var certificateDiv = $('<div>');
     certificateDiv.addClass('delimitedForm');
 
-    var hiddenField_id = hiddenField('_id', form_Id);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
-    var hiddenField_username = hiddenField('_username', 'admin');
 
     var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
@@ -282,7 +275,7 @@ function generateCertificateForm(form_Id, certificateNode) {
     var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
     var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
 
-    certificateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+    certificateForm.append(hiddenField_id, hiddenField_strict,
         nameComponent, '<br/>', descriptionComponent, '<br/>', fromComponent, '<br/>', toComponent
         , '<br/>', gradeComponent);
     certificateDiv.append(certificateForm);
@@ -299,6 +292,7 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var fromString = '';
     var toString = '';
     var assignmentsString = '';
+    var idString = '';
     if (!$.isEmptyObject(workExperienceNode)) {
         var properties = workExperienceNode.properties;
         nameString = propValue(properties.name);
@@ -308,16 +302,15 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
         fromString = propValue(properties.from);
         toString = propValue(properties.to);
         assignmentsString = propValue(properties.assignments);
+        idString = workExperienceNode.id;
     }
 
     var form = generateUpdateForm(formId);
     var div = $('<div>');
     div.addClass('delimitedForm');
 
-    var hiddenField_id = hiddenField('_id', form_Id);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
-    var hiddenField_username = hiddenField('_username', 'admin');
 
     var nameComponent = textInputComponent('Tidigare befattning', 'name', nameString, formId, false);
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
@@ -327,7 +320,7 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var toComponent = textInputComponent('Till och med', 'to', fromString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
-    form.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+    form.append(hiddenField_id, hiddenField_strict,
         nameComponent, '<br/>', companyComponent, '<br/>', tradeComponent, '<br/>', countryComponent, '<br/>',
         fromComponent, '<br/>', toComponent, '<br/>', assignmentComponent);
     div.append(form);
@@ -339,26 +332,25 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
 
     var nameString = '';
     var descriptionString = '';
-
+    var idString;
     if (!$.isEmptyObject(militaryServiceNode)) {
         var properties = militaryServiceNode.properties;
         nameString = propValue(properties.name);
         descriptionString = propValue(properties.description);
+        idString = militaryServiceNode.id;
     }
 
     var form = generateUpdateForm(formId);
     var div = $('<div>');
     div.addClass('delimitedForm');
 
-    var hiddenField_id = hiddenField('_id', form_Id);
-    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
-    var hiddenField_username = hiddenField('_username', 'admin');
 
     var nameComponent = textInputComponent('Militärtjänst', 'name', nameString, formId, false);
     var descriptionComponent = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'description-field');
 
-    form.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username,
+    form.append(hiddenField_id, hiddenField_strict,
         nameComponent, '<br/>', descriptionComponent);
     div.append(form);
     return div;
@@ -373,7 +365,8 @@ function addEducationButton(nodeId) {
     button.attr('id', 'addEducationButton')
     button.html('Lägg till utbildning');
     button.click(function() {
-        addEducationRelationship(nodeId, '#addEducationButton');
+        var formId = getFormId("HAS_EDUCATION",0);
+        generateEducationForm(formId).prependTo("#educations");
     });
     return button;
 }
@@ -383,7 +376,8 @@ function addCertificateButton(nodeId) {
     button.attr('id', 'addCertificateButton')
     button.html('Lägg till certifikat');
     button.click(function() {
-        addCertificateRelationship(nodeId, '#addCertificateButton');
+        var formId = getFormId("HAS_CERTIFICATE",0);
+        generateCertificateForm(formId).prependTo('#certificates');
     });
     return button;
 }
@@ -393,7 +387,8 @@ function addLanguageButton(nodeId) {
     button.attr('id', 'languageButton')
     button.html('Lägg till språk');
     button.click(function() {
-        addLanguageRelationship(nodeId, '#languageButton');
+        var formId = getFormId("HAS_LANGUAGESKILL",0);
+        generateLanguageForm(formId).prependTo('#languages');
     });
     return button;
 }
@@ -403,7 +398,8 @@ function addWorkExperienceButton(nodeId) {
     button.attr('id', 'addWorkExperienceButton')
     button.html('Lägg till tidigare befattning');
     button.click(function() {
-        addWorkExperienceRelationship(nodeId, '#addWorkExperienceButton');
+        var formId = getFormId("HAS_WORK_EXPERIENCE",0);
+        generateWorkExperienceForm(formId).prependTo('#workexperiences');
     });
     return button;
 }
@@ -413,12 +409,22 @@ function addMilitaryServiceButton(nodeId) {
     button.attr('id', 'addMilitaryServiceButton')
     button.html('Lägg till Militärtjänst');
     button.click(function() {
-        addMilitaryServiceRelationship(nodeId, '#addMilitaryServiceButton');
+         var formId = getFormId("HAS_MILITARY_SERVICE",0);
+         generateMilitaryServiceForm(formId).prependTo('#militaryservices');
     });
     return button;
 }
 
-function addExistingValues(nodeId, type, formGeneratingFunction, divToPrepend) {
+function getFormId(formId, count){
+    var form = $('#'+formId + count);
+    if (form.val() == null){
+        return formId+count;
+    }
+    else
+        return getFormId(formId, (count+1));
+}
+
+function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunction, divToPrepend) {
     $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
         if (!$.isEmptyObject(data.list)) {
             var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
@@ -431,45 +437,14 @@ function addExistingValues(nodeId, type, formGeneratingFunction, divToPrepend) {
                 formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
             }
         }
-        else {
+        else { //no values of the type exists so create empty form
             formGeneratingFunction.call(this, type).prependTo(divToPrepend);
         }
     });
 }
 
-function addCertificateRelationship(nodeId, insertBeforeThisDiv) {
-    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_CERTIFICATE" }, function(data) {
-        var div = generateCertificateForm(data.relationship.endNode);
-        div.insertBefore(insertBeforeThisDiv);
-    });
-}
-
-function addEducationRelationship(nodeId, insertBeforeThisDiv) {
-    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_EDUCATION" }, function(data) {
-        var div = generateEducationForm(data.relationship.endNode);
-        div.insertBefore(insertBeforeThisDiv);
-    });
-}
-
-function addLanguageRelationship(nodeId, insertBeforeThisDiv) {
-    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_LANGUAGESKILL" }, function(data) {
-        var div = generateLanguageForm(data.relationship.endNode);
-        div.insertBefore(insertBeforeThisDiv);
-    });
-}
-
-function addWorkExperienceRelationship(nodeId, insertBeforeThisDiv) {
-    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_WORK_EXPERIENCE" }, function(data) {
-        var div = generateWorkExperienceForm(data.relationship.endNode);
-        div.insertBefore(insertBeforeThisDiv);
-    });
-}
-
-function addMilitaryServiceRelationship(nodeId, insertBeforeThisDiv) {
-    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:nodeId, _type:"HAS_MILITARY_SERVICE" }, function(data) {
-        var div = generateMilitaryServiceForm(data.relationship.endNode);
-        div.insertBefore(insertBeforeThisDiv);
-    });
+function createRelationship(startNodeId, endNodeId, type) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:startNodeId, _endNodeId: endNodeId,_type:type });
 }
 
 function generateOption(value, savedValue, text) {
@@ -488,7 +463,7 @@ function updateTableCallback(datatable) {
         }
 }
 
-function generateSaveButton(callback) {
+function generateSaveButton(nodeId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
     saveButton.addClass('saveButton');
@@ -500,7 +475,26 @@ function generateSaveButton(callback) {
         var forms = $('form');
         $.each(forms, function(i, form) {
             if ($(form).data('edited') == 'true') {
-                $(form).ajaxSubmit(function() {
+                $(form).ajaxSubmit(function(data) {
+                    var formId = $(form).attr('id').replace(/\d+/,'');
+                    switch (formId) {
+                        case "HAS_MILITARY_SERVICE":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_EDUCATION":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_LANGUAGESKILL":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_CERTIFICATE":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        case "HAS_WORK_EXPERIENCE":
+                            createRelationship(nodeId, data.node.id, formId);
+                            break;
+                        default:
+                    }
                     if (typeof callback == 'function' && i == 0) //only make the callback once
                         callback.call();
                 });
@@ -521,8 +515,8 @@ function generateCancelButton() {
         var forms = $('form');
         $.each(forms, function(i, form) {
             if ($(form).data('edited') == 'true') {
-               edited = 'true';
-               return false;
+                edited = 'true';
+                return false;
             }
         });
 
@@ -563,10 +557,10 @@ function enableSaveButton() {
 function disableSaveButton() {
     $('.saveButton').attr('disabled', 'disabled');
 }
-function footerButtonsComponent(callback) {
+function footerButtonsComponent(nodeId, callback) {
     var saveDiv = $('<div>');
     saveDiv.addClass('saveDiv');
-    var saveButton = generateSaveButton(callback);
+    var saveButton = generateSaveButton(nodeId, callback);
     var cancelButton = generateCancelButton();
     saveDiv.append(saveButton, cancelButton);
     return saveDiv;
@@ -752,7 +746,7 @@ function getNodeData(unitId) {
 function generateUpdateForm(id) {
     var updateForm = $('<form>');
     updateForm.attr("id", id);
-    updateForm.attr("action", "neo/ajax/update_properties.do");
+    updateForm.attr("action", "neo/ajax/update_node.do");
     updateForm.attr("method", "post");
     return updateForm;
 }

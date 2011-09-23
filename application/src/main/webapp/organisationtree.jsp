@@ -126,7 +126,7 @@
 
         function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            var saveButton = footerButtonsComponent(getOrganizationFormId());
+            var saveButton = footerButtonsComponent();
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 $('#header-organization-name').html($('#name-field').val());
@@ -140,7 +140,7 @@
 
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            var saveButton = footerButtonsComponent(getOrganizationFormId());
+            var saveButton = footerButtonsComponent();
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 assignManager(data.node.id, $('#manager-selection'));

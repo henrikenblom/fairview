@@ -110,11 +110,11 @@
         function loadFormValues(unitId, data) {
             if (!$.isEmptyObject(unitId)) {
                 data = getNodeData(unitId);
-                addExistingValues(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
-                addExistingValues(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
-                addExistingValues(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
-                addExistingValues(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
-                addExistingValues(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
+                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
             }
             return data;
         }
@@ -126,17 +126,17 @@
             addFormContainers();
 
             $('#profile-general').append(generateProfileGeneralForm(data));
-            $('#profile-general').append(footerButtonsComponent(updateTableCallback(oTable)));
+            $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
 
             $('#languages').append(addLanguageButton(unitId));
             $('#educations').append(addEducationButton(unitId));
             $('#certificates').append(addCertificateButton(unitId));
-            $('#profile-education').append(footerButtonsComponent(updateTableCallback(oTable)));
+            $('#profile-education').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
 
 
             $('#workexperiences').append(addWorkExperienceButton(unitId));
             $('#militaryservices').append(addMilitaryServiceButton(unitId));
-            $('#profile-experience').append(footerButtonsComponent(updateTableCallback(oTable)));
+            $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
         function openEmployeeForm(nodeId) {
             var linkData = [
@@ -160,7 +160,7 @@
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            $('#unitsettings-general').append(footerButtonsComponent(updateTableCallback(oTable)));
+            $('#unitsettings-general').append(unitId, footerButtonsComponent(updateTableCallback(oTable)));
             openPopupTab(0);
         }
     </script>
