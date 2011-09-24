@@ -421,22 +421,22 @@ function addEmployee() {
 
 function addEducationButton(nodeId) {
     var button = $('<button>');
-    button.attr('id', 'addEducationButton')
+    button.attr('id', 'educationButton')
     button.html('Lägg till utbildning');
     button.click(function() {
         var formId = getFormId("HAS_EDUCATION", 0);
-        generateEducationForm(formId).prependTo("#educations");
+        generateEducationForm(formId).insertBefore("#educationButton");
     });
     return button;
 }
 
 function addCertificateButton(nodeId) {
     var button = $('<button>');
-    button.attr('id', 'addCertificateButton')
+    button.attr('id', 'certificateButton')
     button.html('Lägg till certifikat');
     button.click(function() {
         var formId = getFormId("HAS_CERTIFICATE", 0);
-        generateCertificateForm(formId).prependTo('#certificates');
+        generateCertificateForm(formId).insertBefore('#certificateButton');
     });
     return button;
 }
@@ -447,29 +447,29 @@ function addLanguageButton(nodeId) {
     button.html('Lägg till språk');
     button.click(function() {
         var formId = getFormId("HAS_LANGUAGESKILL", 0);
-        generateLanguageForm(formId).prependTo('#languages');
+        generateLanguageForm(formId).insertBefore('#languageButton');
     });
     return button;
 }
 
 function addWorkExperienceButton(nodeId) {
     var button = $('<button>');
-    button.attr('id', 'addWorkExperienceButton')
+    button.attr('id', 'workExperienceButton')
     button.html('Lägg till tidigare befattning');
     button.click(function() {
         var formId = getFormId("HAS_WORK_EXPERIENCE", 0);
-        generateWorkExperienceForm(formId).prependTo('#workexperiences');
+        generateWorkExperienceForm(formId).insertBefore('#workExperienceButton');
     });
     return button;
 }
 
 function addMilitaryServiceButton(nodeId) {
     var button = $('<button>');
-    button.attr('id', 'addMilitaryServiceButton')
+    button.attr('id', 'militaryServiceButton')
     button.html('Lägg till Militärtjänst');
     button.click(function() {
         var formId = getFormId("HAS_MILITARY_SERVICE", 0);
-        generateMilitaryServiceForm(formId).prependTo('#militaryservices');
+        generateMilitaryServiceForm(formId).insertBefore('#militaryServiceButton');
     });
     return button;
 }
