@@ -138,7 +138,7 @@
 
         function generateEmploymentForm(unitId, employmentId) {
             $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, unitId));
-            $('#employment-general').append(footerButtonsComponent(unitId, assignFunctionCallback(employmentId, oTable)));
+            $('#employment-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
 
         function createEmployeeTab(nodeId, employmentId) {

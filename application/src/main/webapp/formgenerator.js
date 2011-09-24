@@ -243,17 +243,6 @@ function generateLanguageForm(form_Id, languageNode) {
     return languageDiv;
 }
 
-function assignFunctionCallback(unitId, datatable) {
-    return function response() {
-        var selectedFunctionId = $('#function-field').val();
-        if (assignedFunctionId != selectedFunctionId) {
-            assignFunction(unitId, selectedFunctionId, updateTableCallback(datatable));
-        } else {
-            updateTable(datatable);
-        }
-    }
-}
-
 function generateEducationForm(form_Id, educationNode) {
     var formId = form_Id;
 
@@ -513,8 +502,12 @@ function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunctio
     });
 }
 
-function createRelationship(startNodeId, endNodeId, type) {
-    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:startNodeId, _endNodeId: endNodeId,_type:type });
+function createRelationship(startNodeId, endNodeId, type, callback) {
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:startNodeId, _endNodeId: endNodeId,_type:type }, function(){
+          if (typeof(callback) == 'function'){
+              callback.call();
+          }
+    });
 }
 
 function generateOption(value, savedValue, text) {
@@ -538,30 +531,29 @@ function createNodeWithRelationship(form, nodeId, callback, i) {
         var formId = $(form).attr('id').replace(/\d+/, '');
         switch (formId) {
             case "HAS_MILITARY_SERVICE":
-                createRelationship(nodeId, data.node.id, formId);
+                createRelationship(nodeId, data.node.id, formId, callback);
                 break;
             case "HAS_EDUCATION":
-                createRelationship(nodeId, data.node.id, formId);
+                createRelationship(nodeId, data.node.id, formId, callback);
                 break;
             case "HAS_LANGUAGESKILL":
-                createRelationship(nodeId, data.node.id, formId);
+                createRelationship(nodeId, data.node.id, formId, callback);
                 break;
             case "HAS_CERTIFICATE":
-                createRelationship(nodeId, data.node.id, formId);
+                createRelationship(nodeId, data.node.id, formId, callback);
                 break;
             case "HAS_WORK_EXPERIENCE":
-                createRelationship(nodeId, data.node.id, formId);
+                createRelationship(nodeId, data.node.id, formId, callback);
                 break;
             case "new_employment_form":
-                createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT');
+                createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT', callback);
                 break;
             case "new_person_form":
-                createRelationship('9', data.node.id, 'HAS_EMPLOYEE');
+                createRelationship('9', data.node.id, 'HAS_EMPLOYEE', callback);
                 break;
             default:
+                callback.call();
         }
-        if (typeof callback == 'function' && i == 0) //only make the callback once
-            callback.call();
     });
 }
 function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
@@ -1100,14 +1092,6 @@ function getFunctions(unitId) {
         dataType:"json"
     }).responseText);
     return data;
-}
-
-function assignFunction(unitId, functionId, callback) {
-    $.getJSON("fairview/ajax/unassign_function.do", {_nodeId: unitId}, function() {
-        $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _type:"HAS_EMPLOYMENT" }, function(dataEmployment) {
-            $.getJSON("fairview/ajax/assign_function.do", {employment:dataEmployment.relationship.endNode, "function:relationship":functionId, percent:100}, callback);
-        });
-    });
 }
 
 function yesNo() {
