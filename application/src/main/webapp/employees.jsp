@@ -25,6 +25,11 @@
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
+            $('.newperson').click(function() {
+                createEmployeeTab();
+                openEmployeeForm();
+            });
+
             oTable = $('#datatable').dataTable({
                 "bProcessing": true,
                 "bSortClasses": false,
@@ -131,14 +136,12 @@
             $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
 
-        function generateEmploymentForm(unitId, employmentId){
-            var data = getNodeData(unitId);
-//            var employmentId = data.employment_id;
+        function generateEmploymentForm(unitId, employmentId) {
             $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, unitId));
-            $('#employment-general').append(footerButtonsComponent('employment_form', assignFunctionCallback(employmentId, oTable)));
+            $('#employment-general').append(footerButtonsComponent(unitId, assignFunctionCallback(employmentId, oTable)));
         }
 
-        function createEmployeeTab(nodeId, employmentId){
+        function createEmployeeTab(nodeId, employmentId) {
             var linkData = [
                 ['profile-general', 'Allmänt'],
                 ['profile-education', 'Utbildning'],
@@ -152,15 +155,13 @@
         }
 
         function openEmployeeForm() {
-
-//            generateProfileForm(nodeId);
             openPopupTab(0);
         }
         function openUnitForm(unitId) {
             var linkData = [
-                                ['unitsettings-general', 'Avdelningsinställningar'],
-                                ['unitsettings-subunits', 'Lägg till Underavdelning'],
-                            ];
+                ['unitsettings-general', 'Avdelningsinställningar'],
+                ['unitsettings-subunits', 'Lägg till Underavdelning']
+            ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
             var data = getNodeData(unitId);
@@ -169,9 +170,7 @@
             $('#unitsettings-general').append(unitId, footerButtonsComponent(updateTableCallback(oTable)));
             openPopupTab(0);
         }
-        function openEmploymentForm(employmentId, nodeId){
-//            $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, nodeId));
-//            $('#employment-general').append(footerButtonsComponent('employment_form', assignFunctionCallback(employmentId, oTable)));
+        function openEmploymentForm(employmentId, nodeId) {
             openPopupTab(4);
         }
     </script>
@@ -180,7 +179,8 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="newpersontop"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        <div class="newperson newpersontop"><img src="images/newperson.png"
+                                                 class="helpbox-image"><span>Lägg till person</span>
         </div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
@@ -205,7 +205,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        <div class="newperson newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
         </div>
     </div>
 </div>

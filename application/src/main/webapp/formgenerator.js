@@ -66,7 +66,7 @@ function generateSubunitCreationForm() {
 }
 
 function generateProfileGeneralForm(data) {
-    var formId = 'profile_form';
+    var formId = 'new_person_form';
 
     var idString = '';
     var birthdayString = '';
@@ -88,7 +88,9 @@ function generateProfileGeneralForm(data) {
 
     if (!$.isEmptyObject(data)) {
         var properties = data.node.properties;
+
         idString = data.node.id;
+        formId = 'person_form' + idString;
         birthdayString = makeBirthdate(propValue(properties.civic));
         authorizationString = boolPropValue(properties.authorization);
         firstNameString = propValue(properties.firstname);
@@ -147,15 +149,19 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     var properties = new Array();
     var data;
 
-    var form = buildEmploymentForm();
-    var formId = 'employment_form';
+    var formId = 'new_employment_form';
+    if (employeeId != null && employmentId != null && employmentId != '')
+        formId = 'employment_form'+ employeeId;
+
+    var form = buildUpdateForm(formId);
+
     var fieldSet = $('<fieldset>');
 
     if (employmentId != null
         && employmentId.length > 0) {
 
         data = getNodeData(employmentId);
-        fieldSet.append(hiddenField('_employmentId', data.node.id));
+        fieldSet.append(hiddenField('_nodeId', data.node.id));
         properties = data.node.properties;
 
     }
@@ -163,7 +169,6 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     var hiddenField_type = hiddenField('_type', 'node');
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_employeeId = hiddenField('_employeeId', employeeId);
 
     var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
     var workPhoneDiv = textInputComponent('Arbetstelefon', 'workPhone', propValue(properties.workPhone), formId, false);
@@ -190,7 +195,7 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     var companyCarDiv = textInputComponent('Tjänstebil', 'companyCar', propValue(properties.companyCar), formId, false);
 
     var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensionInsurances', propValue(properties.pensionInsurances), formId, false);
-    fieldSet.append(hiddenField_employeeId, hiddenField_type, hiddenField_strict, hiddenField_username, titleDiv, '<br />', workPhoneDiv, '<br />', workingHoursDiv, '<br />', responsibilityDiv, '<br />', attestationRightsDiv, '<br />', paymentFormDiv, '<br />', salaryDiv
+    fieldSet.append(hiddenField_type, hiddenField_strict, hiddenField_username, titleDiv, '<br />', workPhoneDiv, '<br />', workingHoursDiv, '<br />', responsibilityDiv, '<br />', attestationRightsDiv, '<br />', paymentFormDiv, '<br />', salaryDiv
         , '<br />', overtimeCompensationDiv, '<br />', travelCompensationDiv, '<br />', vacationDaysDiv, '<br />', dismissalPeriodEmployeeDiv, '<br />', dismissalPeriodEmployerDiv, '<br />',
         companyCarDiv, '<br />', pensionInsurancesDiv);
     form.append(fieldSet);
@@ -528,45 +533,93 @@ function updateTableCallback(datatable) {
         }
 }
 
+function createNodeWithRelationship(form, nodeId, callback, i) {
+    $(form).ajaxSubmit(function(data) {
+        var formId = $(form).attr('id').replace(/\d+/, '');
+        switch (formId) {
+            case "HAS_MILITARY_SERVICE":
+                createRelationship(nodeId, data.node.id, formId);
+                break;
+            case "HAS_EDUCATION":
+                createRelationship(nodeId, data.node.id, formId);
+                break;
+            case "HAS_LANGUAGESKILL":
+                createRelationship(nodeId, data.node.id, formId);
+                break;
+            case "HAS_CERTIFICATE":
+                createRelationship(nodeId, data.node.id, formId);
+                break;
+            case "HAS_WORK_EXPERIENCE":
+                createRelationship(nodeId, data.node.id, formId);
+                break;
+            case "new_employment_form":
+                createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT');
+                break;
+            case "new_person_form":
+                createRelationship('9', data.node.id, 'HAS_EMPLOYEE');
+                break;
+            default:
+        }
+        if (typeof callback == 'function' && i == 0) //only make the callback once
+            callback.call();
+    });
+}
+function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
+    $('#new_person_form').ajaxSubmit(function(createdEmployee) {
+        $.getJSON("fairview/ajax/get_organization_node.do", function(organizationNode) {
+            $.getJSON("neo/ajax/create_relationship.do",
+                {_startNodeId:organizationNode['org.neo4j.kernel.impl.core.NodeProxy'].id, _endNodeId: createdEmployee.node.id,_type:'HAS_EMPLOYEE' },
+                function(relationshipData) {
+                    $.each(forms, function(i, form) {
+                        if ($(form).attr('id') != 'new_person_form') {  //don't create the relationship twice
+                            createNodeWithRelationship(form, createdEmployee.node.id, callback, i);
+                        }
+                    });
+                });
+        });
+    });
+}
+function createNodes(forms, nodeId, callback) {
+    $.each(forms, function(i, form) {
+        if ($(form).data('edited') == 'true') {
+            createNodeWithRelationship(form, nodeId, callback, i);
+        }
+    });
+}
 function generateSaveButton(nodeId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
     saveButton.addClass('saveButton');
     saveButton.attr('disabled', 'disabled');
+
     saveButton.click(function() {
         disableSaveButton();
         saveButton.html('Sparar...');
         setTimeout(closePopup, 500);
+
         var forms = $('form');
+        var newPerson = existsNewPersonForm(forms);
+
+        if (newPerson == true) { //in order for other nodes to be created, they need a person node to create a relationship to
+            createPersonNodeBeforeCreatingOtherNodes(forms, callback);
+        }
+        else {
+            createNodes(forms, nodeId, callback);
+        }
+    });
+
+    return saveButton;
+}
+
+function existsNewPersonForm(forms){
+    var newPerson = false;
         $.each(forms, function(i, form) {
-            if ($(form).data('edited') == 'true') {
-                $(form).ajaxSubmit(function(data) {
-                    var formId = $(form).attr('id').replace(/\d+/, '');
-                    switch (formId) {
-                        case "HAS_MILITARY_SERVICE":
-                            createRelationship(nodeId, data.node.id, formId);
-                            break;
-                        case "HAS_EDUCATION":
-                            createRelationship(nodeId, data.node.id, formId);
-                            break;
-                        case "HAS_LANGUAGESKILL":
-                            createRelationship(nodeId, data.node.id, formId);
-                            break;
-                        case "HAS_CERTIFICATE":
-                            createRelationship(nodeId, data.node.id, formId);
-                            break;
-                        case "HAS_WORK_EXPERIENCE":
-                            createRelationship(nodeId, data.node.id, formId);
-                            break;
-                        default:
-                    }
-                    if (typeof callback == 'function' && i == 0) //only make the callback once
-                        callback.call();
-                });
+            if ($(form).attr('id') == 'new_person_form') {
+                newPerson = true;
+                return false;
             }
         });
-    });
-    return saveButton;
+    return newPerson;
 }
 
 function generateCancelButton() {
@@ -577,9 +630,9 @@ function generateCancelButton() {
         var edited;
         var forms = $('form');
         $.each(forms, function(i, form) {
-           if ($(form).data('edited') == 'true') {
-             edited = 'true';
-           }
+            if ($(form).data('edited') == 'true') {
+                edited = 'true';
+            }
         });
         if (edited == 'true') {
             generateCancelDialog();
@@ -935,17 +988,6 @@ function buildUpdateForm(id) {
     updateForm.attr("action", "neo/ajax/update_node.do");
     updateForm.attr("method", "post");
     return updateForm;
-}
-
-function buildEmploymentForm() {
-
-    var employmentForm = $('<form>');
-
-    employmentForm.attr("id", 'employment_form');
-
-    employmentForm.attr("action", "fairview/ajax/set_employment.do");
-    employmentForm.attr("method", "post");
-    return employmentForm;
 }
 
 function textAreaInputComponent(labelText, inputName, value, formId, divId) {

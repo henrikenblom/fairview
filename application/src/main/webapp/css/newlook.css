@@ -774,16 +774,19 @@ label.error {
     padding-top: 18px;
     padding-bottom: 0px;
     text-align: left;
+
+}
+
+.newperson{
+   cursor: pointer;
 }
 
 .newpersontop {
     margin-bottom: 10px;
-    cursor: pointer;
 }
 
 .newpersonbottom {
     margin-top: 25px;
-    cursor: pointer;
 }
 
 /*Multiselect*/
