@@ -104,23 +104,24 @@
             $('#profile-education').append(languageDiv, certificateDiv, educationDiv);
             $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
         }
-        function loadFormValues(unitId, data) {
-            if (!$.isEmptyObject(unitId)) {
-                data = getNodeData(unitId);
+        function loadFormValues(unitId) {
                 addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
                 addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
                 addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
                 addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
                 addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
-            }
-            return data;
         }
         function generateProfileForm(unitId) {
             var data;
 
             clearProfileForm();
-            data = loadFormValues(unitId, data);
+
+            if (!$.isEmptyObject(unitId)) {
+                data = getNodeData(unitId);
+            }
+
             addFormContainers();
+            loadFormValues(unitId);
 
             $('#profile-general').append(generateProfileGeneralForm(data));
             $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));

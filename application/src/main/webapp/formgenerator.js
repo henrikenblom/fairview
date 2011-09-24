@@ -151,7 +151,7 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
 
     var formId = 'new_employment_form';
     if (employeeId != null && employmentId != null && employmentId != '')
-        formId = 'employment_form'+ employeeId;
+        formId = 'employment_form' + employeeId;
 
     var form = buildUpdateForm(formId);
 
@@ -484,29 +484,33 @@ function getFormId(formId, count) {
 }
 
 function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunction, divToPrepend) {
-    $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
-        if (!$.isEmptyObject(data.list)) {
-            var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
-            if (array.length > 1) {
-                $.each(array, function(count, object) {
-                    formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
-                });
+    if (nodeId == null || nodeId == '') //new person
+        formGeneratingFunction.call(this, type).prependTo(divToPrepend);
+    else { //existing person
+        $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
+            if (!$.isEmptyObject(data.list)) {
+                var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+                if (array.length > 1) {
+                    $.each(array, function(count, object) {
+                        formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
+                    });
+                }
+                else { //an array containing only one entry is a single object
+                    formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
+                }
             }
-            else { //an array containing only one entry is a single object
-                formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
+            else { //no values of the type exists so create empty form
+                formGeneratingFunction.call(this, type).prependTo(divToPrepend);
             }
-        }
-        else { //no values of the type exists so create empty form
-            formGeneratingFunction.call(this, type).prependTo(divToPrepend);
-        }
-    });
+        });
+    }
 }
 
 function createRelationship(startNodeId, endNodeId, type, callback) {
-    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:startNodeId, _endNodeId: endNodeId,_type:type }, function(){
-          if (typeof(callback) == 'function'){
-              callback.call();
-          }
+    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:startNodeId, _endNodeId: endNodeId,_type:type }, function() {
+        if (typeof(callback) == 'function') {
+            callback.call();
+        }
     });
 }
 
@@ -603,14 +607,14 @@ function generateSaveButton(nodeId, callback) {
     return saveButton;
 }
 
-function existsNewPersonForm(forms){
+function existsNewPersonForm(forms) {
     var newPerson = false;
-        $.each(forms, function(i, form) {
-            if ($(form).attr('id') == 'new_person_form') {
-                newPerson = true;
-                return false;
-            }
-        });
+    $.each(forms, function(i, form) {
+        if ($(form).attr('id') == 'new_person_form') {
+            newPerson = true;
+            return false;
+        }
+    });
     return newPerson;
 }
 
