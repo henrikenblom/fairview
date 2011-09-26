@@ -56,7 +56,6 @@
     <script type="text/javascript" src="iq.js"></script>
     <script type="text/javascript" src="popupControls.js"></script>
     <script type="text/javascript" src="formgenerator.js"></script>
-    <script type="text/javascript" src="multiSelectGenerator.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="js/jquery-plugins/jquery.multiselect2side.js"></script>
@@ -85,26 +84,18 @@
                 openPopupTab(1);
             });
 
-            $('#imageonly-buttonAddFunction').click(function() {
-                generateMainOrganizationPopup(unitId);
-                openPopupTab(2);
-            });
-
-
         });
 
         function generateMainOrganizationPopup(unitId) {
             var data = getNodeData(unitId);
             generateMainOrganizationEditForm(data);
             generateSubunitCreationTab(data);
-            generateFunctionTab(data);
         }
 
         function generateSubunitPopup(unitId) {
             var data = getNodeData(unitId);
             generateSubunitEditForm(data);
             generateSubunitCreationTab(data);
-            generateFunctionTab(data);
         }
 
         function generateSubunitCreationTab(data) {
@@ -149,15 +140,7 @@
             $('#unitsettings-general').append(saveButton);
             generateSingleAddressComponent(data).insertAfter('#web-field');
             $("#descriptionDiv").append(generateBossSelector(data.node.id));
-//            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
-        }
-
-        function generateFunctionTab(data) {
-            var _unitId = data.node.id;
-            $('#unitsettings-functions').empty().append(generateFunctionMultiSelectForm(_unitId));
-            initDoubleBoxes();
-            getDataUpdateDatabase(_unitId);
         }
 
         function generateAdresses() {
@@ -251,9 +234,6 @@
                         <button class="imageonly-button" title="Lägg till underenhet"
                                 id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button" title="Lägg till funktion" id="imageonly-buttonAddFunction">
-                            <img
-                                    src="images/newfunction.png" alt="Ny funktion"></button>
                     </h3>
                     <%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
@@ -276,8 +256,6 @@
                     <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till
                         underenhet
                         <br/></div>
-                    <div class="helpbox-listentry"><img src="images/newfunction.png" class="helpbox-image">Lägg till
-                        funktion <br/></div>
                 </div>
             </div>
         </div>
@@ -292,13 +270,10 @@
         <ul>
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
-            <li><a href="#unitsettings-functions">Funktioner</a></li>
         </ul>
         <div id="popup-header"></div>
         <div class="unitsettings" id="unitsettings-general"></div>
         <div class="unitsettings" id="unitsettings-subunits">
-        </div>
-        <div id="unitsettings-functions">
         </div>
     </div>
 </div>
