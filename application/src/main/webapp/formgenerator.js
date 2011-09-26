@@ -631,7 +631,8 @@ function generateCancelButton() {
             }
         });
         if (edited == 'true') {
-            generateCancelDialog();
+            generateAlertDialog('Är du säker?', 'Du har osparade ändringar. Är du säker på att du vill stänga formuläret?',
+            closePopup);
         } else {
             closePopup();
         }
@@ -639,18 +640,20 @@ function generateCancelButton() {
     return cancelButton;
 }
 
-function generateCancelDialog() {
+function generateAlertDialog(title, text, fn, fnArg) {
     var cancelDialog = $('<div>');
-    cancelDialog.attr('title', 'Är du säker?');
-    cancelDialog.html('Du har osparade ändringar. Är du säker på att du vill stänga formuläret?');
+    cancelDialog.attr('title', title);
+    cancelDialog.html(text);
     cancelDialog.dialog({
         resizable: false,
         height:140,
         modal: true,
+        overlay: "background-color: red; opacity: 0.5",
         buttons: {
             "Ja": function() {
                 $(this).dialog("close");
-                closePopup();
+                if (typeof(fn) == 'function')
+                    fn.call(this, fnArg);
             },
             "Avbryt": function() {
                 $(this).dialog("close");
