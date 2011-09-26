@@ -234,6 +234,8 @@
                         <button class="imageonly-button" title="Lägg till underenhet"
                                 id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
+                        <button class="imageonly-button" title="Ta bort enhet"
+                                id="imageonly-buttonDeleteUnit"><img src="images/delete.png" alt="Ta bort enhet"></button>
                     </h3>
                     <%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
@@ -253,9 +255,8 @@
                 <div class="helpbox-header">Hjälpruta</div>
                 <div class="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
 
-                    <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till
-                        underenhet
-                        <br/></div>
+                    <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till underenhet<br/></div>
+                    <div class="helpbox-listentry"><img src="images/delete.png"class="helpbox-image">Ta bort enhet</div>
                 </div>
             </div>
         </div>

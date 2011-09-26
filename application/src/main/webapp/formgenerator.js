@@ -659,6 +659,27 @@ function generateCancelDialog() {
     });
 }
 
+function generateDeleteDialog(nodeId){
+    var deleteDialog = $('<div>');
+    deleteDialog.attr('title', 'Är du säker?');
+    deleteDialog.html('Du håller på att ta bort en enhet.');
+    deleteDialog.dialog({
+        resizable: false,
+        height: 140,
+        modal: true,
+        buttons:{
+            "Ja": function(){
+                $(this).dialog("close");
+                $.getJSON("neo/ajax/delete_node.do", {_nodeId:nodeId}, function(){
+                    location.reload();
+                });
+            },
+            "Nej":function(){
+                $(this).dialog("close");
+            }
+        }
+    });
+}
 
 function enableSaveButton() {
     $('.saveButton').removeAttr('disabled');

@@ -15,6 +15,7 @@
 %>
 
 <button class="imageonly-button" title="Lägg till underenhet" onclick="javascript:generateSubunitPopup(<%=unitId%>); openPopupTab(1);"><img src="images/newunit.png" alt="Ny underenhet"></button>
+<button class="imageonly-button" title="Ta bort enhet" onclick="javascript:generateDeleteDialog(<%=unitId%>);"><img src="images/delete.png" alt="Ny underenhet"></button>
 
 <%
     for (Relationship entry : unitNode.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
