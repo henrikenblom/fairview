@@ -253,9 +253,8 @@
                 <div class="helpbox-header">Hjälpruta</div>
                 <div class="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
 
-                    <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till
-                        underenhet
-                        <br/></div>
+                    <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till underenhet<br/></div>
+                    <div class="helpbox-listentry"><img src="images/delete.png"class="helpbox-image">Ta bort enhet</div>
                 </div>
             </div>
         </div>
