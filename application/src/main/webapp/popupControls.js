@@ -22,7 +22,18 @@ function closePopup() {
 }
 
 function bindTabs() {
-    $("#popup-tabs").tabs();
+    $("#popup-tabs").tabs(
+        {
+            selected: 0,
+            select: function(event, ui) {
+                var formId = $('#profile-general form').attr('id');
+                var isValid = validateForm(formId);
+                if (isValid == false)
+                    generateWarningDialog('Ofullständiga uppgifter', "Vänligen fyll i de obligatoriska uppgifterna innan du går vidare.")
+                return isValid;
+            }
+        }
+    );
 }
 
 function tabLinks(links) {

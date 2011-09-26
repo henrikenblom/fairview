@@ -44,7 +44,9 @@
                     { "mDataProp": "firstname"},
                     { "mDataProp": "lastname" },
                     { "mDataProp": "unit_name" },
-                    { "mDataProp": "employment_title" }
+                    { "mDataProp": "employment_title" },
+                    { "mDataProp": null,  "sWidth": 10, fnRender: getDeleteIcon, "bSortable": false, "bSearchable": false  }
+
                 ],
                 "fnDrawCallback" : function() {
                     var datatable = this;
@@ -71,8 +73,23 @@
             fadeOutModalizer();
         });
 
+        function getDeleteIcon(obj) {
+            return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.node_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+        }
+
+        function deleteAlert(id) {
+            generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+                    deleteRow, id);
+        }
+
+        function deleteRow(id) {
+            $.getJSON("neo/ajax/delete_node.do", {_nodeId: id}, function() {
+                updateTable(oTable);
+            });
+        }
+
         function isEmployeeDataColumn(cellIndex) {
-            if (cellIndex == '0' || cellIndex == '1' || cellIndex == '2' || cellIndex == '3')
+            if (cellIndex == '0' || cellIndex == '1' || cellIndex == '3')
                 return true;
             else
                 return false;
@@ -105,11 +122,11 @@
             $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
         }
         function loadFormValues(unitId) {
-                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
-                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
-                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
-                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
-                addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
+            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
+            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
+            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
+            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
+            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
         }
         function generateProfileForm(unitId) {
             var data;
@@ -168,11 +185,11 @@
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            $('#unitsettings-general').append(unitId, footerButtonsComponent(updateTableCallback(oTable)));
+            $('#unitsettings-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
             openPopupTab(0);
         }
         function openEmploymentForm(employmentId, nodeId) {
-            openPopupTab(4);
+            openPopupTab(3);
         }
     </script>
 </head>
@@ -191,6 +208,7 @@
                     <th>Efternamn</th>
                     <th>Enhet</th>
                     <th>Titel</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -202,6 +220,7 @@
                     <th>Efternamn</th>
                     <th>Enhet</th>
                     <th>Titel</th>
+                    <th></th>
                 </tr>
                 </tfoot>
             </table>

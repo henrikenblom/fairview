@@ -631,7 +631,8 @@ function generateCancelButton() {
             }
         });
         if (edited == 'true') {
-            generateCancelDialog();
+            generateAlertDialog('Är du säker?', 'Du har osparade ändringar. Är du säker på att du vill stänga formuläret?',
+                closePopup);
         } else {
             closePopup();
         }
@@ -639,10 +640,10 @@ function generateCancelButton() {
     return cancelButton;
 }
 
-function generateCancelDialog() {
+function generateAlertDialog(title, text, fn, fnArg) {
     var cancelDialog = $('<div>');
-    cancelDialog.attr('title', 'Är du säker?');
-    cancelDialog.html('Du har osparade ändringar. Är du säker på att du vill stänga formuläret?');
+    cancelDialog.attr('title', title);
+    cancelDialog.html(text);
     cancelDialog.dialog({
         resizable: false,
         height:140,
@@ -650,7 +651,8 @@ function generateCancelDialog() {
         buttons: {
             "Ja": function() {
                 $(this).dialog("close");
-                closePopup();
+                if (typeof(fn) == 'function')
+                    fn.call(this, fnArg);
             },
             "Avbryt": function() {
                 $(this).dialog("close");
@@ -659,6 +661,7 @@ function generateCancelDialog() {
     });
 }
 
+<<<<<<< HEAD
 function generateDeleteDialog(nodeId){
     var deleteDialog = $('<div>');
     deleteDialog.attr('title', 'Är du säker?');
@@ -675,11 +678,27 @@ function generateDeleteDialog(nodeId){
                 });
             },
             "Nej":function(){
+=======
+function generateWarningDialog(title, text) {
+    var cancelDialog = $('<div>');
+    cancelDialog.attr('title', title);
+    cancelDialog.html(text);
+    cancelDialog.dialog({
+        resizable: false,
+        height:140,
+        modal: true,
+        buttons: {
+            "Ok": function() {
+>>>>>>> 2c1cb272b996e49cc52c2d5156128f3be94d926d
                 $(this).dialog("close");
             }
         }
     });
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2c1cb272b996e49cc52c2d5156128f3be94d926d
 
 function enableSaveButton() {
     $('.saveButton').removeAttr('disabled');
@@ -1027,10 +1046,14 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
 }
 
 function validateForm(formId) {
-    if (formIsValid(formId))
+    if (formIsValid(formId)) {
         enableSaveButton();
-    else
+        return true;
+    }
+    else {
         disableSaveButton();
+        return false;
+    }
 }
 function selectInputComponent(labelText, inputName, divId, formId, required) {
     var selectDiv = fieldBox();
