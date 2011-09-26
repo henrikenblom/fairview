@@ -661,8 +661,7 @@ function generateAlertDialog(title, text, fn, fnArg) {
     });
 }
 
-<<<<<<< HEAD
-function generateDeleteDialog(nodeId){
+function generateDeleteDialog(nodeId) {
     var deleteDialog = $('<div>');
     deleteDialog.attr('title', 'Är du säker?');
     deleteDialog.html('Du håller på att ta bort en enhet.');
@@ -671,14 +670,20 @@ function generateDeleteDialog(nodeId){
         height: 140,
         modal: true,
         buttons:{
-            "Ja": function(){
+            "Ja": function() {
                 $(this).dialog("close");
-                $.getJSON("fairview/ajax/delete_unit.do", {_nodeId:nodeId}, function(){
+                $.getJSON("fairview/ajax/delete_unit.do", {_nodeId:nodeId}, function() {
                     location.reload();
                 });
             },
-            "Nej":function(){
-=======
+            "Nej":function() {
+                $(this).dialog("close");
+            }
+
+        }
+    });
+}
+
 function generateWarningDialog(title, text) {
     var cancelDialog = $('<div>');
     cancelDialog.attr('title', title);
@@ -689,16 +694,11 @@ function generateWarningDialog(title, text) {
         modal: true,
         buttons: {
             "Ok": function() {
->>>>>>> 2c1cb272b996e49cc52c2d5156128f3be94d926d
                 $(this).dialog("close");
             }
         }
     });
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 2c1cb272b996e49cc52c2d5156128f3be94d926d
 
 function enableSaveButton() {
     $('.saveButton').removeAttr('disabled');
