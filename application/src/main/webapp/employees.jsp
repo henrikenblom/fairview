@@ -185,7 +185,7 @@
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            $('#unitsettings-general').append(unitId, footerButtonsComponent(updateTableCallback(oTable)));
+            $('#unitsettings-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
             openPopupTab(0);
         }
         function openEmploymentForm(employmentId, nodeId) {
