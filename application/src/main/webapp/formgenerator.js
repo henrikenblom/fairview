@@ -670,7 +670,7 @@ function generateDeleteDialog(nodeId){
         buttons:{
             "Ja": function(){
                 $(this).dialog("close");
-                $.getJSON("neo/ajax/delete_node.do", {_nodeId:nodeId}, function(){
+                $.getJSON("fairview/ajax/delete_unit.do", {_nodeId:nodeId}, function(){
                     location.reload();
                 });
             },

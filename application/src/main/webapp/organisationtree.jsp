@@ -234,8 +234,6 @@
                         <button class="imageonly-button" title="Lägg till underenhet"
                                 id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button" title="Ta bort enhet"
-                                id="imageonly-buttonDeleteUnit"><img src="images/delete.png" alt="Ta bort enhet"></button>
                     </h3>
                     <%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {

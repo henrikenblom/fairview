@@ -157,6 +157,50 @@ public class FairviewAjaxController {
 
     }
 
+    @RequestMapping(value = {"/fairview/ajax/delete_unit.do"})
+    public ModelAndView deleteUnit(@RequestParam("_nodeId") Long nodeId) {
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+
+        Node node = neo.getNodeById(nodeId);
+        LinkedList<Node> childNodes = new LinkedList<Node>();
+
+        Node parentNode = node.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.INCOMING).iterator().next().getStartNode();
+
+        try {
+
+            for (Relationship relationship : node.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING)) {
+
+                childNodes.add(relationship.getEndNode());
+
+            }
+
+        } catch (Exception ex) {
+            //no-op
+        }
+
+        for (Relationship relationship : node.getRelationships()) {
+
+            relationship.delete();
+
+        }
+
+        if (childNodes.size() > 0) {
+
+            for (Node childNode : childNodes) {
+
+                Relationship relationship = parentNode.createRelationshipTo(childNode, new SimpleRelationshipType("HAS_UNIT"));
+                mav.addObject(XStreamView.XSTREAM_ROOT, relationship);
+
+            }
+
+        }
+
+        node.delete();
+
+        return mav;
+    }
+
 
     @RequestMapping(value = {"/fairview/ajax/get_assigned_tasks.do"})
     public ModelAndView getAssignedGoals(@RequestParam("_nodeId") Long nodeId) {
@@ -746,8 +790,4 @@ public class FairviewAjaxController {
 
     }
 
-
 }
-
-
-
