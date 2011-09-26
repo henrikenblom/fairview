@@ -632,7 +632,7 @@ function generateCancelButton() {
         });
         if (edited == 'true') {
             generateAlertDialog('Är du säker?', 'Du har osparade ändringar. Är du säker på att du vill stänga formuläret?',
-            closePopup);
+                closePopup);
         } else {
             closePopup();
         }
@@ -648,7 +648,6 @@ function generateAlertDialog(title, text, fn, fnArg) {
         resizable: false,
         height:140,
         modal: true,
-        overlay: "background-color: red; opacity: 0.5",
         buttons: {
             "Ja": function() {
                 $(this).dialog("close");
@@ -656,6 +655,22 @@ function generateAlertDialog(title, text, fn, fnArg) {
                     fn.call(this, fnArg);
             },
             "Avbryt": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+}
+
+function generateWarningDialog(title, text) {
+    var cancelDialog = $('<div>');
+    cancelDialog.attr('title', title);
+    cancelDialog.html(text);
+    cancelDialog.dialog({
+        resizable: false,
+        height:140,
+        modal: true,
+        buttons: {
+            "Ok": function() {
                 $(this).dialog("close");
             }
         }
@@ -1009,10 +1024,14 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
 }
 
 function validateForm(formId) {
-    if (formIsValid(formId))
+    if (formIsValid(formId)) {
         enableSaveButton();
-    else
+        return true;
+    }
+    else {
         disableSaveButton();
+        return false;
+    }
 }
 function selectInputComponent(labelText, inputName, divId, formId, required) {
     var selectDiv = fieldBox();

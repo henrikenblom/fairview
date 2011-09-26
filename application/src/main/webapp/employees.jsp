@@ -189,7 +189,7 @@
             openPopupTab(0);
         }
         function openEmploymentForm(employmentId, nodeId) {
-            openPopupTab(4);
+            openPopupTab(3);
         }
     </script>
 </head>
