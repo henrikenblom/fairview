@@ -57,10 +57,10 @@ function generateSubunitCreationForm() {
     var emailDiv = textInputComponent('E-post', 'email', '', formId, false);
     var webDiv = textInputComponent('Hemsida', 'web', '', formId, false);
 
-    var addressDiv = textInputComponent('Adress', 'address', '', getOrganizationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getOrganizationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', '', getOrganizationFormId());
-    var countryDiv = textInputComponent('Land', 'country', '', getOrganizationFormId());
+    var addressDiv = textInputComponent('Adress', 'address', '', getSubUnitCreationFormId());
+    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getSubUnitCreationFormId());
+    var cityDiv = textInputComponent('Ort', 'city', '', getSubUnitCreationFormId());
+    var countryDiv = textInputComponent('Land', 'country', '', getSubUnitCreationFormId());
 
     fieldSet.append(hiddenField_id, hiddenField_strict, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
         '<br/>', webDiv, '<br/>', addressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>');
