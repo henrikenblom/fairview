@@ -140,7 +140,7 @@ function generateProfileGeneralForm(data) {
     addGenderOptions(genderString, genderDiv.children('#gender-field'));
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization,
-        firstNameDiv, lastNameDiv, genderDiv, nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
+        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
         zipDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
