@@ -54,7 +54,7 @@
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentElement);
-                        if (this.cellIndex == '3') {  //employee-cell
+                        if (this.cellIndex == '3') {  //employment-cell
                             initEmploymentCell(data.employment_id, data.node_id, this);
                         }
                         else if (this.cellIndex == '2') { //unit-cell
@@ -161,7 +161,7 @@
 
         function createEmployeeTab(nodeId, employmentId) {
             var linkData = [
-                ['profile-general', 'Allmänt'],
+                ['profile-general', 'Personuppgifter'],
                 ['profile-education', 'Utbildning'],
                 ['profile-experience', 'Erfarenhet'],
                 ['employment-general', 'Anställningsvillkor']
