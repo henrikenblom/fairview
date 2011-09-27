@@ -152,8 +152,6 @@
             $('#workexperiences').append(addWorkExperienceButton(unitId));
             $('#militaryservices').append(addMilitaryServiceButton(unitId));
             $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
-
-            createDatepickers();
         }
 
         function generateEmploymentForm(unitId, employmentId) {

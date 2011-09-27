@@ -390,7 +390,7 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
-        nameComponent, companyComponent, tradeComponent,countryComponent,
+        nameComponent, companyComponent, tradeComponent, countryComponent,
         fromComponent, toComponent, assignmentComponent);
     div.append(form);
     return div;
@@ -935,9 +935,10 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
     inputLabel.append(labelText);
     var textInput = $('<input type="text">');
     textInput.addClass("datepicker");
-    textInput.attr("id", inputName+"_"+formId);
+    textInput.attr("id", inputName + "_" + formId);
     textInput.attr("name", inputName);
     textInput.val(value);
+    textInput.datepicker();
     textInput.change(function() {
         $('#' + formId).data('edited', 'true');
     });
@@ -1245,8 +1246,4 @@ function translatePseudoCheckbox(event, form_name) {
 
     $('#' + form_name).ajaxSubmit();
 
-}
-
-function createDatepickers(){
-    $('.datepicker').datepicker();
 }
