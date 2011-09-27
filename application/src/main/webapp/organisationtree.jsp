@@ -108,11 +108,16 @@
                 $('#subunitform').ajaxSubmit(function(data) {
                     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _endNodeId: data.node.id,_type:"HAS_UNIT" },
                             function() {
-                                location.reload();
+                                assignManager(data.node.id, $('#subunitform #managersubunitform-field').val(), reloadPage);
                             });
                 });
             });
+            $('#subunitform #descriptionDiv').append(addManager(getSubUnitCreationFormId()));
             submitButton.appendTo($('#unitsettings-subunits'));
+        }
+
+        function reloadPage(){
+           location.reload();
         }
 
         function generateMainOrganizationEditForm(data) {
@@ -134,12 +139,12 @@
             var saveButton = footerButtonsComponent();
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
-                assignManager(data.node.id, $('#manager-selection'));
+                assignManager(data.node.id, $('#managerorganizationForm-field').val());
                 $('#popup-header').html($('#name-field').val());
             });
             $('#unitsettings-general').append(saveButton);
             generateSingleAddressComponent(data).insertAfter('#web-field');
-            $("#descriptionDiv").append(generateBossSelector(data.node.id));
+            addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
         }
 
@@ -165,42 +170,11 @@
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
-        function assignManager(unitId, bossSelector) {
-            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
-        }
-        function generateBossSelector(unitId) {
-            bossSelectorDiv = fieldBox();
-            bossSelectorLabel = fieldLabelBox();
-            bossSelectorLabel.append("Chef");
-
-            bossSelector = $('<select>');
-            bossSelector.attr("id", "manager-selection");
-            bossOption = $('<option>');
-            bossOption.val(-1);
-            bossOption.append('Ingen chef vald');
-            bossSelector.append(bossOption);
-        <%
-         for (Node entry : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false)) {
-
-          try {
-
-          if (!entry.getProperty("firstname", "").equals("") || !entry.getProperty("lastname", "").equals("")) { %>
-            var entryId = <%=entry.getId()%>;
-            bossOption = $('<option>');
-            bossOption.val(entryId);
-            bossOption.append('<%=entry.getProperty("lastname", "")%>' + ", " + '<%=entry.getProperty("firstname", "")%>');
-            bossSelector.append(bossOption);
-        <% }
-                     } catch (Exception ex) {
-                             }
-                     }
-                     %>
-            $.getJSON("fairview/ajax/get_manager.do", {_unitId: unitId}, function(data) {
-                bossSelector.val(data.long);
-            })
-
-            bossSelectorDiv.append(bossSelectorLabel, bossSelector);
-            return bossSelectorDiv;
+        function assignManager(unitId, managerId, callback) {
+            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:managerId},function(){
+                if (typeof(callback) == 'function')
+                    callback.call();
+            });
         }
     </script>
 </head>
