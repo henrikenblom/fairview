@@ -201,12 +201,14 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationDays', propValue(properties.vacationDays), formId, false);
     var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalPeriodEmployee', 'dismissalPeriodEmployeeDiv', formId, false);
     addDismissalPeriod(properties.dismissalPeriodEmployee, dismissalPeriodEmployeeDiv.children('#dismissalPeriodEmployee-field'));
+    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalPeriodEmployer', 'dismissalPeriodEmployerDiv', formId, false);
+    addDismissalPeriod(properties.dismissalPeriodEmployer, dismissalPeriodEmployerDiv.children('#dismissalPeriodEmployer-field'));
     var companyCarDiv = textInputComponent('Tjänstebil', 'companyCar', propValue(properties.companyCar), formId, false);
 
     var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensionInsurances', propValue(properties.pensionInsurances), formId, false);
 
     fieldSet.append(hiddenField_type, hiddenField_strict, hiddenField_username, titleDiv, workPhoneDiv, workingHoursDiv, attestationRightsDiv, responsibilityDiv, '<br />', paymentFormDiv, salaryDiv
-        , overtimeCompensationDiv, travelCompensationDiv, vacationDaysDiv, dismissalPeriodEmployeeDiv,
+        , overtimeCompensationDiv, travelCompensationDiv, vacationDaysDiv, dismissalPeriodEmployeeDiv, dismissalPeriodEmployerDiv,
         companyCarDiv, pensionInsurancesDiv);
     form.append(fieldSet);
     return form;
