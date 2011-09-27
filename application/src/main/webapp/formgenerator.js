@@ -1145,6 +1145,12 @@ function generateOrgNrDiv(data) {
     return orgnrDiv;
 }
 
+function generateImageUrlDiv(data) {
+    var properties = data.node.properties;
+    var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', propValue(properties.imageurl), getOrganizationFormId());
+    return imageUrlDiv;
+}
+
 function generateSingleAddressComponent(data) {
     var properties = data.node.properties;
 
