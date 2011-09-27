@@ -103,6 +103,7 @@
             $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
             var submitButton = $('<button>');
             submitButton.addClass('addsubunit-button')
+            submitButton.attr('disabled', 'disabled');
             submitButton.html('Lägg till underenhet till ' + data.node.properties.name.value);
             submitButton.click(function() {
                 $('#subunitform').ajaxSubmit(function(data) {
