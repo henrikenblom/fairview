@@ -39,7 +39,7 @@
             <div id="content">
                 <div id="frontpage-box">
                     <div id="frontpage-image-box">
-                        <img src="images/infucare.png">
+                        <img src=<%=organization.getProperty("imageurl", "Länk till företagslogotyp saknas.")%>>
                        <!-- <h1>TESTINSTALLATION</h1>     -->
                     </div>
                     <div id="frontpage-information-box">

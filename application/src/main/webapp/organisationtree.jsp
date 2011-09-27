@@ -130,6 +130,7 @@
             });
             $('#unitsettings-general').append(saveButton);
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
+            generateImageUrlDiv(data).insertAfter("#descriptionDiv");
             generateSingleAddressComponent(data).insertAfter('#web-field');
             generateTabHeader(data.node.properties.name.value);
         }
