@@ -177,9 +177,7 @@
         }
         function openUnitForm(unitId) {
             var linkData = [
-                ['unitsettings-general', 'Avdelningsinställningar'],
-                ['unitsettings-subunits', 'Lägg till Underavdelning']
-            ];
+                ['unitsettings-general', 'Avdelningsinställningar']];
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
             var data = getNodeData(unitId);
