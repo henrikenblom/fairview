@@ -42,6 +42,7 @@ function getSubUnitCreationFormId() {
     return formId;
 }
 function generateSubunitCreationForm() {
+
     var formId = getSubUnitCreationFormId();
     var form = buildUpdateForm(formId);
     var fieldSet = $('<fieldset>');
@@ -67,6 +68,7 @@ function generateSubunitCreationForm() {
     form.append(fieldSet);
     form.validate();
     return form;
+
 }
 
 function generateProfileGeneralForm(data) {
@@ -155,7 +157,7 @@ function addManager(formId, unitId) {
     return managerDiv;
 }
 
-function generateEmploymentCreationForm(employmentId, employeeId) {
+function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
 
     var properties = new Array();
     var data;
@@ -195,6 +197,9 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
 
     var paymentFormDiv = selectInputComponent('Löneform', 'paymentForm', 'paymentFormDiv', formId, false);
     addPaymentFormOption(properties.paymentForm, paymentFormDiv.children('#paymentForm-field'));
+
+    var unitDiv = createUnitSelect('Enhet', 'unit', 'unitDiv', formId, false, unitId);
+
     var salaryDiv = textInputComponent('Aktuell lön', 'salary', propValue(properties.salary), formId, false);
     var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimeCompensation', formId, yesNo(), propValue(properties.overtimeCompensation));
     var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelCompensation', formId, yesNo(), propValue(properties.travelCompensation));
@@ -206,9 +211,25 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     var companyCarDiv = textInputComponent('Tjänstebil', 'companyCar', propValue(properties.companyCar), formId, false);
 
     var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensionInsurances', propValue(properties.pensionInsurances), formId, false);
-    fieldSet.append(hiddenField_type, hiddenField_strict, hiddenField_username, titleDiv, '<br />', workPhoneDiv, '<br />', workingHoursDiv, '<br />', responsibilityDiv, '<br />', attestationRightsDiv, '<br />', paymentFormDiv, '<br />', salaryDiv
-        , '<br />', overtimeCompensationDiv, '<br />', travelCompensationDiv, '<br />', vacationDaysDiv, '<br />', dismissalPeriodEmployeeDiv, '<br />', dismissalPeriodEmployerDiv, '<br />',
-        companyCarDiv, '<br />', pensionInsurancesDiv);
+    fieldSet.append(hiddenField_type,
+        hiddenField_strict,
+        hiddenField_username,
+        titleDiv, '<br />',
+        workPhoneDiv, '<br />',
+        workingHoursDiv, '<br />',
+        unitDiv, '<br />',
+        responsibilityDiv, '<br />',
+        attestationRightsDiv, '<br />',
+        paymentFormDiv, '<br />',
+        salaryDiv
+        , '<br />',
+        overtimeCompensationDiv, '<br />',
+        travelCompensationDiv, '<br />',
+        vacationDaysDiv, '<br />',
+        dismissalPeriodEmployeeDiv, '<br />',
+        dismissalPeriodEmployerDiv, '<br />',
+        companyCarDiv, '<br />',
+        pensionInsurancesDiv);
     form.append(fieldSet);
     return form;
 }
@@ -500,7 +521,7 @@ function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunctio
     else { //existing person
         $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
             if (!$.isEmptyObject(data.list)) {
-                var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+                var array = data.list["node"];
                 if (array.length > 1) {
                     $.each(array, function(count, object) {
                         formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
@@ -804,9 +825,8 @@ function addManagerOptions(unitId, managerInputElement) {
     option.attr('value', -1);
     option.html('Ingen chef vald');
     managerInputElement.append(option);
-    if (unitId == null)
-    {
-         createManagerList(-1, managerInputElement);
+    if (unitId == null) {
+        createManagerList(-1, managerInputElement);
     } else {
         $.getJSON("/fairview/ajax/get_manager.do", {_unitId: unitId}, function(assignedManagerId) {
             createManagerList(assignedManagerId, managerInputElement);
@@ -834,6 +854,74 @@ function addEmploymentOptions(employment, employmentInputElement) {
             optionDiv.attr('selected', 'true');
         employmentInputElement.append(optionDiv);
     });
+}
+
+function createUnitSelect(labelText, inputName, divId, formId, required, unitId) {
+
+    var selectDiv = fieldBox();
+    selectDiv.attr("id", divId);
+    var selectLabel = fieldLabelBox();
+    selectLabel.append(labelText);
+    var selectInput = $('<select>');
+    selectInput.attr("name", inputName);
+    selectInput.attr("id", inputName + "-field");
+    selectInput.change(function() {
+        $('#' + formId).data('edited', 'true');
+        validateForm(formId);
+    });
+    if (required == true) {
+        makeInputRequired(selectLabel, selectInput);
+    }
+    selectDiv.append(selectLabel, selectInput, $('<br>'));
+
+    $.ajax({
+            dataType: 'json',
+            async: false,
+            url:'fairview/ajax/get_units.do', success: function(data) {
+
+                $.each(data.list.node, function(i) {
+
+                    var option = $('<option>');
+                    option.html(data.list.node[i].properties.name.value);
+                    option.attr('value', data.list.node[i].id);
+
+                    if (unitId != null && unitId == data.list.node[i].id) {
+                        option.attr('selected', 'selected');
+                    }
+
+                    selectInput.append(option);
+
+                });
+
+            }
+        }
+    );
+
+    return selectDiv;
+
+}
+
+function populateUnitSelect(inputElement) {
+
+    $.ajax({
+            dataType: 'json',
+            async: false,
+            url:'fairview/ajax/get_units.do', success: function(data) {
+
+                $.each(data.list.node, function(i) {
+
+                    var option = $('<option>');
+                    option.html(data.list.node[i].properties.name.value);
+                    option.attr('value', data.list.node[i].id);
+
+                    inputElement.append(option);
+
+                });
+
+            }
+        }
+    );
+
 }
 
 function addPaymentFormOption(paymentForm, paymentFormInputElement) {
