@@ -8,6 +8,12 @@
 <%@ page import="org.apache.lucene.index.Term" %>
 <%@page pageEncoding="UTF-8" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<html>
+<head>
+    <link type="text/css" href="formalizeme/css/formalize.css" rel="stylesheet"/>
+    <script type="text/javascript" src="formalizeme/js/jquery.formalize.js"></script>
+</head>
+
 
 <script type="text/javascript">
 
@@ -93,3 +99,4 @@
     </div>
 
 </div>
+</html>
