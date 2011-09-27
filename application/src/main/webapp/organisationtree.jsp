@@ -115,6 +115,9 @@
             });
             $('#subunitform #descriptionDiv').append(addManager(getSubUnitCreationFormId()));
             submitButton.appendTo($('#unitsettings-subunits'));
+
+            var cancelButton = generateCancelButton();
+            cancelButton.appendTo($('#unitsettings-subunits'));
         }
 
         function reloadPage(){
