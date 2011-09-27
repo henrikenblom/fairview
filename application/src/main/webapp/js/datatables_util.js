@@ -41,12 +41,12 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 }
 
-function initEmploymentCell(employmentId, nodeId, cell) {
+function initEmploymentCell(employmentId, nodeId, unitId, cell) {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
 
         $(cell).click(function() {
-            createEmployeeTab(nodeId, employmentId);
+            createEmployeeTab(nodeId, employmentId, unitId);
 
             openEmploymentForm(employmentId, nodeId);
         });
