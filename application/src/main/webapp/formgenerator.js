@@ -37,8 +37,12 @@ function generateBaseUnitEditForm(data, datatable) {
     return updateForm;
 }
 
-function generateSubunitCreationForm() {
+function getSubUnitCreationFormId() {
     var formId = 'subunitform';
+    return formId;
+}
+function generateSubunitCreationForm() {
+    var formId = getSubUnitCreationFormId();
     var form = buildUpdateForm(formId);
     var fieldSet = $('<fieldset>');
 
@@ -144,6 +148,13 @@ function generateProfileGeneralForm(data) {
 
     return form;
 }
+
+function addManager(formId, unitId) {
+    var managerDiv = selectInputComponent('Chef', 'manager' + formId, 'manager-field', formId, false);
+    addManagerOptions(unitId, managerDiv.children('#manager' + formId + "-field"));
+    return managerDiv;
+}
+
 function generateEmploymentCreationForm(employmentId, employeeId) {
 
     var properties = new Array();
@@ -556,7 +567,8 @@ function createNodeWithRelationship(form, nodeId, callback, i) {
                 createRelationship('9', data.node.id, 'HAS_EMPLOYEE', callback);
                 break;
             default:
-                callback.call();
+                if (typeof(callback) == 'function')
+                    callback.call();
         }
     });
 }
@@ -772,6 +784,34 @@ function addGenderOptions(gender, genderInputElement) {
         return;
     }
     genderInputElement.append(optionMan, optionFemale)
+}
+
+function createManagerList(assignedManagerId, managerInputElement) {
+    $.getJSON("/fairview/ajax/get_persons.do", function(data) {
+        var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+        $.each(array, function(count, node) {
+            var option = $('<option>');
+            option.attr('value', node.id);
+            option.html(propValue(node.properties.firstname) + ' ' + propValue(node.properties.lastname));
+            if (assignedManagerId.long == node.id)
+                option.attr('selected', 'true');
+            managerInputElement.append(option);
+        });
+    });
+}
+function addManagerOptions(unitId, managerInputElement) {
+    var option = $('<option>');
+    option.attr('value', -1);
+    option.html('Ingen chef vald');
+    managerInputElement.append(option);
+    if (unitId == null)
+    {
+         createManagerList(-1, managerInputElement);
+    } else {
+        $.getJSON("/fairview/ajax/get_manager.do", {_unitId: unitId}, function(assignedManagerId) {
+            createManagerList(assignedManagerId, managerInputElement);
+        });
+    }
 }
 
 function addEmploymentOptions(employment, employmentInputElement) {

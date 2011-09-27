@@ -2,6 +2,7 @@ package com.fairviewiq.spring.controllers;
 
 import com.fairviewiq.utils.FunctionListGenerator;
 import com.fairviewiq.utils.MultiSelectFunctionMember;
+import com.fairviewiq.utils.PersonListGenerator;
 import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
@@ -103,7 +104,7 @@ public class FairviewAjaxController {
 
     }
 
-    @RequestMapping(value = {"/fairview/ajax/assign_function.do"})
+//    @RequestMapping(value = {"/fairview/ajax/assign_function.do"})
     public ModelAndView assignFunction(@RequestParam("employment") Long employmentId,
                                        @RequestParam("function:relationship") Long functionId,
                                        @RequestParam("percent") int percent) throws IOException {
@@ -626,9 +627,9 @@ public class FairviewAjaxController {
             managerRelationship = ((Iterable<Relationship>) unitNode.getRelationships(SimpleRelationshipType.withName("HAS_MANAGER"), Direction.OUTGOING)).iterator().next();
         } catch (Exception ex) {
             // managerRelationship didn't exist
-            long noFind = -1;
+            long notFound = -1;
             ModelAndView mav = new ModelAndView(xstreamView);
-            mav.addObject(XStreamView.XSTREAM_ROOT, noFind);
+            mav.addObject(XStreamView.XSTREAM_ROOT, notFound);
             return mav;
         }
 
@@ -713,81 +714,16 @@ public class FairviewAjaxController {
         return mav;
     }
 
-    private ModelAndView updatePropertyContainer(HttpServletRequest request,
-                                                 @RequestParam("_id") Long id,
-                                                 @RequestParam("_type") String type,
-                                                 @RequestParam(value = "_strict", required = false) Boolean strict) {
+    @RequestMapping(value = {"/fairview/ajax/get_persons.do"})
+    public ModelAndView getPersons() {
 
-        PropertyContainer propertyContainer = TYPE_NODE.equalsIgnoreCase(type.trim()) ? neo.getNodeById(id) : neo.getRelationshipById(id);
-
-        Set<String> keySet = null;
-        if (strict != null && strict) {
-            keySet = NeoUtils.getKeysSet(propertyContainer);
-        }
-
-        Enumeration enumeration = request.getParameterNames();
-        while (enumeration.hasMoreElements()) {
-            String name = (String) enumeration.nextElement();
-            if (!name.startsWith("_")) {
-                String[] fields = name.split(":");
-                String key = fields[0];
-                String primitiveType = fields.length > 1 ? fields[1] : null;
-                String pattern = fields.length > 2 ? fields[2] : null;
-                if ("relationship".equalsIgnoreCase(primitiveType)) {
-                    Node node = (Node) propertyContainer;
-                    long otherId = Long.parseLong(request.getParameter(name));
-                    boolean relationshipExists = false;
-                    RelationshipType relationshipType = new SimpleRelationshipType(key);
-                    for (Relationship relationship : node.getRelationships(relationshipType, Direction.OUTGOING)) {
-                        if (relationship.getEndNode().getId() == otherId) {
-                            relationshipExists = true;
-                        } else {
-                            relationship.delete();
-                        }
-                    }
-                    if (!relationshipExists && otherId != -1) {
-                        node.createRelationshipTo(neo.getNodeById(otherId), relationshipType);
-                    }
-                } else if ("checkbox".equalsIgnoreCase(primitiveType)) {
-                    String[] values = request.getParameterValues(name);
-                    Set<String> propertyKeys = NeoUtils.getKeysSet(propertyContainer);
-                    for (String propertyKey : propertyKeys) {
-                        if (propertyKey.startsWith(key + "#")) {
-                            propertyContainer.removeProperty(propertyKey);
-                        }
-                    }
-                    for (String value : values) {
-                        propertyContainer.setProperty(key + "#" + value, true);
-                    }
-                } else {
-                    if (primitiveType == null) {
-                        Object oldValue = propertyContainer.getProperty(key, null);
-                        if (oldValue != null) {
-                            primitiveType = oldValue.getClass().getSimpleName();
-                        }
-                    }
-                    if (request.getParameter(name) != null && request.getParameter(name).length() > 0) {
-                        Object value = NeoUtils.toPrimitive(request.getParameter(name), primitiveType, pattern);
-                        propertyContainer.setProperty(key, value);
-                        if (keySet != null) {
-                            keySet.remove(key);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (keySet != null) {
-            for (String key : keySet) {
-                propertyContainer.removeProperty(key);
-            }
-        }
+        PersonListGenerator personListGenerator = new PersonListGenerator((EmbeddedGraphDatabase)neo);
+        ArrayList<Node> retval = personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false);
 
         ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, propertyContainer);
-
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
         return mav;
-
     }
+
 
 }
