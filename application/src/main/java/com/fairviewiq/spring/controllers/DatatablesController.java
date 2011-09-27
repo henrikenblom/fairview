@@ -2,14 +2,17 @@ package com.fairviewiq.spring.controllers;
 
 
 import com.fairviewiq.utils.DBUtility;
+import com.fairviewiq.utils.EmploymentListGenerator;
 import com.fairviewiq.utils.FunctionListGenerator;
 import com.fairviewiq.utils.PersonListGenerator;
 
 import static com.fairviewiq.spring.controllers.FairviewAjaxController.*;
 
 import com.google.gson.Gson;
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,7 @@ import se.codemate.neo4j.SimpleRelationshipType;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.print.DocFlavor;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -42,6 +46,7 @@ public class DatatablesController {
 
     private FunctionListGenerator functionListGenerator;
     private PersonListGenerator personListGenerator;
+    private EmploymentListGenerator employmentListGenerator;
     private DBUtility dbUtility;
 
     @PostConstruct
@@ -49,6 +54,7 @@ public class DatatablesController {
 
         functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
         personListGenerator = new PersonListGenerator((EmbeddedGraphDatabase) neo);
+        employmentListGenerator = new EmploymentListGenerator((EmbeddedGraphDatabase) neo);
         dbUtility = DBUtility.getInstance(neo);
 
     }
@@ -108,6 +114,26 @@ public class DatatablesController {
         }
     }
 
+    @RequestMapping(value = {"/fairview/ajax/datatables/get_employment_data.do"})
+    public void getEmploymentData(HttpServletResponse response, HttpSession httpSession){
+
+        HashMap<String, ArrayList<HashMap<String, String>>> returnValue = new HashMap<String, ArrayList<HashMap<String, String>>>() ;
+        ArrayList<HashMap<String, String>> aaData = new ArrayList<HashMap<String, String>>();
+
+        for (Node employmentNode : employmentListGenerator.getSortList(PersonListGenerator.ALPHABETICAL, true)){
+            HashMap<String, String> row = new HashMap<String, String>();
+            loadEmploymentData(employmentNode, row);
+            aaData.add(row);
+        }
+
+        returnValue.put("aaData", aaData);
+        try{
+            response.getWriter().print(gson.toJson(returnValue));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     private void loadEmployeeData(Node employeeNode, HashMap<String, String> row) {
         row.put("firstname", employeeNode.getProperty("firstname", "").toString());
         row.put("lastname", employeeNode.getProperty("lastname", "").toString());
@@ -128,6 +154,48 @@ public class DatatablesController {
         }
     }
 
+    private void loadEmploymentData(Node  employmentNode, HashMap<String, String> row) {
+        row.put("employment_title", employmentNode.getProperty("title", "").toString());
+        row.put("employment_id", String.valueOf(employmentNode.getId()));
+
+        Node employeeNode = getEmployeeNode(employmentNode);
+        if ( employeeNode != null){
+            addEmployeeValuesToRow(row, String.valueOf(employeeNode.getId()), employeeNode.getProperty("firstname", "").toString(), employeeNode.getProperty("lastname", "").toString());
+        } else {
+            addEmployeeValuesToRow(row, "", "", "");
+        }
+
+        Node unitNode = getUnitNode(employmentNode);
+        if(unitNode != null){
+            addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("unit_name", "").toString());
+        } else {
+            Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
+            addUnitValuesToRow(row, String.valueOf(organization.getId()), organization.getProperty("name", "").toString());
+        }
+    }
+
+    private Node getUnitNode(Node employmentNode){
+        Node retval = null;
+
+        try{
+            retval = employmentNode.getRelationships(new SimpleRelationshipType("BELONGS_TO")).iterator().next().getEndNode();
+        } catch (Exception ex){
+            //no-op
+        }
+        return retval;
+    }
+
+    private Node getEmployeeNode(Node employmentNode){
+        Node retval = null;
+
+        try{
+            retval = employmentNode.getRelationships(new SimpleRelationshipType("HAS_EMPLOYMENT")).iterator().next().getStartNode();
+        } catch (Exception ex){
+            //no-op
+        }
+        return retval;
+    }
+
     private Node getEmploymentNode(Node employeeNode) {
 
         Node retval = null;
@@ -142,6 +210,12 @@ public class DatatablesController {
 
         return retval;
 
+    }
+
+    private void addEmployeeValuesToRow(HashMap<String, String> row, String employeeNode, String firstName, String lastName){
+        row.put("employee_id", employeeNode);
+        row.put("firstname", firstName);
+        row.put("lastname", lastName);
     }
 
     private void addUnitValuesToRow(HashMap<String, String> row, String unitId, String unitName) {
