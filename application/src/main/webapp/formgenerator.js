@@ -289,8 +289,8 @@ function generateEducationForm(form_Id, educationNode) {
     var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
     var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
     var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
-    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
@@ -340,8 +340,8 @@ function generateCertificateForm(form_Id, certificateNode) {
 
     var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
     var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict,
@@ -385,12 +385,12 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
     var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
-    var fromComponent = textInputComponent('Från och med', 'from', countryString, formId, false);
-    var toComponent = textInputComponent('Till och med', 'to', fromString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', countryString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', fromString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
-        nameComponent, companyComponent, tradeComponent,countryComponent,
+        nameComponent, companyComponent, tradeComponent, countryComponent,
         fromComponent, toComponent, assignmentComponent);
     div.append(form);
     return div;
@@ -916,6 +916,29 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
+    textInput.change(function() {
+        $('#' + formId).data('edited', 'true');
+    });
+    textInput.keyup(function() {
+        validateForm(formId);
+    });
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
+    inputDiv.append(inputLabel, textInput);
+    return inputDiv;
+}
+
+function dateInputComponent(labelText, inputName, value, formId, required) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    inputLabel.append(labelText);
+    var textInput = $('<input type="text">');
+    textInput.addClass("datepicker");
+    textInput.attr("id", inputName + "_" + formId);
+    textInput.attr("name", inputName);
+    textInput.val(value);
+    textInput.datepicker();
     textInput.change(function() {
         $('#' + formId).data('edited', 'true');
     });
