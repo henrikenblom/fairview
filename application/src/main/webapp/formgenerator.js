@@ -1085,13 +1085,21 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     return textareaDiv;
 }
 
+function enableCreateUnitButton() {
+    $('.addsubunit-button').removeAttr('disabled');
+}
+function disableCreateUnitButton() {
+    $('.addsubunit-button').attr('disabled', 'disabled');
+}
 function validateForm(formId) {
     if (formIsValid(formId)) {
         enableSaveButton();
+        enableCreateUnitButton();
         return true;
     }
     else {
         disableSaveButton();
+        disableCreateUnitButton();
         return false;
     }
 }
