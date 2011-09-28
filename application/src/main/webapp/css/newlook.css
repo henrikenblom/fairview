@@ -534,8 +534,7 @@ label.error {
 }
 
 .list-body {
-
-    min-height: 114px;
+    min-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
     border: 1px solid #e8ecf5;

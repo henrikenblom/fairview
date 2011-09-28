@@ -804,17 +804,25 @@ function addGenderOptions(gender, genderInputElement) {
     genderInputElement.append(optionMan, optionFemale)
 }
 
+function appendManagerOption(node, assignedManagerId, managerInputElement) {
+    var option = $('<option>');
+    option.attr('value', node.id);
+    option.html(propValue(node.properties.firstname) + ' ' + propValue(node.properties.lastname));
+    if (assignedManagerId.long == node.id)
+        option.attr('selected', 'true');
+    managerInputElement.append(option);
+}
 function createManagerList(assignedManagerId, managerInputElement) {
     $.getJSON("/fairview/ajax/get_persons.do", function(data) {
-        var array = data.list['node'];
-        $.each(array, function(count, node) {
-            var option = $('<option>');
-            option.attr('value', node.id);
-            option.html(propValue(node.properties.firstname) + ' ' + propValue(node.properties.lastname));
-            if (assignedManagerId.long == node.id)
-                option.attr('selected', 'true');
-            managerInputElement.append(option);
-        });
+        var array = data.list['node']
+        if (array.length != null) {
+            $.each(array, function(count, node) {
+                appendManagerOption(node, assignedManagerId, managerInputElement);
+            });
+        } else {
+            appendManagerOption(array, assignedManagerId, managerInputElement);
+        }
+
     });
 }
 function addManagerOptions(unitId, managerInputElement) {
