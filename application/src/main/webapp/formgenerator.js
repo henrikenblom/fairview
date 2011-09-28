@@ -1093,21 +1093,6 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
             var checkbox = event.target.id.toString().replace("pseudo-", "");
 
             $('#' + checkbox + '-field').val(event.target.checked);
-
-            if (checkbox == "authorization") {
-
-                if (event.target.checked) {
-
-                    $('#authorization-amount-field').show();
-
-                } else {
-
-                    $('#authorization-amount-field').hide();
-
-                }
-
-            }
-
         });
         checkbox.append(checkboxData[i][1]);
         checkbox.click(function() {

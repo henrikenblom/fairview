@@ -75,11 +75,11 @@
             <sec:authorize ifNotGranted="ROLE_MANAGER">
                 <div <%= request.getRequestURI().endsWith("/organisationinfo.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('organisationinfo.jsp')" name="organisationinfo">Organisation</div>
             </sec:authorize>
-            <div <%= request.getRequestURI().endsWith("/functionlist.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functionlist.jsp')" name="company-functions">Anställningar</div>
             <div <%= request.getRequestURI().endsWith("/employees.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employees.jsp')" name="persons">Personer</div>
-            <sec:authorize ifAnyGranted="ROLE_MANAGER">
-                <div <%= request.getRequestURI().endsWith("/users.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('users.jsp')" name="company-functions">Systemanvändare</div>
-            </sec:authorize>
+            <div <%= request.getRequestURI().endsWith("/functionlist.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functionlist.jsp')" name="company-functions">Anställningar</div>
+            <%--<sec:authorize ifAnyGranted="ROLE_MANAGER">--%>
+                <%--<div <%= request.getRequestURI().endsWith("/users.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('users.jsp')" name="company-functions">Systemanvändare</div>--%>
+            <%--</sec:authorize>--%>
             <div class="inactivetab top-button" onclick="document.location.href = 'j_spring_security_logout'" name="logout"> Logga ut</div>
 
         </div>
