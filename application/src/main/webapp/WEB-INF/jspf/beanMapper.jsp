@@ -29,9 +29,9 @@
 
     }
 
-    if (!request.getRequestURI().endsWith("organisationdetails.jsp") && organization.getProperty("name", "").equals("")) {
+    if (!request.getRequestURI().endsWith("organisationtree.jsp") && organization.getProperty("name", "").equals("")) {
 
-        response.sendRedirect("organisationdetails.jsp");
+        response.sendRedirect("organisationtree.jsp");
 
     }
 
