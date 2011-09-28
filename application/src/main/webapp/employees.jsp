@@ -58,10 +58,10 @@
                             initEmploymentCell(data.employment_id, data.node_id, data.unit_id, this);
                         }
                         else if (this.cellIndex == '2') { //unit-cell
-                            initUnitCell(data.unit_id, this, datatable);
+                            initUnitCell(data.unit_id, this);
                         }
                         else if (isEmployeeDataColumn(this.cellIndex)) {
-                            initEmployeeCell(data.node_id, data.employment_id, this, datatable);
+                            initEmployeeCell(data.node_id, data.employment_id, data.unit_id, this);
                         }
                     });
                     $('td', datatable.fnGetNodes()).hover(function() {

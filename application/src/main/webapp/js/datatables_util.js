@@ -57,18 +57,18 @@ function initEmploymentCell(employmentId, nodeId, unitId, cell) {
 
 }
 
-function initEmployeeCell(nodeId, employmentId, cell, datatable) {
+function initEmployeeCell(nodeId, employmentId, unitId, cell) {
     if (nodeId != "") {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
         $(cell).click(function() {
-            createEmployeeTab(nodeId, employmentId);
+            createEmployeeTab(nodeId, employmentId, unitId);
             openEmployeeForm();
         })
     }
 }
 
-function initUnitCell(unitId, cell, datatable) {
+function initUnitCell(unitId, cell) {
     if (unitId != "") {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
