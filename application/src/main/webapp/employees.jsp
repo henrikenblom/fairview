@@ -182,7 +182,7 @@
             bindTabs();
             var data = getNodeData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
-            generateSingleAddressComponent(data).insertAfter('#web-field');
+            generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
             $('#unitsettings-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
             openPopupTab(0);
         }
