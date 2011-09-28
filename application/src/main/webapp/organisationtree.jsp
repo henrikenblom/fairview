@@ -130,13 +130,11 @@
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 $('#header-organization-name').html($('#name-field').val());
-                $('#popup-header').html($('#name-field').val());
             });
             $('#unitsettings-general').append(saveButton);
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateImageUrlDiv(data).insertAfter("#descriptionDiv");
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
-            generateTabHeader(data.node.properties.name.value);
         }
 
         function generateSubunitEditForm(data) {
@@ -145,12 +143,10 @@
             saveButton.click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
                 assignManager(data.node.id, $('#managerorganizationForm-field').val());
-                $('#popup-header').html($('#name-field').val());
             });
             $('#unitsettings-general').append(saveButton);
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
             addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
-            generateTabHeader(data.node.properties.name.value);
         }
 
         function generateAdresses() {
@@ -249,7 +245,6 @@
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
         </ul>
-        <div id="popup-header"></div>
         <div class="unitsettings" id="unitsettings-general"></div>
         <div class="unitsettings" id="unitsettings-subunits">
         </div>

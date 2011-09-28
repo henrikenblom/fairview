@@ -968,10 +968,6 @@ function makeBirthdate(civicnumber) {
         return civicnumber;
 }
 
-function generateTabHeader(name) {
-    $('#popup-header').empty().append(name);
-}
-
 function fieldLabelBox() {
     return $('<div class="field-label-box">');
 }
