@@ -25,7 +25,6 @@
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
-            createEmployeeTab();
             oTable = $('#datatable').dataTable({
                 "bProcessing": true,
                 "bSortClasses": false,
@@ -49,10 +48,10 @@
                     $.each(tdNodes, function(){
                         var data = datatable.fnGetData(this.parentElement);
                         if (this.cellIndex == '2' || this.cellIndex == '3') {  //employee-cell
-                            initEmployeeCell(data.node_id, data.employment_id, data.unit_id, this);
+                            initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
                         }
                         else if (this.cellIndex == '1') { //employment-cell
-                            initEmploymentCell(data.employment_id, data.node_id, data.unit_id, this);
+                            initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
                         }
                         else if (this.cellIndex == '0') { // unit-cell
                             initUnitCell(data.unit_id, this);
@@ -103,8 +102,8 @@
             addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
         }
 
-        function generateEmploymentForm(unitId, employmentId) {
-            $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, unitId));
+        function generateEmploymentForm(nodeId, employmentId, unitId) {
+            $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, nodeId, unitId));
             $('#employment-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
 
@@ -134,7 +133,7 @@
             $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
 
-        function createEmployeeTab(nodeId, employmentId) {
+        function createEmployeeTab(nodeId, employmentId, unitId) {
             var linkData = [
                 ['employment-general', 'Anställningsvillkor'],
                 ['profile-general', 'Personuppgifter'],
@@ -144,7 +143,7 @@
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
             generateProfileForm(nodeId);
-            generateEmploymentForm(nodeId, employmentId);
+            generateEmploymentForm(nodeId, employmentId, unitId);
         }
 
         function openEmploymentForm(employmentId, nodeId) {
