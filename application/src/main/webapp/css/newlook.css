@@ -765,6 +765,7 @@ label.error {
 #unitsettings-general-tablink {
     color: #585c95;
     cursor: pointer;
+    line-height: 19px;
 }
 
 .link {
