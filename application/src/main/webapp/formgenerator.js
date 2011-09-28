@@ -685,7 +685,7 @@ function generateAlertDialog(title, text, fn, fnArg) {
                 if (typeof(fn) == 'function')
                     fn.call(this, fnArg);
             },
-            "Avbryt": function() {
+            "Nej": function() {
                 $(this).dialog("close");
             }
         }
