@@ -581,8 +581,8 @@ function createNodeWithRelationship(form, nodeId, callback, i) {
                 createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT', callback);
                 break;
             case "new_person_form":
-                $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode){
-                  createRelationship(organizationNode.id, data.node.id, 'HAS_EMPLOYEE', callback);
+                $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
+                    createRelationship(organizationNode.id, data.node.id, 'HAS_EMPLOYEE', callback);
                 })
                 break;
             default:
@@ -607,7 +607,6 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
     });
 }
 function createNodes(forms, nodeId, callback) {
-    alert(nodeId);
     $.each(forms, function(i, form) {
         if ($(form).data('edited') == 'true') {
             createNodeWithRelationship(form, nodeId, callback, i);
@@ -821,7 +820,7 @@ function createManagerList(assignedManagerId, managerInputElement) {
             $.each(array, function(count, node) {
                 appendManagerOption(node, assignedManagerId, managerInputElement);
             });
-        } else if (array != null){
+        } else if (array != null) {
             appendManagerOption(array, assignedManagerId, managerInputElement);
         }
 
@@ -886,19 +885,32 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
             async: false,
             url:'fairview/ajax/get_units.do', success: function(data) {
 
-                $.each(data.list.node, function(i) {
+                var option;
 
-                    var option = $('<option>');
-                    option.html(data.list.node[i].properties.name.value);
-                    option.attr('value', data.list.node[i].id);
+                try {
 
-                    if (unitId != null && unitId == data.list.node[i].id) {
-                        option.attr('selected', 'selected');
-                    }
+                    $.each(data.list.node, function(i) {
 
-                    selectInput.append(option);
+                        option = $('<option>');
+                        option.html(data.list.node[i].properties.name.value);
+                        option.attr('value', data.list.node[i].id);
 
-                });
+                        if (unitId != null && unitId == data.list.node[i].id) {
+                            option.attr('selected', 'selected');
+                        }
+
+                    });
+
+                } catch (error) {
+
+                    option = $('<option>');
+                    option.html(data.list.node.properties.name.value);
+                    option.attr('value', data.list.node.id);
+                    option.attr('selected', 'selected');
+
+                }
+
+                selectInput.append(option);
 
             }
         }
