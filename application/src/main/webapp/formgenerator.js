@@ -164,7 +164,7 @@ function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
     if (employeeId != null && employmentId != null && employmentId != '')
         formId = 'employment_form' + employeeId;
 
-    var form = buildUpdateForm(formId);
+    var form = buildUpdateForm(formId, "fairview/ajax/set_employment.do");
 
     var fieldSet = $('<fieldset>');
 
@@ -606,6 +606,7 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
     });
 }
 function createNodes(forms, nodeId, callback) {
+    alert(nodeId);
     $.each(forms, function(i, form) {
         if ($(form).data('edited') == 'true') {
             createNodeWithRelationship(form, nodeId, callback, i);
@@ -1166,12 +1167,19 @@ function getNodeData(unitId) {
     }).responseText);
     return data;
 }
-function buildUpdateForm(id) {
+function buildUpdateForm(id, action) {
+
+    if (action == null) {
+        action = "neo/ajax/update_node.do";
+    }
+
     var updateForm = $('<form>');
     updateForm.attr("id", id);
-    updateForm.attr("action", "neo/ajax/update_node.do");
+    updateForm.attr("action", action);
     updateForm.attr("method", "post");
+
     return updateForm;
+
 }
 
 function textAreaInputComponent(labelText, inputName, value, formId, divId) {

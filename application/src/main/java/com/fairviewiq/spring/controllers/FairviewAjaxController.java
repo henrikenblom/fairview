@@ -102,6 +102,7 @@ public class FairviewAjaxController {
             // no-op
         }
         functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
+
     }
 
     @RequestMapping(value = {"/fairview/ajax/update_position.do"})
@@ -158,6 +159,49 @@ public class FairviewAjaxController {
         return mav;
 
     }
+
+    @RequestMapping(value = {"/fairview/ajax/set_employment.do"})
+    public ModelAndView setEmployment(HttpServletRequest request,
+                                      @RequestParam(value = "_nodeId", required = false) Long nodeId,
+                                      @RequestParam(value = "_strict", required = false) Boolean strict) {
+
+        Node node = null;
+
+        if (nodeId == null) {
+
+            node =  neo.createNode();
+
+            nodeId = node.getId();
+
+        } else {
+
+            node = neo.getNodeById(nodeId);
+
+        }
+
+        if (request.getParameter("unit") != null) {
+
+            SimpleRelationshipType belongsToRelationship = new SimpleRelationshipType("BELONGS_TO");
+
+            try {
+                node.getRelationships(belongsToRelationship, Direction.OUTGOING).iterator().next().delete();
+            } catch (Exception ex) {
+                // no-op
+            }
+
+            try {
+
+                node.createRelationshipTo(neo.getNodeById(Long.decode(request.getParameter("unit"))), belongsToRelationship);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return updatePropertyContainer(request, nodeId, TYPE_NODE, false);
+
+    }
+
 
     @RequestMapping(value = {"/fairview/ajax/assign_unit.do"})
     public ModelAndView assignUnit(@RequestParam("employment") Long employmentId,
@@ -771,5 +815,80 @@ public class FairviewAjaxController {
         return mav;
     }
 
+    private ModelAndView updatePropertyContainer(HttpServletRequest request,
+                                                @RequestParam("_id") Long id,
+                                                @RequestParam("_type") String type,
+                                                @RequestParam(value = "_strict", required = false) Boolean strict) {
+
+        PropertyContainer propertyContainer = TYPE_NODE.equalsIgnoreCase(type.trim()) ? neo.getNodeById(id) : neo.getRelationshipById(id);
+
+        Set<String> keySet = null;
+        if (strict != null && strict) {
+            keySet = NeoUtils.getKeysSet(propertyContainer);
+        }
+
+        Enumeration enumeration = request.getParameterNames();
+        while (enumeration.hasMoreElements()) {
+            String name = (String) enumeration.nextElement();
+            if (!name.startsWith("_")) {
+                String[] fields = name.split(":");
+                String key = fields[0];
+                String primitiveType = fields.length > 1 ? fields[1] : null;
+                String pattern = fields.length > 2 ? fields[2] : null;
+                if ("relationship".equalsIgnoreCase(primitiveType)) {
+                    Node node = (Node) propertyContainer;
+                    long otherId = Long.parseLong(request.getParameter(name));
+                    boolean relationshipExists = false;
+                    RelationshipType relationshipType = new SimpleRelationshipType(key);
+                    for (Relationship relationship : node.getRelationships(relationshipType, Direction.OUTGOING)) {
+                        if (relationship.getEndNode().getId() == otherId) {
+                            relationshipExists = true;
+                        } else {
+                            relationship.delete();
+                        }
+                    }
+                    if (!relationshipExists && otherId != -1) {
+                        node.createRelationshipTo(neo.getNodeById(otherId), relationshipType);
+                    }
+                } else if ("checkbox".equalsIgnoreCase(primitiveType)) {
+                    String[] values = request.getParameterValues(name);
+                    Set<String> propertyKeys = NeoUtils.getKeysSet(propertyContainer);
+                    for (String propertyKey : propertyKeys) {
+                        if (propertyKey.startsWith(key + "#")) {
+                            propertyContainer.removeProperty(propertyKey);
+                        }
+                    }
+                    for (String value : values) {
+                        propertyContainer.setProperty(key + "#" + value, true);
+                    }
+                } else {
+                    if (primitiveType == null) {
+                        Object oldValue = propertyContainer.getProperty(key, null);
+                        if (oldValue != null) {
+                            primitiveType = oldValue.getClass().getSimpleName();
+                        }
+                    }
+                    if (request.getParameter(name) != null && request.getParameter(name).length() > 0) {
+                        Object value = NeoUtils.toPrimitive(request.getParameter(name), primitiveType, pattern);
+                        propertyContainer.setProperty(key, value);
+                        if (keySet != null) {
+                            keySet.remove(key);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (keySet != null) {
+            for (String key : keySet) {
+                propertyContainer.removeProperty(key);
+            }
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, propertyContainer);
+        return mav;
+
+    }
 
 }
