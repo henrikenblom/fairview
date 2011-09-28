@@ -725,11 +725,20 @@ label.error {
     color: black;
     border: none;
     padding-left: 0;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 13px;
+    font-size: 1.1em;
     height: 24px;
     min-width: 46px;
+    float: left;
+    line-height: 28px;
+    margin-right: 35px;
+}
+.activetab{
+    font-weight: bold;
+}
+
+.inactivetab{
+    cursor: pointer;
+    font-weight: normal;
 }
 
 .top-button:disabled {
