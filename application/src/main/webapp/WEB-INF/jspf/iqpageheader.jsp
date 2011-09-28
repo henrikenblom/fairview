@@ -19,8 +19,8 @@
 
     function changeView(location) {
 
-        setTimeout(function() {document.location.href = location}, 200);
-        $('#modalizer').fadeIn(200);
+        setTimeout(function() {document.location.href = location}, 100);
+        $('#modalizer').fadeIn(100);
 
     }
 
