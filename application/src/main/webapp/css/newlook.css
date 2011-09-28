@@ -74,8 +74,6 @@ table{
 }
 
 .addsubunit-button {
-    margin-top: 15px;
-    height: 30px;
 }
 
 .dialog-button:disabled {
@@ -846,7 +844,7 @@ label.error {
 }
 
 .groupedFormsContainer{
-    border-top: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
 }
 
 
