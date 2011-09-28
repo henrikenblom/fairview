@@ -167,7 +167,7 @@ public class DatatablesController {
 
         Node unitNode = getUnitNode(employmentNode);
         if(unitNode != null){
-            addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("unit_name", "").toString());
+            addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name", "").toString());
         } else {
             Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
             addUnitValuesToRow(row, String.valueOf(organization.getId()), organization.getProperty("name", "").toString());

@@ -887,7 +887,7 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
 
                 var option;
 
-                try {
+                if(data.list != null && data.list.node.length > 1) {
 
                     $.each(data.list.node, function(i) {
 
@@ -898,20 +898,17 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
                         if (unitId != null && unitId == data.list.node[i].id) {
                             option.attr('selected', 'selected');
                         }
-
+                        selectInput.append(option);
                     });
 
-                } catch (error) {
+                } else {
 
                     option = $('<option>');
-                    option.html(data.list.node.properties.name.value);
-                    option.attr('value', data.list.node.id);
+                    option.html(data.list.properties.name.value);
+                    option.attr('value', data.list.id);
                     option.attr('selected', 'selected');
-
+                    selectInput.append(option);
                 }
-
-                selectInput.append(option);
-
             }
         }
     );
