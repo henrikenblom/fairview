@@ -384,12 +384,12 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     if (!$.isEmptyObject(workExperienceNode)) {
         var properties = workExperienceNode.properties;
         nameString = propValue(properties.name);
-        companyString = propValue(properties.description);
-        tradeString = propValue(properties.grade);
-        countryString = propValue(properties.from);
+        companyString = propValue(properties.company);
+        tradeString = propValue(properties.trade);
+        countryString = propValue(properties.country);
         fromString = propValue(properties.from);
         toString = propValue(properties.to);
-        assignmentsString = propValue(properties.assignments);
+        assignmentsString = propValue(properties.assignment);
         idString = workExperienceNode.id;
     }
 
@@ -404,8 +404,8 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
     var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', countryString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', fromString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
