@@ -41,15 +41,15 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 }
 
-function initEmploymentCell(employmentId, employeeId, cell) {
-    $(cell).unbind();
-    $(cell).css('cursor', 'pointer');
+function initEmploymentCell(employmentId, nodeId, unitId, cell) {
+        $(cell).unbind();
+        $(cell).css('cursor', 'pointer');
 
-    $(cell).click(function() {
-        createEmployeeTab(employeeId, employmentId);
+        $(cell).click(function() {
+            createEmployeeTab(nodeId, employmentId, unitId);
 
-        openEmploymentForm(employmentId, employeeId);
-    });
+            openEmploymentForm(employmentId, nodeId);
+        });
 
     if ($(cell).html().length < 1) {
         $(cell).html('Lägg till');
