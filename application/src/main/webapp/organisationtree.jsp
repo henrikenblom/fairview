@@ -73,6 +73,12 @@
             adjustViewPort();
             fadeOutModalizer();
 
+            if (<%=organization.getProperty("name", "").equals("")%>) {
+                var data = getNodeData(unitId);
+                generateMainOrganizationEditForm(data);
+                openPopupTab(0);
+            }
+
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
                 openPopupTab(0);
@@ -104,7 +110,7 @@
             var submitButton = $('<button>');
             submitButton.addClass('addsubunit-button')
             submitButton.attr('disabled', 'disabled');
-            submitButton.html('Lägg till underenhet till ' + data.node.properties.name.value);
+            submitButton.html('Lägg till underenhet till ' + propValue(data.node.properties.name));
             submitButton.click(function() {
                 $('#subunitform').ajaxSubmit(function(data) {
                     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _endNodeId: data.node.id,_type:"HAS_UNIT" },
@@ -120,8 +126,8 @@
             cancelButton.appendTo($('#unitsettings-subunits'));
         }
 
-        function reloadPage(){
-           location.reload();
+        function reloadPage() {
+            location.reload();
         }
 
         function generateMainOrganizationEditForm(data) {
@@ -172,7 +178,7 @@
         <% } %>
         }
         function assignManager(unitId, managerId, callback) {
-            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:managerId},function(){
+            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:managerId}, function() {
                 if (typeof(callback) == 'function')
                     callback.call();
             });
@@ -228,8 +234,10 @@
                 <div class="helpbox-header">Hjälpruta</div>
                 <div class="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
 
-                    <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till underenhet<br/></div>
-                    <div class="helpbox-listentry"><img src="images/delete.png"class="helpbox-image">Ta bort enhet</div>
+                    <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till
+                        underenhet<br/></div>
+                    <div class="helpbox-listentry"><img src="images/delete.png" class="helpbox-image">Ta bort enhet
+                    </div>
                 </div>
             </div>
         </div>
