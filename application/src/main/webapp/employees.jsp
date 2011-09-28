@@ -54,8 +54,8 @@
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentElement);
-                        if (this.cellIndex == '3') {  //employment-cell
-                            initEmploymentCell(data.employment_id, data.node_id, this);
+                        if (this.cellIndex == '3') {  //employee-cell
+                            initEmploymentCell(data.employment_id, data.node_id, data.unit_id, this);
                         }
                         else if (this.cellIndex == '2') { //unit-cell
                             initUnitCell(data.unit_id, this, datatable);
@@ -154,12 +154,13 @@
             $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
 
-        function generateEmploymentForm(unitId, employmentId) {
-            $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, unitId));
+        function generateEmploymentForm(nodeId, employmentId, unitId) {
+            $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, nodeId, unitId));
             $('#employment-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
         }
 
-        function createEmployeeTab(nodeId, employmentId) {
+        function createEmployeeTab(nodeId, employmentId, unitId) {
+
             var linkData = [
                 ['profile-general', 'Personuppgifter'],
                 ['profile-education', 'Utbildning'],
@@ -169,7 +170,7 @@
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
             generateProfileForm(nodeId);
-            generateEmploymentForm(nodeId, employmentId);
+            generateEmploymentForm(nodeId, employmentId, unitId);
         }
 
         function openEmployeeForm() {
