@@ -42,7 +42,6 @@ function getSubUnitCreationFormId() {
     return formId;
 }
 function generateSubunitCreationForm() {
-
     var formId = getSubUnitCreationFormId();
     var form = buildUpdateForm(formId);
     var fieldSet = $('<fieldset>');
@@ -68,7 +67,6 @@ function generateSubunitCreationForm() {
     form.append(fieldSet);
     form.validate();
     return form;
-
 }
 
 function generateProfileGeneralForm(data) {
@@ -142,8 +140,8 @@ function generateProfileGeneralForm(data) {
     addGenderOptions(genderString, genderDiv.children('#gender-field'));
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization,
-        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, '<br/>', civicDiv, '<br/>', addressDiv, '<br/>',
-        zipDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>', phoneDiv, '<br/>', cellDiv, '<br/>', emailDiv, '<br/>', additional_infoDiv, '<br/>');
+        firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
+        zipDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     form.validate();
@@ -206,7 +204,7 @@ function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
     var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationDays', propValue(properties.vacationDays), formId, false);
     var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalPeriodEmployee', 'dismissalPeriodEmployeeDiv', formId, false);
     addDismissalPeriod(properties.dismissalPeriodEmployee, dismissalPeriodEmployeeDiv.children('#dismissalPeriodEmployee-field'));
-    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalPeriodEmployer', 'dismissalPeriodEmployerDiv', formId, false);
+    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalPeriodEmployer', 'dismissalPeriodEmployerDiv', formId, false);
     addDismissalPeriod(properties.dismissalPeriodEmployer, dismissalPeriodEmployerDiv.children('#dismissalPeriodEmployer-field'));
     var companyCarDiv = textInputComponent('Tjänstebil', 'companyCar', propValue(properties.companyCar), formId, false);
 
@@ -259,18 +257,18 @@ function generateLanguageForm(form_Id, languageNode) {
 
     var language = textInputComponent('Språk', 'language', languageString, formId, false);
 
-    var written = selectInputComponent('Kunskapsnivå - skriftlig', 'written', 'written-field', formId, false);
+    var written = selectInputComponent('Skriftligt', 'written', 'written-field', formId, false);
     written.children('#written-field').append(generateOption('some', writtenString, 'Viss'));
     written.children('#written-field').append(generateOption('good', writtenString, 'God'));
     written.children('#written-field').append(generateOption('advanced', writtenString, 'Advancerad'));
 
-    var spoken = selectInputComponent('Kunskapsnivå - muntlig', 'spoken', 'spoken-field', formId, false);
+    var spoken = selectInputComponent('Muntligt', 'spoken', 'spoken-field', formId, false);
     spoken.children('#spoken-field').append(generateOption('some', spokenString, 'Viss'));
     spoken.children('#spoken-field').append(generateOption('good', spokenString, 'God'));
     spoken.children('#spoken-field').append(generateOption('advanced', spokenString, 'Advancerad'));
 
     languageForm.append(hiddenField_id, hiddenField_strict,
-        language, '<br/>', written, '<br/>', spoken);
+        language, written, spoken);
     languageDiv.append(languageForm);
     return languageDiv;
 }
@@ -311,8 +309,8 @@ function generateEducationForm(form_Id, educationNode) {
     var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
     var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
     var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
-    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
@@ -327,9 +325,9 @@ function generateEducationForm(form_Id, educationNode) {
     levelComponent.children('#level-field').append(generateOption('phd', levelString, 'Licentiat eller doktorsexamen'));
     levelComponent.children('#level-field').append(generateOption('professional_license', levelString, 'Yrkeslicens'));
 
-    educationForm.append(hiddenField_id, hiddenField_strict, nameComponent, '<br/>',
-        levelComponent, '<br/>', directionComponent, '<br/>', scopeComponent, '<br/>', fromComponent, '<br/>', toComponent,
-        '<br/>', countryComponent, '<br/>', descriptionComponent);
+    educationForm.append(hiddenField_id, hiddenField_strict, nameComponent,
+        levelComponent, directionComponent, scopeComponent, fromComponent, toComponent,
+        countryComponent, descriptionComponent);
     educationDiv.append(educationForm);
     return educationDiv;
 }
@@ -362,13 +360,13 @@ function generateCertificateForm(form_Id, certificateNode) {
 
     var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var fromComponent = textInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = textInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
     var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict,
-        nameComponent, '<br/>', descriptionComponent, '<br/>', fromComponent, '<br/>', toComponent
-        , '<br/>', gradeComponent);
+        nameComponent, descriptionComponent, fromComponent, toComponent
+        , gradeComponent);
     certificateDiv.append(certificateForm);
     return certificateDiv;
 }
@@ -407,13 +405,13 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
     var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
-    var fromComponent = textInputComponent('Från och med', 'from', countryString, formId, false);
-    var toComponent = textInputComponent('Till och med', 'to', fromString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', countryString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', fromString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
-        nameComponent, '<br/>', companyComponent, '<br/>', tradeComponent, '<br/>', countryComponent, '<br/>',
-        fromComponent, '<br/>', toComponent, '<br/>', assignmentComponent);
+        nameComponent, companyComponent, tradeComponent, countryComponent,
+        fromComponent, toComponent, assignmentComponent);
     div.append(form);
     return div;
 }
@@ -994,7 +992,7 @@ function formIsValid(formId) {
     return $('#' + formId).valid();
 }
 function makeInputRequired(label, input) {
-    label.append(' (* Obligatoriskt fält.)');
+    label.append(' *');
     input.addClass('required');
 }
 function textInputComponent(labelText, inputName, value, formId, required) {
@@ -1006,6 +1004,29 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
+    textInput.change(function() {
+        $('#' + formId).data('edited', 'true');
+    });
+    textInput.keyup(function() {
+        validateForm(formId);
+    });
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
+    inputDiv.append(inputLabel, textInput);
+    return inputDiv;
+}
+
+function dateInputComponent(labelText, inputName, value, formId, required) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    inputLabel.append(labelText);
+    var textInput = $('<input type="text">');
+    textInput.addClass("datepicker");
+    textInput.attr("id", inputName + "_" + formId);
+    textInput.attr("name", inputName);
+    textInput.val(value);
+    textInput.datepicker();
     textInput.change(function() {
         $('#' + formId).data('edited', 'true');
     });

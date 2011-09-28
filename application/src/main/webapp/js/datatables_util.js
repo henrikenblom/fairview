@@ -51,9 +51,9 @@ function initEmploymentCell(employmentId, nodeId, unitId, cell) {
             openEmploymentForm(employmentId, nodeId);
         });
 
-        if ($(cell).html().length < 1) {
-            $(cell).html('Lägg till');
-        }
+    if ($(cell).html().length < 1) {
+        $(cell).html('Lägg till');
+    }
 
 }
 

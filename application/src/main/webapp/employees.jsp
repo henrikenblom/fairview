@@ -162,7 +162,7 @@
         function createEmployeeTab(nodeId, employmentId, unitId) {
 
             var linkData = [
-                ['profile-general', 'Allmänt'],
+                ['profile-general', 'Personuppgifter'],
                 ['profile-education', 'Utbildning'],
                 ['profile-experience', 'Erfarenhet'],
                 ['employment-general', 'Anställningsvillkor']
