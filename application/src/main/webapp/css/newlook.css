@@ -360,8 +360,6 @@ input[type="radio"]{
     padding-top: 5px;
     padding-bottom: 5px;
     border-bottom: 1px solid #DDD;
-    border-top: 1px solid #DDD;
-    background-color: #E8ECF5;
 }
 
 .login-field {
