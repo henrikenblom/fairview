@@ -155,7 +155,7 @@ function addManager(formId, unitId) {
     return managerDiv;
 }
 
-function generateEmploymentCreationForm(employmentId, employeeId) {
+function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
 
     var properties = new Array();
     var data;
@@ -195,6 +195,9 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
 
     var paymentFormDiv = selectInputComponent('Löneform', 'paymentForm', 'paymentFormDiv', formId, false);
     addPaymentFormOption(properties.paymentForm, paymentFormDiv.children('#paymentForm-field'));
+
+    var unitDiv = createUnitSelect('Enhet', 'unit', 'unitDiv', formId, false, unitId);
+
     var salaryDiv = textInputComponent('Aktuell lön', 'salary', propValue(properties.salary), formId, false);
     var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimeCompensation', formId, yesNo(), propValue(properties.overtimeCompensation));
     var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelCompensation', formId, yesNo(), propValue(properties.travelCompensation));
@@ -206,10 +209,24 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     var companyCarDiv = textInputComponent('Tjänstebil', 'companyCar', propValue(properties.companyCar), formId, false);
 
     var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensionInsurances', propValue(properties.pensionInsurances), formId, false);
-
-    fieldSet.append(hiddenField_type, hiddenField_strict, hiddenField_username, titleDiv, workPhoneDiv, workingHoursDiv, attestationRightsDiv, responsibilityDiv, '<br />', paymentFormDiv, salaryDiv
-        , '<br />', overtimeCompensationDiv, travelCompensationDiv, '<br />', vacationDaysDiv, dismissalPeriodEmployeeDiv, dismissalPeriodEmployerDiv,
-        companyCarDiv, pensionInsurancesDiv);
+    fieldSet.append(hiddenField_type,
+        hiddenField_strict,
+        hiddenField_username,
+        titleDiv, '<br />',
+        workPhoneDiv,
+        workingHoursDiv,
+        unitDiv,
+        responsibilityDiv,
+        paymentFormDiv,
+        salaryDiv, '<br />',
+        overtimeCompensationDiv,
+        travelCompensationDiv, '<br />',
+        dismissalPeriodEmployeeDiv,
+        dismissalPeriodEmployerDiv,
+        vacationDaysDiv,
+        companyCarDiv,
+        pensionInsurancesDiv,
+        attestationRightsDiv);
     form.append(fieldSet);
     return form;
 }
@@ -501,7 +518,7 @@ function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunctio
     else { //existing person
         $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
             if (!$.isEmptyObject(data.list)) {
-                var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+                var array = data.list["node"];
                 if (array.length > 1) {
                     $.each(array, function(count, object) {
                         formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
@@ -577,7 +594,7 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
     $('#new_person_form').ajaxSubmit(function(createdEmployee) {
         $.getJSON("fairview/ajax/get_organization_node.do", function(organizationNode) {
             $.getJSON("neo/ajax/create_relationship.do",
-                {_startNodeId:organizationNode['org.neo4j.kernel.impl.core.NodeProxy'].id, _endNodeId: createdEmployee.node.id,_type:'HAS_EMPLOYEE' },
+                {_startNodeId:organizationNode['node'].id, _endNodeId: createdEmployee.node.id,_type:'HAS_EMPLOYEE' },
                 function(relationshipData) {
                     $.each(forms, function(i, form) {
                         if ($(form).attr('id') != 'new_person_form') {  //don't create the relationship twice
@@ -789,7 +806,7 @@ function addGenderOptions(gender, genderInputElement) {
 
 function createManagerList(assignedManagerId, managerInputElement) {
     $.getJSON("/fairview/ajax/get_persons.do", function(data) {
-        var array = data.list["org.neo4j.kernel.impl.core.NodeProxy"];
+        var array = data.list['node'];
         $.each(array, function(count, node) {
             var option = $('<option>');
             option.attr('value', node.id);
@@ -834,6 +851,74 @@ function addEmploymentOptions(employment, employmentInputElement) {
             optionDiv.attr('selected', 'true');
         employmentInputElement.append(optionDiv);
     });
+}
+
+function createUnitSelect(labelText, inputName, divId, formId, required, unitId) {
+
+    var selectDiv = fieldBox();
+    selectDiv.attr("id", divId);
+    var selectLabel = fieldLabelBox();
+    selectLabel.append(labelText);
+    var selectInput = $('<select>');
+    selectInput.attr("name", inputName);
+    selectInput.attr("id", inputName + "-field");
+    selectInput.change(function() {
+        $('#' + formId).data('edited', 'true');
+        validateForm(formId);
+    });
+    if (required == true) {
+        makeInputRequired(selectLabel, selectInput);
+    }
+    selectDiv.append(selectLabel, selectInput, $('<br>'));
+
+    $.ajax({
+            dataType: 'json',
+            async: false,
+            url:'fairview/ajax/get_units.do', success: function(data) {
+
+                $.each(data.list.node, function(i) {
+
+                    var option = $('<option>');
+                    option.html(data.list.node[i].properties.name.value);
+                    option.attr('value', data.list.node[i].id);
+
+                    if (unitId != null && unitId == data.list.node[i].id) {
+                        option.attr('selected', 'selected');
+                    }
+
+                    selectInput.append(option);
+
+                });
+
+            }
+        }
+    );
+
+    return selectDiv;
+
+}
+
+function populateUnitSelect(inputElement) {
+
+    $.ajax({
+            dataType: 'json',
+            async: false,
+            url:'fairview/ajax/get_units.do', success: function(data) {
+
+                $.each(data.list.node, function(i) {
+
+                    var option = $('<option>');
+                    option.html(data.list.node[i].properties.name.value);
+                    option.attr('value', data.list.node[i].id);
+
+                    inputElement.append(option);
+
+                });
+
+            }
+        }
+    );
+
 }
 
 function addPaymentFormOption(paymentForm, paymentFormInputElement) {

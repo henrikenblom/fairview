@@ -41,6 +41,7 @@ public class FairviewAjaxController {
     private NeoUtils neoUtils;
     private FunctionListGenerator functionListGenerator;
     private Gson gson = new Gson();
+    private Node organization;
 
     @PostConstruct
     public void initialize() {
@@ -58,20 +59,44 @@ public class FairviewAjaxController {
         xstream.alias("relationship", Relationship.class);
 
         try {
-            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeImpl"));
-            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeProxy"));
+            xstream.alias("node", Class.forName("org.neo4j.kernel.impl.core.NodeProxy"));
         } catch (ClassNotFoundException e) {
             // no-op
         }
 
         try {
+            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeImpl"));
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+
+        try {
+
+            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeProxy"));
+
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+        try {
+            xstream.alias("relationship", Class.forName("org.neo4j.kernel.impl.core.RelationshipProxy"));
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+        try {
             xstream.alias("relationship", Class.forName("org.neo4j.impl.core.RelationshipImpl"));
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+        try {
             xstream.alias("relationship", Class.forName("org.neo4j.impl.core.RelationshipProxy"));
+
         } catch (ClassNotFoundException e) {
             // no-op
         }
 
         xstreamView = new XStreamView(xstream, "text/json");
+
+        organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
 
         functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
     }
@@ -104,7 +129,7 @@ public class FairviewAjaxController {
 
     }
 
-//    @RequestMapping(value = {"/fairview/ajax/assign_function.do"})
+    //    @RequestMapping(value = {"/fairview/ajax/assign_function.do"})
     public ModelAndView assignFunction(@RequestParam("employment") Long employmentId,
                                        @RequestParam("function:relationship") Long functionId,
                                        @RequestParam("percent") int percent) throws IOException {
@@ -202,6 +227,26 @@ public class FairviewAjaxController {
         return mav;
     }
 
+    @RequestMapping(value = {"/fairview/ajax/get_units.do"})
+    public ModelAndView getUnits() {
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+
+        ArrayList<Node> retval = new ArrayList<Node>();
+
+        retval.add(organization);
+
+        for (Relationship relationship : organization.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING)) {
+
+            retval.add(relationship.getEndNode());
+
+        }
+
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
+
+        return mav;
+
+    }
 
     @RequestMapping(value = {"/fairview/ajax/get_assigned_tasks.do"})
     public ModelAndView getAssignedGoals(@RequestParam("_nodeId") Long nodeId) {
@@ -699,8 +744,6 @@ public class FairviewAjaxController {
     @RequestMapping(value = {"/fairview/ajax/get_organization_node.do"})
     public ModelAndView getOrganizationNode() {
 
-        Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
-
         ModelAndView mav = new ModelAndView(xstreamView);
         mav.addObject(XStreamView.XSTREAM_ROOT, organization);
         return mav;
@@ -717,7 +760,7 @@ public class FairviewAjaxController {
     @RequestMapping(value = {"/fairview/ajax/get_persons.do"})
     public ModelAndView getPersons() {
 
-        PersonListGenerator personListGenerator = new PersonListGenerator((EmbeddedGraphDatabase)neo);
+        PersonListGenerator personListGenerator = new PersonListGenerator((EmbeddedGraphDatabase) neo);
         ArrayList<Node> retval = personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false);
 
         ModelAndView mav = new ModelAndView(xstreamView);
