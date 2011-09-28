@@ -212,11 +212,10 @@ function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
     fieldSet.append(hiddenField_type,
         hiddenField_strict,
         hiddenField_username,
-        titleDiv, '<br />',
+        titleDiv, unitDiv, '<br />',
         workPhoneDiv,
         workingHoursDiv,
-        unitDiv,
-        responsibilityDiv,
+        responsibilityDiv, '<br />',
         paymentFormDiv,
         salaryDiv, '<br />',
         overtimeCompensationDiv,
@@ -582,7 +581,9 @@ function createNodeWithRelationship(form, nodeId, callback, i) {
                 createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT', callback);
                 break;
             case "new_person_form":
-                createRelationship('9', data.node.id, 'HAS_EMPLOYEE', callback);
+                $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode){
+                  createRelationship(organizationNode.id, data.node.id, 'HAS_EMPLOYEE', callback);
+                })
                 break;
             default:
                 if (typeof(callback) == 'function')
@@ -815,11 +816,11 @@ function appendManagerOption(node, assignedManagerId, managerInputElement) {
 function createManagerList(assignedManagerId, managerInputElement) {
     $.getJSON("/fairview/ajax/get_persons.do", function(data) {
         var array = data.list['node']
-        if (array.length != null) {
+        if (array != null && array.length != null) {
             $.each(array, function(count, node) {
                 appendManagerOption(node, assignedManagerId, managerInputElement);
             });
-        } else {
+        } else if (array != null){
             appendManagerOption(array, assignedManagerId, managerInputElement);
         }
 
