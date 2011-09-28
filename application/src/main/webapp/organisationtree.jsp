@@ -68,16 +68,10 @@
                 }
             });
             var unitId = <%= organization.getId()%>;
-            bindTabs();
 
             adjustViewPort();
             fadeOutModalizer();
-
-            if (<%=organization.getProperty("name", "").equals("")%>) {
-                var data = getNodeData(unitId);
-                generateMainOrganizationEditForm(data);
-                openPopupTab(0);
-            }
+            bindTabs();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
@@ -90,6 +84,12 @@
                 openPopupTab(1);
             });
 
+            if (<%=organization.getProperty("name", "").equals("")%>) {
+                var data = getNodeData(unitId);
+                generateMainOrganizationEditForm(data);
+                $('#popup-tabs li a[href="#unitsettings-subunits"]').hide();
+                openPopupTab(0);
+            }
         });
 
         function generateMainOrganizationPopup(unitId) {
