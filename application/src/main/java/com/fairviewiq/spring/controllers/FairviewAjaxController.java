@@ -41,7 +41,7 @@ public class FairviewAjaxController {
     private NeoUtils neoUtils;
     private FunctionListGenerator functionListGenerator;
     private Gson gson = new Gson();
-    private Node organization;
+    private Node organization = null;
 
     @PostConstruct
     public void initialize() {
@@ -96,8 +96,11 @@ public class FairviewAjaxController {
 
         xstreamView = new XStreamView(xstream, "text/json");
 
-        organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
-
+        try {
+            organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
+        } catch (Exception ex) {
+            // no-op
+        }
         functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
     }
 
