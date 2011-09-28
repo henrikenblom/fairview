@@ -125,6 +125,11 @@ fieldset {
     padding: 0;
 }
 
+input[type="radio"]{
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
 .helpbox {
     width: 200px;
     background-color: white;

@@ -1047,8 +1047,12 @@ function radioButtonInputComponent(labelText, inputName, formId, radioButtonData
     inputLabel.append(labelText);
     inputDiv.append(inputLabel);
     $.each(radioButtonData, function(i) {
+        var label = $('<label>');
+        label.attr('for', radioButtonData[i][1]);
+        label.append(radioButtonData[i][0]);
         var radioButton = $('<input type="radio">');
         radioButton.attr('name', inputName);
+        radioButton.attr('id', radioButtonData[i][1]);
         radioButton.attr('value', radioButtonData[i][1]);
         radioButton.click(function() {
             validateForm(formId);
@@ -1059,7 +1063,7 @@ function radioButtonInputComponent(labelText, inputName, formId, radioButtonData
         if (radioButtonData[i][1] == selected)
             radioButton.attr('checked', 'checked');
         radioButton.addClass('radiobutton');
-        radioButton.append(radioButtonData[i][0]);
+        inputBox.append(label);
         inputBox.append(radioButton);
     });
     inputDiv.append(inputBox);
