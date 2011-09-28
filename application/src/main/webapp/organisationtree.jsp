@@ -135,7 +135,7 @@
             $('#unitsettings-general').append(saveButton);
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateImageUrlDiv(data).insertAfter("#descriptionDiv");
-            generateSingleAddressComponent(data).insertAfter('#web-field');
+            generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
             generateTabHeader(data.node.properties.name.value);
         }
 
@@ -148,7 +148,7 @@
                 $('#popup-header').html($('#name-field').val());
             });
             $('#unitsettings-general').append(saveButton);
-            generateSingleAddressComponent(data).insertAfter('#web-field');
+            generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
             addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
             generateTabHeader(data.node.properties.name.value);
         }

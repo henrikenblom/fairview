@@ -30,8 +30,8 @@ function generateBaseUnitEditForm(data, datatable) {
     var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId, false);
 
     //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>',
-        emailDiv, '<br/>', webDiv, '<br/>');
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, faxDiv,
+        emailDiv, webDiv);
     updateForm.append(fieldSet);
     updateForm.validate();
     return updateForm;
@@ -62,8 +62,8 @@ function generateSubunitCreationForm() {
     var cityDiv = textInputComponent('Ort', 'city', '', getSubUnitCreationFormId());
     var countryDiv = textInputComponent('Land', 'country', '', getSubUnitCreationFormId());
 
-    fieldSet.append(hiddenField_id, hiddenField_strict, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, '<br/>', faxDiv, '<br/>', emailDiv,
-        '<br/>', webDiv, '<br/>', addressDiv, '<br/>', postnummerDiv, '<br/>', cityDiv, '<br/>', countryDiv, '<br/>');
+    fieldSet.append(hiddenField_id, hiddenField_strict, nameDiv, '<br/>', descriptionDiv, phoneDiv, faxDiv, emailDiv,
+        webDiv, addressDiv, postnummerDiv, cityDiv, countryDiv);
     form.append(fieldSet);
     form.validate();
     return form;
@@ -208,7 +208,7 @@ function generateEmploymentCreationForm(employmentId, employeeId) {
     var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensionInsurances', propValue(properties.pensionInsurances), formId, false);
 
     fieldSet.append(hiddenField_type, hiddenField_strict, hiddenField_username, titleDiv, workPhoneDiv, workingHoursDiv, attestationRightsDiv, responsibilityDiv, '<br />', paymentFormDiv, salaryDiv
-        , overtimeCompensationDiv, travelCompensationDiv, vacationDaysDiv, dismissalPeriodEmployeeDiv, dismissalPeriodEmployerDiv,
+        , '<br />', overtimeCompensationDiv, travelCompensationDiv, '<br />', vacationDaysDiv, dismissalPeriodEmployeeDiv, dismissalPeriodEmployerDiv,
         companyCarDiv, pensionInsurancesDiv);
     form.append(fieldSet);
     return form;
@@ -1189,13 +1189,14 @@ function generateImageUrlDiv(data) {
 function generateSingleAddressComponent(data) {
     var properties = data.node.properties;
 
+    var addressComponent = $('<div>');
     var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), getOrganizationFormId());
     var postnummerDiv = textInputComponent('Postnummer', 'postalcode', propValue(properties.postalcode), getOrganizationFormId());
     var cityDiv = textInputComponent('Ort', 'city', propValue(properties.city), getOrganizationFormId());
     var countryDiv = textInputComponent('Land', 'country', propValue(properties.country), getOrganizationFormId());
 
-    addressDiv.append(postnummerDiv, cityDiv, countryDiv);
-    return addressDiv;
+    addressComponent.append(addressDiv, postnummerDiv, cityDiv, countryDiv);
+    return addressComponent;
 }
 
 function generateMainOrganizationAddressComponent(labelText, unitId, name, value) {
