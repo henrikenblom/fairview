@@ -694,8 +694,8 @@ function generateAlertDialog(title, text, fn, fnArg) {
 
 function generateDeleteDialog(nodeId) {
     var deleteDialog = $('<div>');
-    deleteDialog.attr('title', 'Är du säker?');
-    deleteDialog.html('Du håller på att ta bort en enhet.');
+    deleteDialog.attr('title', 'Borttagning av enhet');
+    deleteDialog.html('Är du säker på att du vill ta bort enheten?');
     deleteDialog.dialog({
         resizable: false,
         height: 140,
