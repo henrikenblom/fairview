@@ -19,8 +19,8 @@
 
     function changeView(location) {
 
-        setTimeout(function() {document.location.href = location}, 200);
-        $('#modalizer').fadeIn(200);
+        setTimeout(function() {document.location.href = location}, 100);
+        $('#modalizer').fadeIn(100);
 
     }
 
@@ -68,29 +68,19 @@
 
                  %>
 
-            <button <%=  request.getRequestURI().endsWith("/index.jsp") ? "disabled=\"true\"" : "" %> class="top-button" <%=buttonStyle%> onclick="changeView('index.jsp')" name="navigate-home">Startsida</button>
+            <div <%= request.getRequestURI().endsWith("/index.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%>  onclick="changeView('index.jsp')" name="navigate-home">Startsida</div>
             <sec:authorize ifAnyGranted="ROLE_MANAGER">
-                <button <%=  request.getRequestURI().endsWith("/organisationtree.jsp") ? "disabled=\"true\"" : "" %> class="top-button" <%=buttonStyle%> name="organisation"
-                        onclick="changeView('organisationtree.jsp')">Organisation
-                </button>
+                <div <%= request.getRequestURI().endsWith("/organisationtree.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%>  onclick="changeView('organisationtree.jsp')" name="organisation">Organisation</div>
             </sec:authorize>
             <sec:authorize ifNotGranted="ROLE_MANAGER">
-                <button <%=  request.getRequestURI().endsWith("/organisationinfo.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="organisationinfo"
-                        onclick="changeView('organisationinfo.jsp')">Organisation
-                </button>
+                <div <%= request.getRequestURI().endsWith("/organisationinfo.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('organisationinfo.jsp')" name="organisationinfo">Organisation</div>
             </sec:authorize>
-                <button <%=  request.getRequestURI().endsWith("/functionlist.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="company-functions"
-                        onclick="changeView('functionlist.jsp')">Anställningar
-                </button>
-                <button <%=  request.getRequestURI().endsWith("/employees.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="persons"
-                        onclick="changeView('employees.jsp')">Personer
-                </button>
-            <sec:authorize ifAnyGranted="ROLE_MANAGER">
-                <button <%=  request.getRequestURI().endsWith("/users.jsp") ? "disabled=\"true\"" : "" %>class="top-button" <%=buttonStyle%> name="company-functions"
-                        onclick="changeView('users.jsp')">Systemanvändare
-                </button>
-            </sec:authorize>
-            <button class="top-button" onclick="document.location.href = 'j_spring_security_logout'" name="logout">Logga ut</button>
+            <div <%= request.getRequestURI().endsWith("/employees.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employees.jsp')" name="persons">Personer</div>
+            <div <%= request.getRequestURI().endsWith("/functionlist.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functionlist.jsp')" name="company-functions">Anställningar</div>
+            <%--<sec:authorize ifAnyGranted="ROLE_MANAGER">--%>
+                <%--<div <%= request.getRequestURI().endsWith("/users.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('users.jsp')" name="company-functions">Systemanvändare</div>--%>
+            <%--</sec:authorize>--%>
+            <div class="inactivetab top-button" onclick="document.location.href = 'j_spring_security_logout'" name="logout"> Logga ut</div>
 
         </div>
 

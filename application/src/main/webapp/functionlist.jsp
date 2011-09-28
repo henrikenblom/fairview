@@ -52,7 +52,7 @@
                             initEmployeeCell(data.employee_id, data.employment_id, this, datatable);
                         }
                         else if (this.cellIndex == '1') { //employment-cell
-                            initEmploymentCell(data.employment_id, data.employee_id, this);
+                            initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
                         }
                         else if (this.cellIndex == '0') { // unit-cell
                             initUnitCell(data.unit_id, this, datatable);

@@ -212,11 +212,10 @@ function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
     fieldSet.append(hiddenField_type,
         hiddenField_strict,
         hiddenField_username,
-        titleDiv, '<br />',
+        titleDiv, unitDiv, '<br />',
         workPhoneDiv,
         workingHoursDiv,
-        unitDiv,
-        responsibilityDiv,
+        responsibilityDiv, '<br />',
         paymentFormDiv,
         salaryDiv, '<br />',
         overtimeCompensationDiv,
@@ -384,12 +383,12 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     if (!$.isEmptyObject(workExperienceNode)) {
         var properties = workExperienceNode.properties;
         nameString = propValue(properties.name);
-        companyString = propValue(properties.description);
-        tradeString = propValue(properties.grade);
-        countryString = propValue(properties.from);
+        companyString = propValue(properties.company);
+        tradeString = propValue(properties.trade);
+        countryString = propValue(properties.country);
         fromString = propValue(properties.from);
         toString = propValue(properties.to);
-        assignmentsString = propValue(properties.assignments);
+        assignmentsString = propValue(properties.assignment);
         idString = workExperienceNode.id;
     }
 
@@ -404,8 +403,8 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
     var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', countryString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', fromString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
@@ -582,7 +581,9 @@ function createNodeWithRelationship(form, nodeId, callback, i) {
                 createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT', callback);
                 break;
             case "new_person_form":
-                createRelationship('9', data.node.id, 'HAS_EMPLOYEE', callback);
+                $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode){
+                  createRelationship(organizationNode.id, data.node.id, 'HAS_EMPLOYEE', callback);
+                })
                 break;
             default:
                 if (typeof(callback) == 'function')
@@ -685,7 +686,7 @@ function generateAlertDialog(title, text, fn, fnArg) {
                 if (typeof(fn) == 'function')
                     fn.call(this, fnArg);
             },
-            "Avbryt": function() {
+            "Nej": function() {
                 $(this).dialog("close");
             }
         }
@@ -805,17 +806,25 @@ function addGenderOptions(gender, genderInputElement) {
     genderInputElement.append(optionMan, optionFemale)
 }
 
+function appendManagerOption(node, assignedManagerId, managerInputElement) {
+    var option = $('<option>');
+    option.attr('value', node.id);
+    option.html(propValue(node.properties.firstname) + ' ' + propValue(node.properties.lastname));
+    if (assignedManagerId.long == node.id)
+        option.attr('selected', 'true');
+    managerInputElement.append(option);
+}
 function createManagerList(assignedManagerId, managerInputElement) {
     $.getJSON("/fairview/ajax/get_persons.do", function(data) {
-        var array = data.list['node'];
-        $.each(array, function(count, node) {
-            var option = $('<option>');
-            option.attr('value', node.id);
-            option.html(propValue(node.properties.firstname) + ' ' + propValue(node.properties.lastname));
-            if (assignedManagerId.long == node.id)
-                option.attr('selected', 'true');
-            managerInputElement.append(option);
-        });
+        var array = data.list['node']
+        if (array != null && array.length != null) {
+            $.each(array, function(count, node) {
+                appendManagerOption(node, assignedManagerId, managerInputElement);
+            });
+        } else if (array != null){
+            appendManagerOption(array, assignedManagerId, managerInputElement);
+        }
+
     });
 }
 function addManagerOptions(unitId, managerInputElement) {
@@ -1086,21 +1095,6 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
             var checkbox = event.target.id.toString().replace("pseudo-", "");
 
             $('#' + checkbox + '-field').val(event.target.checked);
-
-            if (checkbox == "authorization") {
-
-                if (event.target.checked) {
-
-                    $('#authorization-amount-field').show();
-
-                } else {
-
-                    $('#authorization-amount-field').hide();
-
-                }
-
-            }
-
         });
         checkbox.append(checkboxData[i][1]);
         checkbox.click(function() {
