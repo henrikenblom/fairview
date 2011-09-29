@@ -41,15 +41,14 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 }
 
-function initEmploymentCell(employmentId, nodeId, unitId, cell) {
-        $(cell).unbind();
-        $(cell).css('cursor', 'pointer');
+function initEmploymentCell(data, cell) {
+    $(cell).unbind();
+    $(cell).css('cursor', 'pointer');
 
-        $(cell).click(function() {
-            createEmployeeTab(nodeId, employmentId, unitId);
-
-            openEmploymentForm(employmentId, nodeId);
-        });
+    $(cell).click(function() {
+        createEmployeeTab(data);
+        openEmploymentForm();
+    });
 
     if ($(cell).html().length < 1) {
         $(cell).html('Lägg till');
@@ -57,12 +56,12 @@ function initEmploymentCell(employmentId, nodeId, unitId, cell) {
 
 }
 
-function initEmployeeCell(nodeId, employmentId, unitId, cell) {
-    if (nodeId != "") {
+function initEmployeeCell(data, cell) {
+    if (data.employee_id != "") {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
         $(cell).click(function() {
-            createEmployeeTab(nodeId, employmentId, unitId);
+            createEmployeeTab(data);
             openEmployeeForm();
         })
     }
@@ -80,4 +79,86 @@ function initUnitCell(unitId, cell) {
 
 function updateTable(datatable) {
     datatable.fnReloadAjax(null, null, true);
+}
+
+function clearProfileForm() {
+    $('#profile-general').empty();
+    $('#profile-education').empty();
+}
+
+function addFormContainers() {
+    var languageDiv = $('<div>');
+    languageDiv.attr('id', 'languages');
+    languageDiv.addClass('groupedFormsContainer');
+    var certificateDiv = $('<div>');
+    certificateDiv.attr('id', 'certificates');
+    certificateDiv.addClass('groupedFormsContainer');
+    var educationDiv = $('<div>');
+    educationDiv.addClass('groupedFormsContainer');
+    educationDiv.attr('id', 'educations');
+
+    var workExperienceDiv = $('<div>');
+    workExperienceDiv.addClass('groupedFormsContainer');
+    workExperienceDiv.attr('id', 'workexperiences');
+    var militaryServiceDiv = $('<div>');
+    militaryServiceDiv.addClass('groupedFormsContainer');
+    militaryServiceDiv.attr('id', 'militaryservices');
+
+    $('#profile-education').append(languageDiv, certificateDiv, educationDiv);
+    $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
+}
+
+function loadFormValues(unitId) {
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
+}
+
+function generateEmploymentForm(data) {
+    $('#employment-general').empty().append(generateEmploymentCreationForm(data));
+    $('#employment-general').append(footerButtonsComponent(data.unit_id, updateTableCallback(oTable)));
+}
+
+function generateProfileForm(unitId) {
+    var data;
+
+    clearProfileForm();
+
+    if (!$.isEmptyObject(unitId)) {
+        data = getUnitData(unitId);
+    }
+
+    addFormContainers();
+    loadFormValues(unitId);
+
+    $('#profile-general').append(generateProfileGeneralForm(data));
+    $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+
+    $('#languages').append(addLanguageButton(unitId));
+    $('#educations').append(addEducationButton(unitId));
+    $('#certificates').append(addCertificateButton(unitId));
+    $('#profile-education').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+
+
+    $('#workexperiences').append(addWorkExperienceButton(unitId));
+    $('#militaryservices').append(addMilitaryServiceButton(unitId));
+    $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+}
+
+//---Delete
+function getDeleteIcon(obj) {
+    return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.node_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
+function deleteAlert(id) {
+    generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+        deleteRow, id);
+}
+
+function deleteRow(id) {
+    $.getJSON("neo/ajax/delete_node.do", {_nodeId: id}, function() {
+        updateTable(oTable);
+    });
 }

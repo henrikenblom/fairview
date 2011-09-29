@@ -85,7 +85,7 @@
             });
 
             if (<%=organization.getProperty("name", "").equals("")%>) {
-                var data = getNodeData(unitId);
+                var data = getUnitData(unitId);
                 generateMainOrganizationEditForm(data);
                 $('#popup-tabs li a[href="#unitsettings-subunits"]').hide();
                 openPopupTab(0);
@@ -93,13 +93,13 @@
         });
 
         function generateMainOrganizationPopup(unitId) {
-            var data = getNodeData(unitId);
+            var data = getUnitData(unitId);
             generateMainOrganizationEditForm(data);
             generateSubunitCreationTab(data);
         }
 
         function generateSubunitPopup(unitId) {
-            var data = getNodeData(unitId);
+            var data = getUnitData(unitId);
             generateSubunitEditForm(data);
             generateSubunitCreationTab(data);
         }
@@ -160,7 +160,7 @@
 
             var unitId = <%=addressEntry.getEndNode().getId()%>;
             var updateForm = generateUpdateForm('organization_address_form' + unitId);
-            var data = getNodeData(unitId);
+            var data = getUnitData(unitId);
             var properties = data.node.properties;
 
             var hiddenField_id = hiddenField('_id', unitId);

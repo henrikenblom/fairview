@@ -137,7 +137,7 @@ public class DatatablesController {
     private void loadEmployeeData(Node employeeNode, HashMap<String, String> row) {
         row.put("firstname", employeeNode.getProperty("firstname", "").toString());
         row.put("lastname", employeeNode.getProperty("lastname", "").toString());
-        row.put("node_id", String.valueOf(employeeNode.getId()));
+        row.put("employee_id", String.valueOf(employeeNode.getId()));
 
         Node employmentNode = getEmploymentNode(employeeNode);
         if (employmentNode != null) {

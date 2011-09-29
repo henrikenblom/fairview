@@ -41,17 +41,19 @@
                     { "mDataProp": "firstname" },
                     { "mDataProp": "lastname" }
                 ],
-                "fnDrawCallback" : function(){
+                "fnDrawCallback" : function() {
                     var datatable = this;
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
-                    $.each(tdNodes, function(){
+                    $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentElement);
                         if (this.cellIndex == '2' || this.cellIndex == '3') {  //employee-cell
-                            initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
+                            //initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
+                            initEmployeeCell(data, this);
                         }
                         else if (this.cellIndex == '1') { //employment-cell
-                            initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
+                            //initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
+                            initEmploymentCell(data, this);
                         }
                         else if (this.cellIndex == '0') { // unit-cell
                             initUnitCell(data.unit_id, this);
@@ -67,73 +69,7 @@
 
         });
 
-         function clearProfileForm() {
-            $('#profile-general').empty();
-            $('#profile-education').empty();
-        }
-
-        function addFormContainers() {
-            var languageDiv = $('<div>');
-            languageDiv.attr('id', 'languages');
-            languageDiv.addClass('groupedFormsContainer');
-            var certificateDiv = $('<div>');
-            certificateDiv.attr('id', 'certificates');
-            certificateDiv.addClass('groupedFormsContainer');
-            var educationDiv = $('<div>');
-            educationDiv.addClass('groupedFormsContainer');
-            educationDiv.attr('id', 'educations');
-
-            var workExperienceDiv = $('<div>');
-            workExperienceDiv.addClass('groupedFormsContainer');
-            workExperienceDiv.attr('id', 'workexperiences');
-            var militaryServiceDiv = $('<div>');
-            militaryServiceDiv.addClass('groupedFormsContainer');
-            militaryServiceDiv.attr('id', 'militaryservices');
-
-            $('#profile-education').append(languageDiv, certificateDiv, educationDiv);
-            $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
-        }
-
-         function loadFormValues(unitId) {
-            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
-            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
-            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
-            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
-            addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
-        }
-
-        function generateEmploymentForm(nodeId, employmentId, unitId) {
-            $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, nodeId, unitId));
-            $('#employment-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
-        }
-
-        function generateProfileForm(unitId) {
-            var data;
-
-            clearProfileForm();
-
-            if (!$.isEmptyObject(unitId)) {
-                data = getNodeData(unitId);
-            }
-
-            addFormContainers();
-            loadFormValues(unitId);
-
-            $('#profile-general').append(generateProfileGeneralForm(data));
-            $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
-
-            $('#languages').append(addLanguageButton(unitId));
-            $('#educations').append(addEducationButton(unitId));
-            $('#certificates').append(addCertificateButton(unitId));
-            $('#profile-education').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
-
-
-            $('#workexperiences').append(addWorkExperienceButton(unitId));
-            $('#militaryservices').append(addMilitaryServiceButton(unitId));
-            $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
-        }
-
-        function createEmployeeTab(nodeId, employmentId, unitId) {
+        function createEmployeeTab(data) {
             var linkData = [
                 ['employment-general', 'Anställningsvillkor'],
                 ['profile-general', 'Personuppgifter'],
@@ -142,32 +78,30 @@
             ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
-            generateProfileForm(nodeId);
-            generateEmploymentForm(nodeId, employmentId, unitId);
+            generateProfileForm(data.employee_id);
+            generateEmploymentForm(data);
         }
 
-        function openEmploymentForm(employmentId, nodeId) {
+        function openEmploymentForm() {
             openPopupTab(0);
         }
 
         function openEmployeeForm() {
             openPopupTab(1);
-        }function openUnitForm(unitId) {
+        }
+        function openUnitForm(unitId) {
             var linkData = [
                 ['unitsettings-general', 'Avdelningsinställningar'],
             ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
-            var data = getNodeData(unitId);
+            var data = getUnitData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
             $('#unitsettings-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
             openPopupTab(0);
         }
-//        function generateProfileForm(unitId) {
-//            var data = getNodeData(unitId);
-//            $('#profile-general').empty().append(generateProfileGeneralForm(data));
-//        }
+
     </script>
 </head>
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>

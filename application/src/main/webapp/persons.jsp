@@ -118,7 +118,7 @@
         }
 
         function generateProfileForm(unitId) {
-            var data = getNodeData(unitId);
+            var data = getUnitData(unitId);
             $('#profile-employmentinfo').empty().append(generateProfileGeneralForm(data));
         }
 

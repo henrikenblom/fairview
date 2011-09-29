@@ -155,10 +155,13 @@ function addManager(formId, unitId) {
     return managerDiv;
 }
 
-function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
+function generateEmploymentCreationForm(data) {
 
     var properties = new Array();
-    var data;
+    var employeeId = data.employee_id;
+    var employmentId = data.employment_id;
+    var unitId = data.unit_id;
+    var EmploymentData;
 
     var formId = 'new_employment_form';
     if (employeeId != null && employmentId != null && employmentId != '')
@@ -171,9 +174,9 @@ function generateEmploymentCreationForm(employmentId, employeeId, unitId) {
     if (employmentId != null
         && employmentId.length > 0) {
 
-        data = getNodeData(employmentId);
-        fieldSet.append(hiddenField('_nodeId', data.node.id));
-        properties = data.node.properties;
+        EmploymentData = getUnitData(employmentId);
+        fieldSet.append(hiddenField('_nodeId', EmploymentData.node.id));
+        properties = EmploymentData.node.properties;
 
     }
 
@@ -1161,10 +1164,10 @@ function boolPropValue(prop) {
     else
         return prop.value;
 }
-function getNodeData(unitId) {
+function getUnitData(nodeId) {
     var data = $.parseJSON($.ajax({
         url:"neo/ajax/get_node.do",
-        data:{_nodeId:unitId},
+        data:{_nodeId:nodeId},
         async:false,
         dataType:"json"
     }).responseText);
