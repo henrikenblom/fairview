@@ -42,14 +42,14 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
 }
 
 function initEmploymentCell(employmentId, nodeId, unitId, cell) {
-        $(cell).unbind();
-        $(cell).css('cursor', 'pointer');
+    $(cell).unbind();
+    $(cell).css('cursor', 'pointer');
 
-        $(cell).click(function() {
-            createEmployeeTab(nodeId, employmentId, unitId);
+    $(cell).click(function() {
+        createEmployeeTab(nodeId, employmentId, unitId);
 
-            openEmploymentForm(employmentId, nodeId);
-        });
+        openEmploymentForm(employmentId, nodeId);
+    });
 
     if ($(cell).html().length < 1) {
         $(cell).html('Lägg till');
@@ -80,4 +80,70 @@ function initUnitCell(unitId, cell) {
 
 function updateTable(datatable) {
     datatable.fnReloadAjax(null, null, true);
+}
+
+function clearProfileForm() {
+    $('#profile-general').empty();
+    $('#profile-education').empty();
+}
+
+function addFormContainers() {
+    var languageDiv = $('<div>');
+    languageDiv.attr('id', 'languages');
+    languageDiv.addClass('groupedFormsContainer');
+    var certificateDiv = $('<div>');
+    certificateDiv.attr('id', 'certificates');
+    certificateDiv.addClass('groupedFormsContainer');
+    var educationDiv = $('<div>');
+    educationDiv.addClass('groupedFormsContainer');
+    educationDiv.attr('id', 'educations');
+
+    var workExperienceDiv = $('<div>');
+    workExperienceDiv.addClass('groupedFormsContainer');
+    workExperienceDiv.attr('id', 'workexperiences');
+    var militaryServiceDiv = $('<div>');
+    militaryServiceDiv.addClass('groupedFormsContainer');
+    militaryServiceDiv.attr('id', 'militaryservices');
+
+    $('#profile-education').append(languageDiv, certificateDiv, educationDiv);
+    $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
+}
+
+function loadFormValues(unitId) {
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
+}
+
+function generateEmploymentForm(nodeId, employmentId, unitId) {
+    $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, nodeId, unitId));
+    $('#employment-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+}
+
+function generateProfileForm(unitId) {
+    var data;
+
+    clearProfileForm();
+
+    if (!$.isEmptyObject(unitId)) {
+        data = getNodeData(unitId);
+    }
+
+    addFormContainers();
+    loadFormValues(unitId);
+
+    $('#profile-general').append(generateProfileGeneralForm(data));
+    $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+
+    $('#languages').append(addLanguageButton(unitId));
+    $('#educations').append(addEducationButton(unitId));
+    $('#certificates').append(addCertificateButton(unitId));
+    $('#profile-education').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+
+
+    $('#workexperiences').append(addWorkExperienceButton(unitId));
+    $('#militaryservices').append(addMilitaryServiceButton(unitId));
+    $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
 }
