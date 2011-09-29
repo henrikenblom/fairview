@@ -41,14 +41,13 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 }
 
-function initEmploymentCell(employmentId, nodeId, unitId, cell) {
+function initEmploymentCell(data, cell) {
     $(cell).unbind();
     $(cell).css('cursor', 'pointer');
 
     $(cell).click(function() {
-        createEmployeeTab(nodeId, employmentId, unitId);
-
-        openEmploymentForm(employmentId, nodeId);
+        createEmployeeTab(data);
+        openEmploymentForm();
     });
 
     if ($(cell).html().length < 1) {
@@ -57,12 +56,12 @@ function initEmploymentCell(employmentId, nodeId, unitId, cell) {
 
 }
 
-function initEmployeeCell(nodeId, employmentId, unitId, cell) {
-    if (nodeId != "") {
+function initEmployeeCell(data, cell) {
+    if (data.employee_id != "") {
         $(cell).unbind();
         $(cell).css('cursor', 'pointer');
         $(cell).click(function() {
-            createEmployeeTab(nodeId, employmentId, unitId);
+            createEmployeeTab(data);
             openEmployeeForm();
         })
     }
@@ -117,9 +116,9 @@ function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
 }
 
-function generateEmploymentForm(nodeId, employmentId, unitId) {
-    $('#employment-general').empty().append(generateEmploymentCreationForm(employmentId, nodeId, unitId));
-    $('#employment-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+function generateEmploymentForm(data) {
+    $('#employment-general').empty().append(generateEmploymentCreationForm(data));
+    $('#employment-general').append(footerButtonsComponent(data.unit_id, updateTableCallback(oTable)));
 }
 
 function generateProfileForm(unitId) {
@@ -128,7 +127,7 @@ function generateProfileForm(unitId) {
     clearProfileForm();
 
     if (!$.isEmptyObject(unitId)) {
-        data = getNodeData(unitId);
+        data = getUnitData(unitId);
     }
 
     addFormContainers();
@@ -146,4 +145,20 @@ function generateProfileForm(unitId) {
     $('#workexperiences').append(addWorkExperienceButton(unitId));
     $('#militaryservices').append(addMilitaryServiceButton(unitId));
     $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+}
+
+//---Delete
+function getDeleteIcon(obj) {
+    return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.node_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
+function deleteAlert(id) {
+    generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+        deleteRow, id);
+}
+
+function deleteRow(id) {
+    $.getJSON("neo/ajax/delete_node.do", {_nodeId: id}, function() {
+        updateTable(oTable);
+    });
 }

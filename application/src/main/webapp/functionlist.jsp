@@ -48,10 +48,12 @@
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentElement);
                         if (this.cellIndex == '2' || this.cellIndex == '3') {  //employee-cell
-                            initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
+                            //initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
+                            initEmployeeCell(data, this);
                         }
                         else if (this.cellIndex == '1') { //employment-cell
-                            initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
+                            //initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
+                            initEmploymentCell(data, this);
                         }
                         else if (this.cellIndex == '0') { // unit-cell
                             initUnitCell(data.unit_id, this);
@@ -67,7 +69,7 @@
 
         });
 
-        function createEmployeeTab(nodeId, employmentId, unitId) {
+        function createEmployeeTab(data) {
             var linkData = [
                 ['employment-general', 'Anställningsvillkor'],
                 ['profile-general', 'Personuppgifter'],
@@ -76,11 +78,11 @@
             ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
-            generateProfileForm(nodeId);
-            generateEmploymentForm(nodeId, employmentId, unitId);
+            generateProfileForm(data.employee_id);
+            generateEmploymentForm(data);
         }
 
-        function openEmploymentForm(employmentId, nodeId) {
+        function openEmploymentForm() {
             openPopupTab(0);
         }
 
@@ -93,16 +95,13 @@
             ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
-            var data = getNodeData(unitId);
+            var data = getUnitData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
             $('#unitsettings-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
             openPopupTab(0);
         }
-        //        function generateProfileForm(unitId) {
-        //            var data = getNodeData(unitId);
-        //            $('#profile-general').empty().append(generateProfileGeneralForm(data));
-        //        }
+
     </script>
 </head>
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
