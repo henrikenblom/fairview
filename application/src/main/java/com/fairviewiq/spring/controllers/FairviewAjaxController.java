@@ -283,15 +283,25 @@ public class FairviewAjaxController {
 
         retval.add(organization);
 
-        for (Relationship relationship : organization.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING)) {
-
-            retval.add(relationship.getEndNode());
-
-        }
+        populateUnitArrayList(retval, organization);
 
         mav.addObject(XStreamView.XSTREAM_ROOT, retval);
 
         return mav;
+
+    }
+
+    private void populateUnitArrayList(ArrayList<Node> arrayList, Node root) {
+
+        for (Relationship relationship : root.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING)) {
+
+            arrayList.add(relationship.getEndNode());
+
+            populateUnitArrayList(arrayList, relationship.getEndNode());
+
+
+        }
+
 
     }
 
