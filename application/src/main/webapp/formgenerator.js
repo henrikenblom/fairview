@@ -185,33 +185,33 @@ function generateEmploymentCreationForm(data) {
     var hiddenField_username = hiddenField('_username', 'admin');
 
     var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
-    var workPhoneDiv = textInputComponent('Arbetstelefon', 'workPhone', propValue(properties.workPhone), formId, false);
-    var workingHoursDiv = textInputComponent('Arbetstider', 'workHours', propValue(properties.workHours), formId, false);
+    var workPhoneDiv = textInputComponent('Arbetstelefon', 'workphone', propValue(properties.workphone), formId, false);
+    var workingHoursDiv = textInputComponent('Arbetstider', 'workpours', propValue(properties.workhours), formId, false);
     var responsibilitys = [
-        ['managementTeam', 'Ledningsgrupp', boolPropValue(properties.managementTeam)],
-        ['budgetResponsibility', 'Budgetansvar', boolPropValue(properties.budgetResponsibility)],
-        ['ownResultResponsibility', 'Eget resultatansvar', boolPropValue(properties.ownResultResponsibility)],
-        ['authorizationRight', 'Attesträtt', boolPropValue(properties.authorizationRight)]
+        ['managementteam', 'Ledningsgrupp', boolPropValue(properties.managementteam)],
+        ['budgetresponsibility', 'Budgetansvar', boolPropValue(properties.budgetresponsibility)],
+        ['ownresultresponsibility', 'Eget resultatansvar', boolPropValue(properties.ownresultresponsibility)],
+        ['authorizationright', 'Attesträtt', boolPropValue(properties.authorizationright)]
     ];
     var responsibilityDiv = checkboxInputComponent('Ansvar/Befogenheter', formId, responsibilitys);
-    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationAmount', propValue(properties.authorizationAmount), formId, false);
+    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationamount', propValue(properties.authorizationamount), formId, false);
 
-    var paymentFormDiv = selectInputComponent('Löneform', 'paymentForm', 'paymentFormDiv', formId, false);
-    addPaymentFormOption(properties.paymentForm, paymentFormDiv.children('#paymentForm-field'));
+    var paymentFormDiv = selectInputComponent('Löneform', 'paymentform', 'paymentFormDiv', formId, false);
+    addPaymentFormOption(properties.paymentform, paymentFormDiv.children('#paymentform-field'));
 
     var unitDiv = createUnitSelect('Enhet', 'unit', 'unitDiv', formId, false, unitId);
 
     var salaryDiv = textInputComponent('Aktuell lön', 'salary', propValue(properties.salary), formId, false);
-    var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimeCompensation', formId, yesNo(), propValue(properties.overtimeCompensation));
-    var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelCompensation', formId, yesNo(), propValue(properties.travelCompensation));
-    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationDays', propValue(properties.vacationDays), formId, false);
-    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalPeriodEmployee', 'dismissalPeriodEmployeeDiv', formId, false);
-    addDismissalPeriod(properties.dismissalPeriodEmployee, dismissalPeriodEmployeeDiv.children('#dismissalPeriodEmployee-field'));
-    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalPeriodEmployer', 'dismissalPeriodEmployerDiv', formId, false);
-    addDismissalPeriod(properties.dismissalPeriodEmployer, dismissalPeriodEmployerDiv.children('#dismissalPeriodEmployer-field'));
-    var companyCarDiv = textInputComponent('Tjänstebil', 'companyCar', propValue(properties.companyCar), formId, false);
+    var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimecompensation', formId, yesNo(), propValue(properties.overtimecompensation));
+    var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelcompensation', formId, yesNo(), propValue(properties.travelcompensation));
+    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays', propValue(properties.vacationdays), formId, false);
+    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee', 'dismissalPeriodEmployeeDiv', formId, false);
+    addDismissalPeriod(properties.dismissalperiodemployee, dismissalPeriodEmployeeDiv.children('#dismissalperiodemployee-field'));
+    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer', 'dismissalPeriodEmployerDiv', formId, false);
+    addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
+    var companyCarDiv = textInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, false);
 
-    var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensionInsurances', propValue(properties.pensionInsurances), formId, false);
+    var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, false);
     fieldSet.append(hiddenField_type,
         hiddenField_strict,
         hiddenField_username,

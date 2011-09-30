@@ -1,3 +1,5 @@
+<!DOCTYPE HTML>
+
 <%@ page import="org.neo4j.kernel.EmbeddedGraphDatabase" %>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%@ page import="se.codemate.neo4j.SimpleRelationshipType" %>
