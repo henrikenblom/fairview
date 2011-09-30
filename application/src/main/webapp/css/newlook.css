@@ -331,6 +331,7 @@ input[type="radio"]{
 #unit-tree-icons {
     position: relative;
     bottom: 4px;
+    line-height: 15px;
 }
 
 .imageonly-button {
