@@ -58,6 +58,8 @@
     <script type="text/javascript" src="formgenerator.js"></script>
     <script type="text/javascript" src="js/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="js/jquery-plugins/jquery.multiselect2side.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
@@ -66,42 +68,38 @@
                 }
             });
             var unitId = <%= organization.getId()%>;
-            createTabs();
 
             adjustViewPort();
             fadeOutModalizer();
+            bindTabs();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
                 openPopupTab(0);
             });
 
-            setupModalizerClickEvents();
 
             $('#imageonly-buttonAddSubUnit').click(function() {
                 generateMainOrganizationPopup(unitId);
                 openPopupTab(1);
             });
 
-            $('#imageonly-buttonAddFunction').click(function() {
-                generateMainOrganizationPopup(unitId);
-                openPopupTab(3);
-            });
-
-            $('#imageonly-buttonAddGoal').click(function() {
-                generateMainOrganizationPopup(unitId);
-                openPopupTab(2);
-            });
+            if (<%=organization.getProperty("name", "").equals("")%>) {
+                var data = getUnitData(unitId);
+                generateMainOrganizationEditForm(data);
+                $('#popup-tabs li a[href="#unitsettings-subunits"]').hide();
+                openPopupTab(0);
+            }
         });
 
-        function generateMainOrganizationPopup(unitId){
-            var data = getNodeData(unitId);
+        function generateMainOrganizationPopup(unitId) {
+            var data = getUnitData(unitId);
             generateMainOrganizationEditForm(data);
             generateSubunitCreationTab(data);
         }
 
-        function generateSubunitPopup(unitId){
-            var data = getNodeData(unitId);
+        function generateSubunitPopup(unitId) {
+            var data = getUnitData(unitId);
             generateSubunitEditForm(data);
             generateSubunitCreationTab(data);
         }
@@ -111,30 +109,50 @@
             $('#unitsettings-subunits').empty().append(generateSubunitCreationForm('name-field' + unitId, unitId));
             var submitButton = $('<button>');
             submitButton.addClass('addsubunit-button')
-            submitButton.html('Lägg till underenhet till ' + data.node.properties.name.value);
+            submitButton.attr('disabled', 'disabled');
+            submitButton.html('Lägg till underenhet till ' + propValue(data.node.properties.name));
             submitButton.click(function() {
-                var createdSubunit = getRelationshipData(getNodeData(unitId).node.id);
-                var createdSubunitId = createdSubunit.relationship.endNode;
-                $('#subunitform').children().children('input[name="_id"]').val(createdSubunitId);
-                $('#subunitform').ajaxSubmit(function() {
-                    location.reload();  //reloads the page to make the newly created subunit to be visible in the organization tree
+                $('#subunitform').ajaxSubmit(function(data) {
+                    $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _endNodeId: data.node.id,_type:"HAS_UNIT" },
+                            function() {
+                                assignManager(data.node.id, $('#subunitform #managersubunitform-field').val(), reloadPage);
+                            });
                 });
             });
+            $('#subunitform #descriptionDiv').append(addManager(getSubUnitCreationFormId()));
             submitButton.appendTo($('#unitsettings-subunits'));
+
+            var cancelButton = generateCancelButton();
+            cancelButton.appendTo($('#unitsettings-subunits'));
+        }
+
+        function reloadPage() {
+            location.reload();
         }
 
         function generateMainOrganizationEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+            var saveButton = footerButtonsComponent();
+            saveButton.click(function() {
+                editTreeNamesOnChange($('#name-field').val(), data.node.id);
+                $('#header-organization-name').html($('#name-field').val());
+            });
+            $('#unitsettings-general').append(saveButton);
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
-            generateAdresses();
-            editHeaderNameOnChange();
-            generateTabHeader(data.node.properties.name.value);
+            generateImageUrlDiv(data).insertAfter("#descriptionDiv");
+            generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
         }
+
         function generateSubunitEditForm(data) {
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            generateSubUnitAddressComponent(data).insertAfter('#web-field');
-            generateBossSelector(data.node.id).insertAfter("#descriptionDiv");
-            generateTabHeader(data.node.properties.name.value);
+            var saveButton = footerButtonsComponent();
+            saveButton.click(function() {
+                editTreeNamesOnChange($('#name-field').val(), data.node.id);
+                assignManager(data.node.id, $('#managerorganizationForm-field').val());
+            });
+            $('#unitsettings-general').append(saveButton);
+            generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
+            addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
         }
 
         function generateAdresses() {
@@ -142,7 +160,7 @@
 
             var unitId = <%=addressEntry.getEndNode().getId()%>;
             var updateForm = generateUpdateForm('organization_address_form' + unitId);
-            var data = getNodeData(unitId);
+            var data = getUnitData(unitId);
             var properties = data.node.properties;
 
             var hiddenField_id = hiddenField('_id', unitId);
@@ -150,59 +168,20 @@
             var hiddenField_strict = hiddenField('_strict', 'true');
             var hiddenField_username = hiddenField('_username', 'admin');
 
-            var addressDescriptionDiv = generateMainOrganizationAddressComponent('Adressbenämning', unitId, 'description', propValue(properties.description));
             var addressDiv = generateMainOrganizationAddressComponent('Adress', unitId, 'address', propValue(properties.address));
             var postalCodeDiv = generateMainOrganizationAddressComponent('Postnummer', unitId, 'postalcode', propValue(properties.postalcode));
             var cityDiv = generateMainOrganizationAddressComponent('Ort', unitId, 'city', propValue(properties.city));
             var countryDiv = generateMainOrganizationAddressComponent('Land', unitId, 'country', propValue(properties.country));
 
-            updateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, '<br/>', addressDescriptionDiv, '<br/>', addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
+            updateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
             $('#unitsettings-general').append(updateForm);
         <% } %>
         }
-
-        function editHeaderNameOnChange() {
-            $('#name-field').change(function() {
-                $('#header-organization-name').html(this.value);
+        function assignManager(unitId, managerId, callback) {
+            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:managerId}, function() {
+                if (typeof(callback) == 'function')
+                    callback.call();
             });
-        }
-
-        function generateBossSelector(unitId) {
-            bossSelectorDiv = fieldBox();
-            bossSelectorLabel = fieldLabelBox();
-            bossSelectorLabel.append("Chef");
-
-            bossSelector = $('<select>');
-            bossSelector.attr("id", "manager-selection");
-            bossSelector.change(function() {
-                $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:bossSelector.val()});
-            });
-            bossOption = $('<option>');
-            bossOption.val(-1);
-            bossOption.append('Ingen chef vald');
-            bossSelector.append(bossOption);
-        <%
-         for (Node entry : personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false)) {
-
-          try {
-
-          if (!entry.getProperty("firstname", "").equals("") || !entry.getProperty("lastname", "").equals("")) { %>
-            var entryId = <%=entry.getId()%>;
-            bossOption = $('<option>');
-            bossOption.val(entryId);
-            bossOption.append('<%=entry.getProperty("lastname", "")%>' + ", " + '<%=entry.getProperty("firstname", "")%>');
-            bossSelector.append(bossOption);
-        <% }
-                     } catch (Exception ex) {
-                             }
-                     }
-                     %>
-            $.getJSON("fairview/ajax/get_manager.do", {_unitId: unitId}, function(data) {
-                bossSelector.val(data.long);
-            })
-
-            bossSelectorDiv.append(bossSelectorLabel, bossSelector);
-            return bossSelectorDiv;
         }
     </script>
 </head>
@@ -210,8 +189,7 @@
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
 <div id="main">
     <div id="content">
-        <div class="header"><input type="text" class="text-field filter-field" onkeyup="unitTextFilter(event)"
-                                   placeholder="Organisation/Enhet/Beskrivning" id="unit-text-filter"></div>
+        <div class="header"></div>
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">
@@ -237,11 +215,6 @@
                         <button class="imageonly-button" title="Lägg till underenhet"
                                 id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
-                        <button class="imageonly-button" title="Lägg till funktion" id="imageonly-buttonAddFunction">
-                            <img
-                                    src="images/newfunction.png" alt="Ny funktion"></button>
-                        <button class="imageonly-button" title="Lägg till mål" id="imageonly-buttonAddGoal"><img
-                                src="images/newgoal.png" alt="Nytt mål"></button>
                     </h3>
                     <%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
@@ -262,12 +235,8 @@
                 <div class="helpbox-content">Beskrivning av ikonernas funktion: <br/> <br/>
 
                     <div class="helpbox-listentry"><img src="images/newunit.png" class="helpbox-image">Lägg till
-                        underenhet
-                        <br/></div>
-                    <div class="helpbox-listentry"><img src="images/newfunction.png" class="helpbox-image">Lägg till
-                        funktion <br/></div>
-                    <div class="helpbox-listentry"><img src="images/newgoal.png" class="helpbox-image">Lägg till nytt
-                        mål
+                        underenhet<br/></div>
+                    <div class="helpbox-listentry"><img src="images/delete.png" class="helpbox-image">Ta bort enhet
                     </div>
                 </div>
             </div>
@@ -283,22 +252,9 @@
         <ul>
             <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
             <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
-            <li><a href="#unitsettings-goals">Lägg till Mål</a></li>
-            <li><a href="#unitsettings-functions">Lägg till Funktion</a></li>
-            <li><a href="#unitsettings-persons">Lägg till Person</a></li>
         </ul>
-        <div id="popup-header"></div>
         <div class="unitsettings" id="unitsettings-general"></div>
         <div class="unitsettings" id="unitsettings-subunits">
-        </div>
-        <div id="unitsettings-goals">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi
-            urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
-        </div>
-        <div id="unitsettings-functions">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque
-            nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
-        </div>
-        <div id="unitsettings-persons">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque
-            nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.
         </div>
     </div>
 </div>

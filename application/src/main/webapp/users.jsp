@@ -159,7 +159,6 @@
         <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
         <div id="main">
             <div id="content">
-                <div class="header" id="user-list-header"><input type="text" class="text-field filter-field" onkeyup="coworkerTextFilter(event)" placeholder="Namn/Användarnamn" id="coworker-text-filter"></div>
                 <div id="user-list" class="list-body">
 
                     <div class="list-entry">

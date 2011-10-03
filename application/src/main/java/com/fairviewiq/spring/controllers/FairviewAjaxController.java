@@ -1,6 +1,9 @@
 package com.fairviewiq.spring.controllers;
 
 import com.fairviewiq.utils.FunctionListGenerator;
+import com.fairviewiq.utils.MultiSelectFunctionMember;
+import com.fairviewiq.utils.PersonListGenerator;
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import org.neo4j.graphdb.*;
@@ -11,19 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import se.codemate.neo4j.*;
+import se.codemate.spring.controllers.NeoAjaxController;
 import se.codemate.spring.mvc.ModelMapConverter;
 import se.codemate.spring.mvc.XStreamView;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Controller
 public class FairviewAjaxController {
+
+    private static String TYPE_NODE = "node";
+    private static String TYPE_RELATIONSHIP = "relationship";
 
     @Resource
     private GraphDatabaseService neo;
@@ -33,6 +39,9 @@ public class FairviewAjaxController {
 
     private XStreamView xstreamView;
     private NeoUtils neoUtils;
+    private FunctionListGenerator functionListGenerator;
+    private Gson gson = new Gson();
+    private Node organization = null;
 
     @PostConstruct
     public void initialize() {
@@ -50,27 +59,56 @@ public class FairviewAjaxController {
         xstream.alias("relationship", Relationship.class);
 
         try {
-            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeImpl"));
-            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeProxy"));
+            xstream.alias("node", Class.forName("org.neo4j.kernel.impl.core.NodeProxy"));
         } catch (ClassNotFoundException e) {
             // no-op
         }
 
         try {
+            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeImpl"));
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+
+        try {
+
+            xstream.alias("node", Class.forName("org.neo4j.impl.core.NodeProxy"));
+
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+        try {
+            xstream.alias("relationship", Class.forName("org.neo4j.kernel.impl.core.RelationshipProxy"));
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+        try {
             xstream.alias("relationship", Class.forName("org.neo4j.impl.core.RelationshipImpl"));
+        } catch (ClassNotFoundException e) {
+            // no-op
+        }
+        try {
             xstream.alias("relationship", Class.forName("org.neo4j.impl.core.RelationshipProxy"));
+
         } catch (ClassNotFoundException e) {
             // no-op
         }
 
         xstreamView = new XStreamView(xstream, "text/json");
 
+        try {
+            organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
+        } catch (Exception ex) {
+            // no-op
+        }
+        functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
+
     }
 
     @RequestMapping(value = {"/fairview/ajax/update_position.do"})
-    public ModelAndView updatePropertyContainer(@RequestParam("_id") Long id,
-                                                @RequestParam("name") String name,
-                                                @RequestParam("reports_to") Long reportsTo) throws IOException {
+    public ModelAndView updatePosition(@RequestParam("_id") Long id,
+                                       @RequestParam("name") String name,
+                                       @RequestParam("reports_to") Long reportsTo) throws IOException {
 
         Node node = neo.getNodeById(id);
 
@@ -95,7 +133,7 @@ public class FairviewAjaxController {
 
     }
 
-    @RequestMapping(value = {"/fairview/ajax/assign_function.do"})
+    //    @RequestMapping(value = {"/fairview/ajax/assign_function.do"})
     public ModelAndView assignFunction(@RequestParam("employment") Long employmentId,
                                        @RequestParam("function:relationship") Long functionId,
                                        @RequestParam("percent") int percent) throws IOException {
@@ -121,6 +159,49 @@ public class FairviewAjaxController {
         return mav;
 
     }
+
+    @RequestMapping(value = {"/fairview/ajax/set_employment.do"})
+    public ModelAndView setEmployment(HttpServletRequest request,
+                                      @RequestParam(value = "_nodeId", required = false) Long nodeId,
+                                      @RequestParam(value = "_strict", required = false) Boolean strict) {
+
+        Node node = null;
+
+        if (nodeId == null) {
+
+            node =  neo.createNode();
+
+            nodeId = node.getId();
+
+        } else {
+
+            node = neo.getNodeById(nodeId);
+
+        }
+
+        if (request.getParameter("unit") != null) {
+
+            SimpleRelationshipType belongsToRelationship = new SimpleRelationshipType("BELONGS_TO");
+
+            try {
+                node.getRelationships(belongsToRelationship, Direction.OUTGOING).iterator().next().delete();
+            } catch (Exception ex) {
+                // no-op
+            }
+
+            try {
+
+                node.createRelationshipTo(neo.getNodeById(Long.decode(request.getParameter("unit"))), belongsToRelationship);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return updatePropertyContainer(request, nodeId, TYPE_NODE, false);
+
+    }
+
 
     @RequestMapping(value = {"/fairview/ajax/assign_unit.do"})
     public ModelAndView assignUnit(@RequestParam("employment") Long employmentId,
@@ -149,8 +230,80 @@ public class FairviewAjaxController {
 
     }
 
+    @RequestMapping(value = {"/fairview/ajax/delete_unit.do"})
+    public ModelAndView deleteUnit(@RequestParam("_nodeId") Long nodeId) {
 
-    // Additions made by Henrik Enblom.
+        ModelAndView mav = new ModelAndView(xstreamView);
+
+        Node node = neo.getNodeById(nodeId);
+        LinkedList<Node> childNodes = new LinkedList<Node>();
+
+        Node parentNode = node.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.INCOMING).iterator().next().getStartNode();
+
+        try {
+
+            for (Relationship relationship : node.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING)) {
+
+                childNodes.add(relationship.getEndNode());
+
+            }
+
+        } catch (Exception ex) {
+            //no-op
+        }
+
+        for (Relationship relationship : node.getRelationships()) {
+
+            relationship.delete();
+
+        }
+
+        if (childNodes.size() > 0) {
+
+            for (Node childNode : childNodes) {
+
+                Relationship relationship = parentNode.createRelationshipTo(childNode, new SimpleRelationshipType("HAS_UNIT"));
+                mav.addObject(XStreamView.XSTREAM_ROOT, relationship);
+
+            }
+
+        }
+
+        node.delete();
+
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_units.do"})
+    public ModelAndView getUnits() {
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+
+        ArrayList<Node> retval = new ArrayList<Node>();
+
+        retval.add(organization);
+
+        populateUnitArrayList(retval, organization);
+
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
+
+        return mav;
+
+    }
+
+    private void populateUnitArrayList(ArrayList<Node> arrayList, Node root) {
+
+        for (Relationship relationship : root.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING)) {
+
+            arrayList.add(relationship.getEndNode());
+
+            populateUnitArrayList(arrayList, relationship.getEndNode());
+
+
+        }
+
+
+    }
 
     @RequestMapping(value = {"/fairview/ajax/get_assigned_tasks.do"})
     public ModelAndView getAssignedGoals(@RequestParam("_nodeId") Long nodeId) {
@@ -182,10 +335,11 @@ public class FairviewAjaxController {
         return mav;
     }
 
-    private long getFunctionNodeId(Node node) {
+
+    public static long getFunctionNodeId(Node employeeNode) {
         long functionId = -1;
         try {
-            Traverser employmentTraverser = node.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
+            Traverser employmentTraverser = employeeNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
             Traverser functionTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.OUTGOING);
             functionId = functionTraverser.iterator().next().getId();
         } catch (Exception e) {
@@ -194,10 +348,10 @@ public class FairviewAjaxController {
         return functionId;
     }
 
-    private Node getFunctionNode(Node node) {
+    public static Node getFunctionOfEmployee(Node employeeNode) {
         Node functionNode = null;
         try {
-            Traverser employmentTraverser = node.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
+            Traverser employmentTraverser = employeeNode.traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("HAS_EMPLOYMENT"), Direction.OUTGOING);
             Traverser functionTraverser = employmentTraverser.iterator().next().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH, ReturnableEvaluator.ALL_BUT_START_NODE, SimpleRelationshipType.withName("PERFORMS_FUNCTION"), Direction.OUTGOING);
             functionNode = functionTraverser.iterator().next();
         } catch (Exception e) {
@@ -205,6 +359,24 @@ public class FairviewAjaxController {
         }
         return functionNode;
     }
+
+    private boolean functionBelongsToUnit(Node functionNode, long unitId) {
+
+        boolean retval = false;
+
+        for (Relationship relationship : functionNode.getRelationships(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING)) {
+
+            if (relationship.getEndNode().getId() == unitId) {
+                retval = true;
+                break;
+            }
+
+        }
+
+        return retval;
+
+    }
+
 
     @RequestMapping(value = {"/fairview/ajax/unassign_function.do"})
     public ModelAndView getFunctionRelationshipId(@RequestParam("_nodeId") Long nodeId) {
@@ -230,12 +402,10 @@ public class FairviewAjaxController {
 
     @RequestMapping(value = {"/fairview/ajax/get_functions.do"})
     public ModelAndView getFunctions(@RequestParam("_nodeId") Long nodeId) {
-        FunctionListGenerator functionListGenerator = new FunctionListGenerator((EmbeddedGraphDatabase) neo);
-
         HashMap<Long, String> retval = new HashMap<Long, String>();
 
         Node node = neo.getNodeById(nodeId);
-        Node functionNode = getFunctionNode(node);
+        Node functionNode = getFunctionOfEmployee(node);
         if (functionNode != null)
             retval.put(functionNode.getId(), functionNode.getProperty("name").toString());
 
@@ -559,9 +729,9 @@ public class FairviewAjaxController {
             managerRelationship = ((Iterable<Relationship>) unitNode.getRelationships(SimpleRelationshipType.withName("HAS_MANAGER"), Direction.OUTGOING)).iterator().next();
         } catch (Exception ex) {
             // managerRelationship didn't exist
-            long noFind = -1;
+            long notFound = -1;
             ModelAndView mav = new ModelAndView(xstreamView);
-            mav.addObject(XStreamView.XSTREAM_ROOT, noFind);
+            mav.addObject(XStreamView.XSTREAM_ROOT, notFound);
             return mav;
         }
 
@@ -572,5 +742,163 @@ public class FairviewAjaxController {
     }
 
 
-}
+    @RequestMapping(value = {"/fairview/ajax/get_multiselect_functions.do"})
+    public ModelAndView getMultiselectFunctions(@RequestParam("_unitId") long unitId) {
 
+        ArrayList<Node> functions = functionListGenerator.getSortedList(0, true);
+        ArrayList<MultiSelectFunctionMember> msfList = new ArrayList<MultiSelectFunctionMember>();
+        for (Node function : functions) {
+
+            MultiSelectFunctionMember multiSelectFunction = new MultiSelectFunctionMember(function.getProperty("name").toString(), function.getId());
+            if (functionBelongsToUnit(function, unitId)) {
+
+                multiSelectFunction.setSelected(true);
+
+            }
+            msfList.add(multiSelectFunction);
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, msfList);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/set_multiselect_functions.do"})
+    public ModelAndView setMultiselectFunctions(@RequestParam("_unitId") long unitId,
+                                                @RequestParam("_functionIds") String functionIds) {
+
+        Long[] functionIdArray = gson.fromJson(functionIds, Long[].class);
+
+        Node unitNode = neo.getNodeById(unitId);
+
+        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType("BELONGS_TO"), Direction.INCOMING)) {
+            relationship.delete();
+        }
+
+        for (Long entry : functionIdArray) {
+            neo.getNodeById(entry).createRelationshipTo(unitNode, new SimpleRelationshipType("BELONGS_TO"));
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_relationship_endnodes.do"})
+    public ModelAndView getRelationshipEndNodes(@RequestParam("_nodeId") long unitId, @RequestParam("_type") String type) {
+
+        Node unitNode = neo.getNodeById(unitId);
+        ArrayList<Node> retval = new ArrayList<Node>();
+
+        for (Relationship relationship : unitNode.getRelationships(new SimpleRelationshipType(type), Direction.OUTGOING)) {
+            retval.add(relationship.getEndNode());
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_organization_node.do"})
+    public ModelAndView getOrganizationNode() {
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, organization);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_reference_node.do"})
+    public ModelAndView getReferenceNode() {
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, neo.getReferenceNode());
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_persons.do"})
+    public ModelAndView getPersons() {
+
+        PersonListGenerator personListGenerator = new PersonListGenerator((EmbeddedGraphDatabase) neo);
+        ArrayList<Node> retval = personListGenerator.getSortedList(PersonListGenerator.ALPHABETICAL, false);
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, retval);
+        return mav;
+    }
+
+    private ModelAndView updatePropertyContainer(HttpServletRequest request,
+                                                @RequestParam("_id") Long id,
+                                                @RequestParam("_type") String type,
+                                                @RequestParam(value = "_strict", required = false) Boolean strict) {
+
+        PropertyContainer propertyContainer = TYPE_NODE.equalsIgnoreCase(type.trim()) ? neo.getNodeById(id) : neo.getRelationshipById(id);
+
+        Set<String> keySet = null;
+        if (strict != null && strict) {
+            keySet = NeoUtils.getKeysSet(propertyContainer);
+        }
+
+        Enumeration enumeration = request.getParameterNames();
+        while (enumeration.hasMoreElements()) {
+            String name = (String) enumeration.nextElement();
+            if (!name.startsWith("_")) {
+                String[] fields = name.split(":");
+                String key = fields[0];
+                String primitiveType = fields.length > 1 ? fields[1] : null;
+                String pattern = fields.length > 2 ? fields[2] : null;
+                if ("relationship".equalsIgnoreCase(primitiveType)) {
+                    Node node = (Node) propertyContainer;
+                    long otherId = Long.parseLong(request.getParameter(name));
+                    boolean relationshipExists = false;
+                    RelationshipType relationshipType = new SimpleRelationshipType(key);
+                    for (Relationship relationship : node.getRelationships(relationshipType, Direction.OUTGOING)) {
+                        if (relationship.getEndNode().getId() == otherId) {
+                            relationshipExists = true;
+                        } else {
+                            relationship.delete();
+                        }
+                    }
+                    if (!relationshipExists && otherId != -1) {
+                        node.createRelationshipTo(neo.getNodeById(otherId), relationshipType);
+                    }
+                } else if ("checkbox".equalsIgnoreCase(primitiveType)) {
+                    String[] values = request.getParameterValues(name);
+                    Set<String> propertyKeys = NeoUtils.getKeysSet(propertyContainer);
+                    for (String propertyKey : propertyKeys) {
+                        if (propertyKey.startsWith(key + "#")) {
+                            propertyContainer.removeProperty(propertyKey);
+                        }
+                    }
+                    for (String value : values) {
+                        propertyContainer.setProperty(key + "#" + value, true);
+                    }
+                } else {
+                    if (primitiveType == null) {
+                        Object oldValue = propertyContainer.getProperty(key, null);
+                        if (oldValue != null) {
+                            primitiveType = oldValue.getClass().getSimpleName();
+                        }
+                    }
+                    if (request.getParameter(name) != null && request.getParameter(name).length() > 0) {
+                        Object value = NeoUtils.toPrimitive(request.getParameter(name), primitiveType, pattern);
+                        propertyContainer.setProperty(key, value);
+                        if (keySet != null) {
+                            keySet.remove(key);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (keySet != null) {
+            for (String key : keySet) {
+                propertyContainer.removeProperty(key);
+            }
+        }
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, propertyContainer);
+        return mav;
+
+    }
+
+}

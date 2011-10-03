@@ -57,13 +57,13 @@
         <property name="servletClass" value="se.codemate.spring.sitemesh.SpringFreemarkerDecoratorServlet"/>
         <property name="servletName" value="sitemesh"/>
     </bean>
-
+   <!--
     <bean id="jasperReportController" class="com.fairviewiq.spring.controllers.FairviewReportController">
         <property name="reportRoot" value="${report.root}"/>
         <property name="imageServletPath" value="/reports/image"/>
         <property name="indexViewName" value="/reports/index"/>
     </bean>
-
+                -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="10000000"/>
     </bean>
@@ -75,8 +75,10 @@
         </property>
         <property name="mappings">
             <map>
+                <!--
                 <entry key="/index.do" value-ref="jasperReportController"/>
                 <entry key="/reports/*" value-ref="jasperReportController"/>
+                -->
                 <entry key="/decorators/*.ftd" value-ref="decoratorController"/>
                 <entry key="/sms.do">
                     <bean class="se.codemate.spring.controllers.RequestChannelController">

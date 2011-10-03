@@ -118,8 +118,8 @@
         }
 
         function generateProfileForm(unitId) {
-            var data = getNodeData(unitId);
-            $('#profile-employmentinfo').empty().append(generateProfileEmploymentInfoForm(data));
+            var data = getUnitData(unitId);
+            $('#profile-employmentinfo').empty().append(generateProfileGeneralForm(data));
         }
 
         $(document).ready(function() {
@@ -128,9 +128,7 @@
             fadeOutModalizer();
 
             alternateRowColors();
-            createTabs();
-
-            setupModalizerClickEvents();
+            bindTabs();
 
             $('.profilelink-manager').click(function() {
                 openPopupTab(0);
