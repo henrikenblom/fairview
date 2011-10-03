@@ -46,7 +46,7 @@
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function() {
-                        var data = datatable.fnGetData(this.parentElement);
+                        var data = datatable.fnGetData(this.parentNode);
                         if (this.cellIndex == '2' || this.cellIndex == '3') {  //employee-cell
                             //initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
                             initEmployeeCell(data, this);
