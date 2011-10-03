@@ -1294,12 +1294,6 @@ function generateSingleAddressComponent(data) {
     return addressComponent;
 }
 
-function generateMainOrganizationAddressComponent(labelText, unitId, name, value) {
-    var addressDescriptionDiv = textInputComponent(labelText, name, value, 'organization_address_form' + unitId);
-    addressDescriptionDiv.children('#' + name + '-field').attr("id", name + "-field" + unitId);
-    return addressDescriptionDiv;
-}
-
 function getRelationshipData(parentNode) {
     var data = $.parseJSON($.ajax({
         url:"neo/ajax/create_relationship.do",
