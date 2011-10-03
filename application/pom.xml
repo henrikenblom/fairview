@@ -8,12 +8,12 @@
     <parent>
         <groupId>com.fairviewiq</groupId>
         <artifactId>fairview</artifactId>
-        <version>1.0</version>
+        <version>11.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>fairview-application</artifactId>
-    <version>1.1</version>
+    <version>11.1</version>
     <name>Fairview Web Application</name>
     <packaging>war</packaging>
 
