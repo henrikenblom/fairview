@@ -11,38 +11,6 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<%
-    Node mainAddressNode = null;
-
-    try {
-
-        mainAddressNode = ((Iterable<Relationship>) organization.getRelationships(SimpleRelationshipType.withName("HAS_ADDRESS"))).iterator().next().getEndNode();
-
-    } catch (Exception ex) {
-
-        Transaction tx = neo.beginTx();
-
-        try {
-
-            mainAddressNode = neo.createNode();
-
-            mainAddressNode.setProperty("mainAddress", "true");
-
-            organization.createRelationshipTo(mainAddressNode, SimpleRelationshipType.withName("HAS_ADDRESS"));
-
-            tx.success();
-
-        } catch (Exception e) {
-
-        } finally {
-
-            tx.finish();
-
-        }
-
-    }
-
-%>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -156,28 +124,6 @@
             addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
         }
 
-        function generateAdresses() {
-        <%for (Relationship addressEntry : organization.getRelationships(SimpleRelationshipType.withName("HAS_ADDRESS"))) {%>
-
-            var unitId = <%=addressEntry.getEndNode().getId()%>;
-            var updateForm = generateUpdateForm('organization_address_form' + unitId);
-            var data = getUnitData(unitId);
-            var properties = data.node.properties;
-
-            var hiddenField_id = hiddenField('_id', unitId);
-            var hiddenField_type = hiddenField('_type', 'node');
-            var hiddenField_strict = hiddenField('_strict', 'true');
-            var hiddenField_username = hiddenField('_username', 'admin');
-
-            var addressDiv = generateMainOrganizationAddressComponent('Adress', unitId, 'address', propValue(properties.address));
-            var postalCodeDiv = generateMainOrganizationAddressComponent('Postnummer', unitId, 'postalcode', propValue(properties.postalcode));
-            var cityDiv = generateMainOrganizationAddressComponent('Ort', unitId, 'city', propValue(properties.city));
-            var countryDiv = generateMainOrganizationAddressComponent('Land', unitId, 'country', propValue(properties.country));
-
-            updateForm.append(hiddenField_id, hiddenField_type, hiddenField_strict, hiddenField_username, addressDiv, '<br/>', postalCodeDiv, '<br/>', cityDiv, '<br/>', countryDiv);
-            $('#unitsettings-general').append(updateForm);
-        <% } %>
-        }
         function assignManager(unitId, managerId, callback) {
             $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:managerId}, function() {
                 if (typeof(callback) == 'function')
