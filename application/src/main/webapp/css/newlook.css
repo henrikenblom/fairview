@@ -418,9 +418,8 @@ input[type="radio"]{
     /*width: 468px;*/
 }
 
-.checkbox{
-    text-indent: 20px;
-    width: 200px;
+label.checkbox{
+    margin-left: 5px;
 }
 .radiobutton{
     text-indent: 20px;

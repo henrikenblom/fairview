@@ -1094,13 +1094,18 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
     inputDiv.append(inputLabel);
     $.each(checkboxData, function(i) {
         var inputBoxDiv = fieldCheckboxBox();
-        var hidden = $('<input type="hidden">');
+        var hidden = $('<input type="hidden" >');
         hidden.attr('id', checkboxData[i][0] + "-field");
         hidden.attr('name', checkboxData[i][0]);
         hidden.attr('value', (checkboxData[i][2]));
-        var checkbox = $('<input type="checkbox">');
+        var label = $('<label>');
+        label.attr('for', 'pseudo-' + checkboxData[i][0]);
+        label.append(checkboxData[i][1]);
+        label.addClass('checkbox');
+        var checkbox = $('<input />');
+        checkbox.attr('type', 'checkbox');
         checkbox.attr('id', 'pseudo-' + checkboxData[i][0]);
-        checkbox.addClass('checkbox');
+        //checkbox.addClass('checkbox');
         if (checkboxData[i][2] == true)
             checkbox.attr('checked', 'checked');
         checkbox.change(function(event) {
@@ -1108,7 +1113,7 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
 
             $('#' + checkbox + '-field').val(event.target.checked);
         });
-        checkbox.append(checkboxData[i][1]);
+        //checkbox.append(checkboxData[i][1]);
         checkbox.click(function() {
             validateForm(formId);
         });
@@ -1117,7 +1122,9 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
         });
 
         inputBoxDiv.append(hidden);
+        hidden.after(label);
         hidden.after(checkbox);
+
         inputDiv.append(inputBoxDiv);
     });
     return inputDiv;
