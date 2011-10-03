@@ -25,7 +25,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.fairviewiq.cloner.Main</mainClass>
+                            <mainClass>com.fairviewiq.cloner.Cloner</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
