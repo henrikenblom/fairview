@@ -12,9 +12,7 @@ import se.codemate.neo4j.XStreamRelationshipConverter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /*
 Notes
@@ -114,10 +112,15 @@ public class Cloner {
             }
         };
 
-        Traverser units = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
+        Traverser traverser = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
                 StopEvaluator.END_OF_GRAPH, returnEvaluator,
                 new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
                 new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING);
+
+        Set<Node> units = new HashSet<Node>();
+        for (Node unit : traverser) {
+            units.add(unit);
+        }
 
         for (Node unit : units) {
 
@@ -133,7 +136,9 @@ public class Cloner {
 
         for (Node unit : units) {
             /* Link the unit to sub units */
-            createLink(unit.getSingleRelationship(new SimpleRelationshipType("HAS_UNIT"), Direction.OUTGOING));
+            for (Relationship relationship : unit.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.INCOMING)) {
+                createLink(relationship);
+            }
         }
 
     }
