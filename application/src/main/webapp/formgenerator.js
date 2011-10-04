@@ -1245,7 +1245,7 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
 
     var propertyName = inputName.split(":")[0];
 
-    selectInput.attr("name", propertyName);
+    selectInput.attr("name", inputName);
     selectInput.attr("id", propertyName + "-field");
     selectInput.change(function() {
         $('#' + formId).data('edited', 'true');
