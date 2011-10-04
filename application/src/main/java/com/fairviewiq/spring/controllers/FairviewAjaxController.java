@@ -672,27 +672,6 @@ public class FairviewAjaxController {
 
     }
 
-    @RequestMapping(value = {"/fairview/ajax/assign_manager.do"})
-    public ModelAndView assignManager(@RequestParam("_startNodeId") Long startNodeId,
-                                      @RequestParam("_endNodeId") Long endNodeId) {
-
-        Node unitNode = neo.getNodeById(startNodeId);
-        deleteExistingManagerRelationship(unitNode);
-        if (endNodeId == -1) // No boss selected
-        {
-            ModelAndView mav = new ModelAndView(xstreamView);
-            mav.addObject(XStreamView.XSTREAM_ROOT, "Deleted manager of unit '" + unitNode.getProperty("name") + "'");
-            return mav;
-        } else {
-            Node endNode = getEndNode(endNodeId);
-            Relationship relationship = createManagerRelationship(unitNode, endNode);
-
-            ModelAndView mav = new ModelAndView(xstreamView);
-            mav.addObject(XStreamView.XSTREAM_ROOT, relationship);
-            return mav;
-        }
-    }
-
     private Relationship createManagerRelationship(Node unitNode, Node endNode) {
         return unitNode.createRelationshipTo(endNode, new SimpleRelationshipType("HAS_MANAGER"));
     }
