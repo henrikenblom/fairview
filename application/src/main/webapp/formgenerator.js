@@ -889,13 +889,11 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
             async: false,
             url:'fairview/ajax/get_units.do', success: function(data) {
 
-                var option;
-
-                if(data.list != null && data.list.node.length > 1) {
+                try {
 
                     $.each(data.list.node, function(i) {
 
-                        option = $('<option>');
+                        var option = $('<option>');
                         option.html(data.list.node[i].properties.name.value);
                         option.attr('value', data.list.node[i].id);
 
@@ -905,42 +903,20 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
                         selectInput.append(option);
                     });
 
-                } else {
+                } catch(e) {
 
-                    option = $('<option>');
-                    option.html(data.list.properties.name.value);
+                    var option = $('<option>');
+                    option.html(data.list.node.properties.name.value);
                     option.attr('value', data.list.id);
                     option.attr('selected', 'selected');
                     selectInput.append(option);
+
                 }
             }
         }
     );
 
     return selectDiv;
-
-}
-
-function populateUnitSelect(inputElement) {
-
-    $.ajax({
-            dataType: 'json',
-            async: false,
-            url:'fairview/ajax/get_units.do', success: function(data) {
-
-                $.each(data.list.node, function(i) {
-
-                    var option = $('<option>');
-                    option.html(data.list.node[i].properties.name.value);
-                    option.attr('value', data.list.node[i].id);
-
-                    inputElement.append(option);
-
-                });
-
-            }
-        }
-    );
 
 }
 
