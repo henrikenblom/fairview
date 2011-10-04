@@ -167,7 +167,7 @@ function generateEmploymentCreationForm(data) {
     if (employeeId != null && employmentId != null && employmentId != '')
         formId = 'employment_form' + employeeId;
 
-    var form = buildUpdateForm(formId, "fairview/ajax/set_employment.do");
+    var form = buildUpdateForm(formId);
 
     var fieldSet = $('<fieldset>');
 
@@ -194,20 +194,20 @@ function generateEmploymentCreationForm(data) {
         ['authorizationright', 'Attesträtt', boolPropValue(properties.authorizationright)]
     ];
     var responsibilityDiv = checkboxInputComponent('Ansvar/Befogenheter', formId, responsibilitys);
-    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationamount', propValue(properties.authorizationamount), formId, false);
+    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationamount:int', propValue(properties.authorizationamount), formId, false);
 
     var paymentFormDiv = selectInputComponent('Löneform', 'paymentform', 'paymentFormDiv', formId, false);
     addPaymentFormOption(properties.paymentform, paymentFormDiv.children('#paymentform-field'));
 
-    var unitDiv = createUnitSelect('Enhet', 'unit', 'unitDiv', formId, false, unitId);
+    var unitDiv = createUnitSelect('Enhet', 'BELONGS_TO:relationship', 'unitDiv', formId, false, unitId);
 
-    var salaryDiv = textInputComponent('Aktuell lön', 'salary', propValue(properties.salary), formId, false);
-    var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimecompensation', formId, yesNo(), propValue(properties.overtimecompensation));
-    var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelcompensation', formId, yesNo(), propValue(properties.travelcompensation));
-    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays', propValue(properties.vacationdays), formId, false);
-    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee', 'dismissalPeriodEmployeeDiv', formId, false);
+    var salaryDiv = textInputComponent('Aktuell lön', 'salary:int', propValue(properties.salary), formId, false);
+    var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimecompensation:boolean', formId, yesNo(), propValue(properties.overtimecompensation));
+    var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelcompensation:boolean', formId, yesNo(), propValue(properties.travelcompensation));
+    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays:int', propValue(properties.vacationdays), formId, false);
+    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee:int', 'dismissalPeriodEmployeeDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployee, dismissalPeriodEmployeeDiv.children('#dismissalperiodemployee-field'));
-    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer', 'dismissalPeriodEmployerDiv', formId, false);
+    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
     var companyCarDiv = textInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, false);
 
@@ -373,6 +373,7 @@ function generateCertificateForm(form_Id, certificateNode) {
 }
 
 function generateWorkExperienceForm(form_Id, workExperienceNode) {
+
     var formId = form_Id;
 
     var nameString = '';
@@ -1233,13 +1234,19 @@ function validateForm(formId) {
     }
 }
 function selectInputComponent(labelText, inputName, divId, formId, required) {
+
     var selectDiv = fieldBox();
     selectDiv.attr("id", divId);
+
     var selectLabel = fieldLabelBox();
     selectLabel.append(labelText);
+
     var selectInput = $('<select>');
+
+    var propertyName = inputName.split(":")[0];
+
     selectInput.attr("name", inputName);
-    selectInput.attr("id", inputName + "-field");
+    selectInput.attr("id", propertyName + "-field");
     selectInput.change(function() {
         $('#' + formId).data('edited', 'true');
         validateForm(formId);
@@ -1248,7 +1255,9 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
         makeInputRequired(selectLabel, selectInput);
     }
     selectDiv.append(selectLabel, selectInput, $('<br>'));
+
     return selectDiv;
+
 }
 
 function functionSelectInputComponent(labelText, inputName, divId, formId, required) {
