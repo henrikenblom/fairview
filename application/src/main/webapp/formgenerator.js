@@ -186,7 +186,7 @@ function generateEmploymentCreationForm(data) {
 
     var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
     var workPhoneDiv = textInputComponent('Arbetstelefon', 'workphone', propValue(properties.workphone), formId, false);
-    var workingHoursDiv = textInputComponent('Arbetstider', 'workpours', propValue(properties.workhours), formId, false);
+    var workingHoursDiv = textInputComponent('Arbetstider', 'workhours', propValue(properties.workhours), formId, false);
     var responsibilitys = [
         ['managementteam', 'Ledningsgrupp', boolPropValue(properties.managementteam)],
         ['budgetresponsibility', 'Budgetansvar', boolPropValue(properties.budgetresponsibility)],
@@ -907,7 +907,7 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
 
                     var option = $('<option>');
                     option.html(data.list.node.properties.name.value);
-                    option.attr('value', data.list.id);
+                    option.attr('value', data.list.node.id);
                     option.attr('selected', 'selected');
                     selectInput.append(option);
 
@@ -944,6 +944,7 @@ function addDismissalPeriod(dismissalPeriod, dismissalPeriodInputElement) {
     {
         var optionChoose = $('<option>');
         optionChoose.html('Välj...');
+        optionChoose.val(-1);
         optionChoose.attr('selected', 'true');
         dismissalPeriodInputElement.append(optionChoose);
     }
@@ -1291,8 +1292,8 @@ function getFunctions(unitId) {
 
 function yesNo() {
     return  [
-        ['Ja', 'Yes'],
-        ['Nej', 'No']
+        ['Ja', true],
+        ['Nej', false]
     ];
 }
 
