@@ -258,15 +258,15 @@ function generateLanguageForm(form_Id, languageNode) {
 
     var language = textInputComponent('Språk', 'language', languageString, formId, false);
 
-    var written = selectInputComponent('Skriftligt', 'written', 'written-field', formId, false);
-    written.children('#written-field').append(generateOption('some', writtenString, 'Viss'));
-    written.children('#written-field').append(generateOption('good', writtenString, 'God'));
-    written.children('#written-field').append(generateOption('advanced', writtenString, 'Advancerad'));
+    var written = selectInputComponent('Skriftligt', 'written', 'written-field:byte', formId, false);
+    written.children('#written-field').append(generateOption('1', writtenString, 'Viss'));
+    written.children('#written-field').append(generateOption('2', writtenString, 'God'));
+    written.children('#written-field').append(generateOption('3', writtenString, 'Advancerad'));
 
-    var spoken = selectInputComponent('Muntligt', 'spoken', 'spoken-field', formId, false);
-    spoken.children('#spoken-field').append(generateOption('some', spokenString, 'Viss'));
-    spoken.children('#spoken-field').append(generateOption('good', spokenString, 'God'));
-    spoken.children('#spoken-field').append(generateOption('advanced', spokenString, 'Advancerad'));
+    var spoken = selectInputComponent('Muntligt', 'spoken', 'spoken-field:byte', formId, false);
+    spoken.children('#spoken-field').append(generateOption('1', spokenString, 'Viss'));
+    spoken.children('#spoken-field').append(generateOption('2', spokenString, 'God'));
+    spoken.children('#spoken-field').append(generateOption('3', spokenString, 'Advancerad'));
 
     languageForm.append(hiddenField_id, hiddenField_strict,
         language, written, spoken);
@@ -310,8 +310,8 @@ function generateEducationForm(form_Id, educationNode) {
     var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
     var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
     var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
@@ -361,8 +361,8 @@ function generateCertificateForm(form_Id, certificateNode) {
 
     var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
     var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict,
@@ -407,8 +407,8 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
     var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
