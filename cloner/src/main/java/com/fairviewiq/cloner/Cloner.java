@@ -9,6 +9,7 @@ import se.codemate.neo4j.XStreamEmbeddedNeoConverter;
 import se.codemate.neo4j.XStreamNodeConverter;
 import se.codemate.neo4j.XStreamRelationshipConverter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -235,7 +236,18 @@ public class Cloner {
         neoOut.shutdown();
     }
 
+    private static void deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                deleteDir(file);
+            }
+        }
+        dir.delete();
+    }
+
     public static void main(String[] args) throws Exception {
+
+        deleteDir(new File(args[2]));
 
         EmbeddedReadOnlyGraphDatabase neoIn = new EmbeddedReadOnlyGraphDatabase(args[1]);
         EmbeddedGraphDatabase neoOut = new EmbeddedGraphDatabase(args[2]);

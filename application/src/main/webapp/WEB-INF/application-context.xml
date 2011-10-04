@@ -130,7 +130,7 @@
         <property name="neoSearch" ref="neoSearch"/>
         <property name="configuration" value="classpath:neo4j.xml"/>
         <property name="forceInitialization" value="false"/>
-        <property name="indexGraph" value="false"/>
+        <property name="indexGraph" value="${neo4j.index}"/>
     </bean>
 
     <!-- The following beans need to be accessible for all servlets -->
