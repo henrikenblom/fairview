@@ -84,6 +84,7 @@
 
     <modules>
         <module>application</module>
+        <module>cloner</module>
     </modules>
 
 </project>
