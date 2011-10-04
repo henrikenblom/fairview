@@ -150,8 +150,8 @@ function generateProfileGeneralForm(data) {
 }
 
 function addManager(formId, unitId) {
-    var managerDiv = selectInputComponent('Chef', 'manager' + formId, 'manager-field', formId, false);
-    addManagerOptions(unitId, managerDiv.children('#manager' + formId + "-field"));
+    var managerDiv = selectInputComponent('Chef', 'HAS_MANAGER:relationship', 'manager-field', formId, false);
+    addManagerOptions(unitId, managerDiv.children('select'));
     return managerDiv;
 }
 
@@ -1233,7 +1233,7 @@ function validateForm(formId) {
         return false;
     }
 }
-function selectInputComponent(labelText, inputName, divId, formId, required) {
+function selectInputComponent(labelText, propertyName, divId, formId, required) {
 
     var selectDiv = fieldBox();
     selectDiv.attr("id", divId);
@@ -1243,10 +1243,10 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
 
     var selectInput = $('<select>');
 
-    var propertyName = inputName.split(":")[0];
+    var inputId = propertyName.split(":")[0];
 
-    selectInput.attr("name", inputName);
-    selectInput.attr("id", propertyName + "-field");
+    selectInput.attr("name", propertyName);
+    selectInput.attr("id", inputId + "-field");
     selectInput.change(function() {
         $('#' + formId).data('edited', 'true');
         validateForm(formId);
@@ -1258,22 +1258,6 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
 
     return selectDiv;
 
-}
-
-function functionSelectInputComponent(labelText, inputName, divId, formId, required) {
-    var selectDiv = fieldBox();
-    selectDiv.attr("id", divId);
-    var selectLabel = fieldLabelBox();
-    selectLabel.append(labelText);
-    var selectInput = $('<select>');
-    selectInput.attr("name", inputName);
-    selectInput.attr("id", inputName + "-field");
-    selectInput.change(function() {
-        validateForm(formId);
-        $('#' + formId).data('edited', 'true');
-    });
-    selectDiv.append(selectLabel, selectInput, $('<br>'));
-    return selectDiv;
 }
 
 function editTreeNamesOnChange(newVal, unitId) {
