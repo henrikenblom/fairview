@@ -118,7 +118,7 @@ function loadFormValues(unitId) {
 
 function generateEmploymentForm(data) {
     $('#employment-general').empty().append(generateEmploymentCreationForm(data));
-    $('#employment-general').append(footerButtonsComponent(data.unit_id, updateTableCallback(oTable)));
+    $('#employment-general').append(footerButtonsComponent(data.employee_id, updateTableCallback(oTable)));
 }
 
 function generateProfileForm(unitId) {
