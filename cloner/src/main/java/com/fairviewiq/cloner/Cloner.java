@@ -1,6 +1,7 @@
 package com.fairviewiq.cloner;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.neo4j.graphdb.*;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
 import org.neo4j.kernel.EmbeddedReadOnlyGraphDatabase;
@@ -9,6 +10,7 @@ import se.codemate.neo4j.XStreamEmbeddedNeoConverter;
 import se.codemate.neo4j.XStreamNodeConverter;
 import se.codemate.neo4j.XStreamRelationshipConverter;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,6 +29,7 @@ public class Cloner {
     private GraphDatabaseService neoOut;
 
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
+    private XStream xstream = new XStream(new DomDriver());
 
     public Cloner(String initPath, EmbeddedReadOnlyGraphDatabase neoIn, EmbeddedGraphDatabase neoOut) throws ClassNotFoundException, IOException {
 
@@ -39,22 +42,22 @@ public class Cloner {
         Transaction tx = neoOut.beginTx();
         try {
             Node node = neoOut.getNodeById(0);
-            XStream xstream = new XStream();
-            xstream.setMode(XStream.NO_REFERENCES);
-            xstream.alias("embeddedNeo", EmbeddedGraphDatabase.class);
-            xstream.alias("node", Node.class);
-            xstream.alias("node", Class.forName("org.neo4j.kernel.impl.core.NodeImpl"));
-            xstream.alias("node", Class.forName("org.neo4j.kernel.impl.core.NodeProxy"));
-            xstream.alias("relationship", Relationship.class);
-            xstream.alias("relationship", Class.forName("org.neo4j.kernel.impl.core.RelationshipImpl"));
-            xstream.alias("relationship", Class.forName("org.neo4j.kernel.impl.core.RelationshipProxy"));
-            xstream.registerConverter(new XStreamEmbeddedNeoConverter(neoOut));
-            xstream.registerConverter(new XStreamNodeConverter(xstream.getMapper()));
-            xstream.registerConverter(new XStreamRelationshipConverter(xstream.getMapper()));
-            ObjectInputStream in = xstream.createObjectInputStream(new FileInputStream(initPath));
+            XStream xstreamInit = new XStream();
+            xstreamInit.setMode(XStream.NO_REFERENCES);
+            xstreamInit.alias("embeddedNeo", EmbeddedGraphDatabase.class);
+            xstreamInit.alias("node", Node.class);
+            xstreamInit.alias("node", Class.forName("org.neo4j.kernel.impl.core.NodeImpl"));
+            xstreamInit.alias("node", Class.forName("org.neo4j.kernel.impl.core.NodeProxy"));
+            xstreamInit.alias("relationship", Relationship.class);
+            xstreamInit.alias("relationship", Class.forName("org.neo4j.kernel.impl.core.RelationshipImpl"));
+            xstreamInit.alias("relationship", Class.forName("org.neo4j.kernel.impl.core.RelationshipProxy"));
+            xstreamInit.registerConverter(new XStreamEmbeddedNeoConverter(neoOut));
+            xstreamInit.registerConverter(new XStreamNodeConverter(xstreamInit.getMapper()));
+            xstreamInit.registerConverter(new XStreamRelationshipConverter(xstreamInit.getMapper()));
+            ObjectInputStream in = xstreamInit.createObjectInputStream(new FileInputStream(initPath));
             in.readObject();
             in.close();
-            node.setProperty("initialized", true);
+            setProperty(node, "initialized", true);
             tx.success();
         } finally {
             tx.finish();
@@ -191,7 +194,7 @@ public class Cloner {
             System.out.println("L " + inFrom.getId() + "->" + inTo.getId() + " | " + outFrom.getId() + "-[" + type + "]->" + outTo.getId() + " = " + relationship.getId());
             for (String key : properties.keySet()) {
                 Object value = properties.get(key);
-                relationship.setProperty(key, value);
+                setProperty(relationship, key, value);
                 System.out.println("L " + relationship.getId() + ":" + key + " = " + value);
             }
             tx.success();
@@ -206,7 +209,7 @@ public class Cloner {
             Node node = neoOut.createNode();
             for (String key : properties.keySet()) {
                 Object value = properties.get(key);
-                node.setProperty(key, value);
+                setProperty(node, key, value);
                 System.out.println("N " + node.getId() + ":" + key + " = " + value);
             }
             tx.success();
@@ -230,12 +233,47 @@ public class Cloner {
         return createNode(properties);
     }
 
+    private void setProperty(PropertyContainer propertyContainer, String key, Object value) {
+        if (Cloner.isValidType(value)) {
+            propertyContainer.setProperty(key, value);
+        } else {
+            propertyContainer.setProperty(key, "XStream:" + xstream.toXML(value));
+        }
+    }
+
     public void shutdown() {
         neoIn.shutdown();
         neoOut.shutdown();
     }
 
+    private static void deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                deleteDir(file);
+            }
+        }
+        dir.delete();
+    }
+
+    private static boolean isValidType(Object object) {
+        Class type = object.getClass();
+        if (type.isArray()) {
+            type = type.getComponentType();
+        }
+        return Boolean.class.equals(type) ||
+                Byte.class.equals(type) ||
+                Short.class.equals(type) ||
+                Integer.class.equals(type) ||
+                Long.class.equals(type) ||
+                Float.class.equals(type) ||
+                Double.class.equals(type) ||
+                Character.class.equals(type) ||
+                String.class.equals(type);
+    }
+
     public static void main(String[] args) throws Exception {
+
+        deleteDir(new File(args[2]));
 
         EmbeddedReadOnlyGraphDatabase neoIn = new EmbeddedReadOnlyGraphDatabase(args[1]);
         EmbeddedGraphDatabase neoOut = new EmbeddedGraphDatabase(args[2]);
