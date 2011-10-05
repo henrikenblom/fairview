@@ -136,7 +136,15 @@ public class Cloner {
 
             Map<String, Object> properties = new TreeMap<String, Object>();
 
-            oldEmploymentNode = employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYMENT"), Direction.OUTGOING).getEndNode();
+            try {
+
+                oldEmploymentNode = employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYMENT"), Direction.OUTGOING).getEndNode();
+
+            } catch (Exception ex) {
+
+                System.err.println("Employee node " + employee.getId() + " has no employment/function relationship.");
+
+            }
 
             if (oldEmploymentNode != null) {
 
@@ -168,6 +176,10 @@ public class Cloner {
 
     }
 
+    public void cloneLanguages() {
+
+
+    }
 
     public void cloneUnits() {
 
