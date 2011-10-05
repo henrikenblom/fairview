@@ -204,7 +204,7 @@ function generateEmploymentCreationForm(data) {
     var salaryDiv = textInputComponent('Aktuell lön', 'salary:int', propValue(properties.salary), formId, false);
     var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimecompensation:boolean', formId, yesNo(), propValue(properties.overtimecompensation));
     var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelcompensation:boolean', formId, yesNo(), propValue(properties.travelcompensation));
-    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays:int', propValue(properties.vacationdays), formId, false);
+    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays', propValue(properties.vacationdays), formId, false);
     var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee:int', 'dismissalPeriodEmployeeDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployee, dismissalPeriodEmployeeDiv.children('#dismissalperiodemployee-field'));
     var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
@@ -230,6 +230,7 @@ function generateEmploymentCreationForm(data) {
         pensionInsurancesDiv,
         attestationRightsDiv);
     form.append(fieldSet);
+    form.validate();
     return form;
 }
 
