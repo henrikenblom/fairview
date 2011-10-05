@@ -74,7 +74,10 @@ public class Cloner {
         Relationship relationship2 = organization.getSingleRelationship(new SimpleRelationshipType("HAS_ADDRESS"), Direction.OUTGOING);
         Node address = relationship2.getEndNode();
         Map<String, Object> properties = new TreeMap<String, Object>();
-        addMultipleIfExists(organization, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "name", "description", "regnr", "phone", "fax", "email", "web"}, properties);
+        addMultipleIfExists(organization, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                "address", "city", "country", "description", "email", "fax", "imageurl", "name", "phone", "postalcode", "regnr", "web"
+
+        }, properties);
         addMultipleIfExists(address, new String[]{"address", "postalcode", "city", "country"}, properties);
         idMap.put(organization.getId(), createNode(properties));
 
@@ -98,7 +101,10 @@ public class Cloner {
 
         for (Node employee : employees) {
             Map<String, Object> properties = new TreeMap<String, Object>();
-            addMultipleIfExists(employee, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "firstname", "lastname", "email"}, properties);
+            addMultipleIfExists(employee, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                    "firstname", "lastname", "email", "address", "birthday", "cell", "city", "civic", "country",
+                    "gender", "nationality", "phone", "zip", "additional_info"
+            }, properties);
             if (properties.containsKey("firstname")) {
                 idMap.put(employee.getId(), createNode(properties));
                 createLink(employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.INCOMING));
@@ -129,7 +135,8 @@ public class Cloner {
 
             /* Copy the unit node */
             Map<String, Object> properties = new TreeMap<String, Object>();
-            addMultipleIfExists(unit, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "name", "description", "phone", "fax", "email", "web", "address", "postalcode", "city", "country"}, properties);
+            addMultipleIfExists(unit, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                    "name", "description", "phone", "fax", "email", "web", "address", "postalcode", "city", "country"}, properties);
             idMap.put(unit.getId(), createNode(properties));
 
             /* Link the unit to the manager */
