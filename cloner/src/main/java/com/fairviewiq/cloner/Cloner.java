@@ -34,6 +34,7 @@ public class Cloner {
 
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
     private XStream xstream = new XStream(new DomDriver());
+    private DateTool dateTool = DateTool.getInstance();
 
     public Cloner(String initPath, EmbeddedReadOnlyGraphDatabase neoIn, EmbeddedGraphDatabase neoOut) throws ClassNotFoundException, IOException {
 
@@ -433,11 +434,10 @@ public class Cloner {
 
     private Date toDate(Object stringValue) {
 
-        Date retval = new Date();
-
+        Date retval = null;
         try {
 
-            retval = dateFormat.parse((String) stringValue);
+            retval = dateTool.guessDate((String) stringValue);
 
         } catch (Exception ex) {
             //no-op
