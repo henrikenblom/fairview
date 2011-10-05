@@ -5,6 +5,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.neo4j.graphdb.*;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
 import org.neo4j.kernel.EmbeddedReadOnlyGraphDatabase;
+import org.neo4j.kernel.impl.batchinsert.SimpleRelationship;
 import se.codemate.neo4j.SimpleRelationshipType;
 import se.codemate.neo4j.XStreamEmbeddedNeoConverter;
 import se.codemate.neo4j.XStreamNodeConverter;
@@ -176,8 +177,37 @@ public class Cloner {
 
     }
 
-    public void cloneLanguages() {
+    public void cloneWorkExperience() {
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
 
+        Traverser workExperiences = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
+                StopEvaluator.END_OF_GRAPH, returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.OUTGOING);
+
+        for (Node workExperience : workExperiences) {
+
+            Map<String, Object> properties = new TreeMap<String, Object>();
+            addMultipleIfExists(workExperience, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                    "name", "company", "trade", "country", "assignment"
+            }, properties);
+
+            properties.put("to", toDate(workExperience.getProperty("to")));
+            properties.put("from", toDate(workExperience.getProperty("from")));
+            idMap.put(workExperience.getId(), createNode(properties));
+            try {
+                createLink(workExperience.getSingleRelationship(new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.INCOMING));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
 
     }
 
@@ -273,6 +303,8 @@ public class Cloner {
                 System.out.println("L " + relationship.getId() + ":" + key + " = " + value);
             }
             tx.success();
+        } catch (Exception e) {
+              System.out.println("hello world");
         } finally {
             tx.finish();
         }
@@ -409,6 +441,7 @@ public class Cloner {
         cloner.cloneEmployees();
         cloner.cloneUnits();
         cloner.createEmployments();
+        cloner.cloneWorkExperience();
         cloner.shutdown();
 
     }
