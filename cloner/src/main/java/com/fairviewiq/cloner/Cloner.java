@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /*
@@ -27,6 +29,7 @@ public class Cloner {
 
     private GraphDatabaseService neoIn;
     private GraphDatabaseService neoOut;
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
     private XStream xstream = new XStream(new DomDriver());
@@ -112,6 +115,59 @@ public class Cloner {
         }
 
     }
+
+    public void createEmployments() {
+
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 1;
+            }
+        };
+
+        Traverser employees = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
+                StopEvaluator.END_OF_GRAPH, returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING);
+
+        for (Node employee : employees) {
+
+            Node oldEmploymentNode = null;
+            Node oldFunctionNode = null;
+
+            Map<String, Object> properties = new TreeMap<String, Object>();
+
+            oldEmploymentNode = employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYMENT"), Direction.OUTGOING).getEndNode();
+
+            if (oldEmploymentNode != null) {
+
+                oldFunctionNode = oldEmploymentNode.getSingleRelationship(new SimpleRelationshipType("PERFORMS_FUNCTION"), Direction.OUTGOING).getEndNode();
+
+                properties.put("authorizationamount", toInt(employee.getProperty("authorization-amount", "0")));
+                properties.put("authorizationright", employee.getProperty("authorization", ""));
+                properties.put("budgetresponsibility", employee.getProperty("budget-responsibility", ""));
+                properties.put("companycar", employee.getProperty("company-car", ""));
+                properties.put("dismissalperiodemployee", toInt(employee.getProperty("dismissal-period-employee", "")));
+                properties.put("dismissalperiodemployeer", toInt(employee.getProperty("dismissal-period-employeer", "")));
+                properties.put("managementteam", employee.getProperty("executive", ""));
+                properties.put("overtimecompensation", employee.getProperty("overtime-compensation", ""));
+                properties.put("ownresultresponsibility", employee.getProperty("own-result-responsibility", ""));
+                properties.put("paymentform", employee.getProperty("payment-form", ""));
+                properties.put("pensioninsurances", employee.getProperty("pension-insurances", ""));
+                properties.put("salary", employee.getProperty("salary", ""));
+                properties.put("travelcompensation", employee.getProperty("travel-compensation", ""));
+                properties.put("vacationdays", toInt(employee.getProperty("vaication-days", "")));
+                properties.put("workhours", employee.getProperty("workhours", ""));
+
+                properties.put("title", oldFunctionNode.getProperty("name", ""));
+
+                createNewLink(idMap.get(employee.getId()), createNode(properties), "HAS_EMPLOYMENT");
+
+            }
+
+        }
+
+    }
+
 
     public void cloneUnits() {
 
@@ -210,6 +266,25 @@ public class Cloner {
         }
     }
 
+    private void createNewLink(long fromId, long toId, String type) {
+
+        Transaction tx = neoOut.beginTx();
+
+        try {
+
+            Node fromNode = neoOut.getNodeById(fromId);
+
+            fromNode.createRelationshipTo(neoOut.getNodeById(toId), new SimpleRelationshipType(type));
+
+            tx.success();
+
+        } finally {
+            tx.finish();
+            tx = null;
+        }
+
+    }
+
     private long createNode(Map<String, Object> properties) {
         Transaction tx = neoOut.beginTx();
         try {
@@ -253,6 +328,38 @@ public class Cloner {
         neoOut.shutdown();
     }
 
+    private Integer toInt(Object stringValue) {
+
+        Integer retval = -1;
+
+        try {
+
+            retval = Integer.parseInt((String) stringValue);
+
+        } catch (Exception ex) {
+            //no-op
+        } finally {
+            return retval;
+        }
+
+    }
+
+    private Date toDate(Object stringValue) {
+
+        Date retval = new Date();
+
+        try {
+
+            retval = dateFormat.parse((String) stringValue);
+
+        } catch (Exception ex) {
+            //no-op
+        } finally {
+            return retval;
+        }
+
+    }
+
     private static void deleteDir(File dir) {
         if (dir.isDirectory()) {
             for (File file : dir.listFiles()) {
@@ -289,6 +396,7 @@ public class Cloner {
         cloner.cloneOrganization();
         cloner.cloneEmployees();
         cloner.cloneUnits();
+        cloner.createEmployments();
         cloner.shutdown();
 
     }
