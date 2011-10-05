@@ -30,11 +30,16 @@ public class Cloner {
     private GraphDatabaseService neoIn;
     private GraphDatabaseService neoOut;
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private HashMap<String, Integer> skillLevel = new HashMap<String, Integer>();
 
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
     private XStream xstream = new XStream(new DomDriver());
 
     public Cloner(String initPath, EmbeddedReadOnlyGraphDatabase neoIn, EmbeddedGraphDatabase neoOut) throws ClassNotFoundException, IOException {
+
+        skillLevel.put("Viss", 1);
+        skillLevel.put("God", 2);
+        skillLevel.put("Avancerad", 3);
 
         this.neoIn = neoIn;
         this.neoOut = neoOut;
@@ -177,6 +182,34 @@ public class Cloner {
     }
 
     public void cloneLanguages() {
+
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
+
+        Traverser languageskills = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
+                StopEvaluator.END_OF_GRAPH, returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.OUTGOING
+
+        );
+
+        for (Node languageskill : languageskills) {
+
+            Map<String, Object> properties = new TreeMap<String, Object>();
+            addMultipleIfExists(languageskill, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "language"}, properties);
+
+            properties.put("written", skillLevel.get(languageskill.getProperty("written", "Viss")));
+            properties.put("spoken", skillLevel.get(languageskill.getProperty("spoken", "Viss")));
+
+            if (properties.containsKey("language")) {
+                idMap.put(languageskill.getId(), createNode(properties));
+                createLink(languageskill.getSingleRelationship(new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.INCOMING));
+            }
+        }
 
 
     }
@@ -409,6 +442,7 @@ public class Cloner {
         cloner.cloneEmployees();
         cloner.cloneUnits();
         cloner.createEmployments();
+        cloner.cloneLanguages();
         cloner.shutdown();
 
     }
