@@ -241,8 +241,17 @@ public class Cloner {
                     "name", "company", "trade", "country", "assignment"
             }, properties);
 
-            properties.put("to", toDate(workExperience.getProperty("to")));
-            properties.put("from", toDate(workExperience.getProperty("from")));
+
+            try {
+                properties.put("to", toDate(workExperience.getProperty("to")));
+            } catch (Exception e) {
+                //no-op
+            }
+            try {
+                properties.put("from", toDate(workExperience.getProperty("from")));
+            } catch (Exception e) {
+               //no-op
+            }
             idMap.put(workExperience.getId(), createNode(properties));
             try {
                 createLink(workExperience.getSingleRelationship(new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.INCOMING));
