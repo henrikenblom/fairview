@@ -25,6 +25,7 @@ public class DateTool {
         possibleFormat.add(new SimpleDateFormat("yyyyMMdd"));
         possibleFormat.add(new SimpleDateFormat("yyyy MM dd"));
         possibleFormat.add(new SimpleDateFormat("dd MMM yyyy"));
+        possibleFormat.add(new SimpleDateFormat("yyyy"));
 
     }
 

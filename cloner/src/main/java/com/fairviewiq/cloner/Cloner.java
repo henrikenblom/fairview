@@ -221,6 +221,49 @@ public class Cloner {
 
     }
 
+    public void cloneCourses() {
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
+
+        Traverser traverser = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH,
+                returnEvaluator, new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING, new SimpleRelationshipType("HAS_COURSE"),
+                Direction.OUTGOING);
+
+        Set<Node> courses = new HashSet<Node>();
+        for (Node course : traverser) {
+            courses.add(course);
+        }
+
+        for (Node course : courses) {
+            Relationship employeeRelationship = course.getSingleRelationship(new SimpleRelationshipType("HAS_COURSE"), Direction.INCOMING);
+            if (idMap.containsKey(employeeRelationship.getStartNode().getId())) {
+
+                Map<String, Object> properties = new TreeMap<String, Object>();
+                addMultipleIfExists(course, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                        "name", "description"}, properties);
+
+                try {
+                    properties.put("from", toDate(course.getProperty("from", "")));
+                } catch (Exception ex) {
+                    //no-op
+                }
+                try {
+                    properties.put("to", toDate(course.getProperty("to", "")));
+                } catch (Exception e) {
+                    //no-op
+                }
+
+                idMap.put(course.getId(), createNode(properties));
+                createLink(employeeRelationship);
+            }
+        }
+
+    }
+
     public void cloneUnits() {
 
         ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
@@ -396,18 +439,17 @@ public class Cloner {
 
     }
 
-    private Date toDate(Object stringValue) {
+    private Date toDate(Object stringValue) throws Exception {
 
         Date retval = null;
-        try {
 
-            retval = dateTool.guessDate((String) stringValue);
+        retval = dateTool.guessDate((String) stringValue);
 
-        } catch (Exception ex) {
-            //no-op
-        } finally {
-            return retval;
+        if (retval == null) {
+            throw new Exception();
         }
+
+        return retval;
 
     }
 
@@ -447,6 +489,7 @@ public class Cloner {
         cloner.cloneOrganization();
         cloner.cloneEmployees();
         cloner.cloneUnits();
+        cloner.cloneCourses();
         cloner.createEmployments();
         cloner.cloneLanguages();
         cloner.shutdown();
