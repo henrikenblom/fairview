@@ -150,8 +150,8 @@ function generateProfileGeneralForm(data) {
 }
 
 function addManager(formId, unitId) {
-    var managerDiv = selectInputComponent('Chef', 'manager' + formId, 'manager-field', formId, false);
-    addManagerOptions(unitId, managerDiv.children('#manager' + formId + "-field"));
+    var managerDiv = selectInputComponent('Chef', 'HAS_MANAGER:relationship', 'manager-field', formId, false);
+    addManagerOptions(unitId, managerDiv.children('select'));
     return managerDiv;
 }
 
@@ -167,7 +167,7 @@ function generateEmploymentCreationForm(data) {
     if (employeeId != null && employmentId != null && employmentId != '')
         formId = 'employment_form' + employeeId;
 
-    var form = buildUpdateForm(formId, "fairview/ajax/set_employment.do");
+    var form = buildUpdateForm(formId);
 
     var fieldSet = $('<fieldset>');
 
@@ -186,7 +186,7 @@ function generateEmploymentCreationForm(data) {
 
     var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
     var workPhoneDiv = textInputComponent('Arbetstelefon', 'workphone', propValue(properties.workphone), formId, false);
-    var workingHoursDiv = textInputComponent('Arbetstider', 'workpours', propValue(properties.workhours), formId, false);
+    var workingHoursDiv = textInputComponent('Arbetstider', 'workhours', propValue(properties.workhours), formId, false);
     var responsibilitys = [
         ['managementteam', 'Ledningsgrupp', boolPropValue(properties.managementteam)],
         ['budgetresponsibility', 'Budgetansvar', boolPropValue(properties.budgetresponsibility)],
@@ -194,20 +194,20 @@ function generateEmploymentCreationForm(data) {
         ['authorizationright', 'Attesträtt', boolPropValue(properties.authorizationright)]
     ];
     var responsibilityDiv = checkboxInputComponent('Ansvar/Befogenheter', formId, responsibilitys);
-    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationamount', propValue(properties.authorizationamount), formId, false);
+    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationamount:int', propValue(properties.authorizationamount), formId, false);
 
     var paymentFormDiv = selectInputComponent('Löneform', 'paymentform', 'paymentFormDiv', formId, false);
     addPaymentFormOption(properties.paymentform, paymentFormDiv.children('#paymentform-field'));
 
-    var unitDiv = createUnitSelect('Enhet', 'unit', 'unitDiv', formId, false, unitId);
+    var unitDiv = createUnitSelect('Enhet', 'BELONGS_TO:relationship', 'unitDiv', formId, false, unitId);
 
-    var salaryDiv = textInputComponent('Aktuell lön', 'salary', propValue(properties.salary), formId, false);
-    var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimecompensation', formId, yesNo(), propValue(properties.overtimecompensation));
-    var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelcompensation', formId, yesNo(), propValue(properties.travelcompensation));
-    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays', propValue(properties.vacationdays), formId, false);
-    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee', 'dismissalPeriodEmployeeDiv', formId, false);
+    var salaryDiv = textInputComponent('Aktuell lön', 'salary:int', propValue(properties.salary), formId, false);
+    var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimecompensation:boolean', formId, yesNo(), propValue(properties.overtimecompensation));
+    var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelcompensation:boolean', formId, yesNo(), propValue(properties.travelcompensation));
+    var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays:int', propValue(properties.vacationdays), formId, false);
+    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee:int', 'dismissalPeriodEmployeeDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployee, dismissalPeriodEmployeeDiv.children('#dismissalperiodemployee-field'));
-    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer', 'dismissalPeriodEmployerDiv', formId, false);
+    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
     var companyCarDiv = textInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, false);
 
@@ -258,15 +258,15 @@ function generateLanguageForm(form_Id, languageNode) {
 
     var language = textInputComponent('Språk', 'language', languageString, formId, false);
 
-    var written = selectInputComponent('Skriftligt', 'written', 'written-field', formId, false);
-    written.children('#written-field').append(generateOption('some', writtenString, 'Viss'));
-    written.children('#written-field').append(generateOption('good', writtenString, 'God'));
-    written.children('#written-field').append(generateOption('advanced', writtenString, 'Advancerad'));
+    var written = selectInputComponent('Skriftligt', 'written', 'written-field:byte', formId, false);
+    written.children('#written-field').append(generateOption('1', writtenString, 'Viss'));
+    written.children('#written-field').append(generateOption('2', writtenString, 'God'));
+    written.children('#written-field').append(generateOption('3', writtenString, 'Advancerad'));
 
-    var spoken = selectInputComponent('Muntligt', 'spoken', 'spoken-field', formId, false);
-    spoken.children('#spoken-field').append(generateOption('some', spokenString, 'Viss'));
-    spoken.children('#spoken-field').append(generateOption('good', spokenString, 'God'));
-    spoken.children('#spoken-field').append(generateOption('advanced', spokenString, 'Advancerad'));
+    var spoken = selectInputComponent('Muntligt', 'spoken', 'spoken-field:byte', formId, false);
+    spoken.children('#spoken-field').append(generateOption('1', spokenString, 'Viss'));
+    spoken.children('#spoken-field').append(generateOption('2', spokenString, 'God'));
+    spoken.children('#spoken-field').append(generateOption('3', spokenString, 'Advancerad'));
 
     languageForm.append(hiddenField_id, hiddenField_strict,
         language, written, spoken);
@@ -310,8 +310,8 @@ function generateEducationForm(form_Id, educationNode) {
     var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
     var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
     var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
@@ -361,8 +361,8 @@ function generateCertificateForm(form_Id, certificateNode) {
 
     var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
     var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict,
@@ -373,6 +373,7 @@ function generateCertificateForm(form_Id, certificateNode) {
 }
 
 function generateWorkExperienceForm(form_Id, workExperienceNode) {
+
     var formId = form_Id;
 
     var nameString = '';
@@ -406,8 +407,8 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
     var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
@@ -888,13 +889,11 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
             async: false,
             url:'fairview/ajax/get_units.do', success: function(data) {
 
-                var option;
-
-                if(data.list != null && data.list.node.length > 1) {
+                try {
 
                     $.each(data.list.node, function(i) {
 
-                        option = $('<option>');
+                        var option = $('<option>');
                         option.html(data.list.node[i].properties.name.value);
                         option.attr('value', data.list.node[i].id);
 
@@ -904,42 +903,20 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
                         selectInput.append(option);
                     });
 
-                } else {
+                } catch(e) {
 
-                    option = $('<option>');
-                    option.html(data.list.properties.name.value);
-                    option.attr('value', data.list.id);
+                    var option = $('<option>');
+                    option.html(data.list.node.properties.name.value);
+                    option.attr('value', data.list.node.id);
                     option.attr('selected', 'selected');
                     selectInput.append(option);
+
                 }
             }
         }
     );
 
     return selectDiv;
-
-}
-
-function populateUnitSelect(inputElement) {
-
-    $.ajax({
-            dataType: 'json',
-            async: false,
-            url:'fairview/ajax/get_units.do', success: function(data) {
-
-                $.each(data.list.node, function(i) {
-
-                    var option = $('<option>');
-                    option.html(data.list.node[i].properties.name.value);
-                    option.attr('value', data.list.node[i].id);
-
-                    inputElement.append(option);
-
-                });
-
-            }
-        }
-    );
 
 }
 
@@ -967,6 +944,7 @@ function addDismissalPeriod(dismissalPeriod, dismissalPeriodInputElement) {
     {
         var optionChoose = $('<option>');
         optionChoose.html('Välj...');
+        optionChoose.val(-1);
         optionChoose.attr('selected', 'true');
         dismissalPeriodInputElement.append(optionChoose);
     }
@@ -1232,14 +1210,20 @@ function validateForm(formId) {
         return false;
     }
 }
-function selectInputComponent(labelText, inputName, divId, formId, required) {
+function selectInputComponent(labelText, propertyName, divId, formId, required) {
+
     var selectDiv = fieldBox();
     selectDiv.attr("id", divId);
+
     var selectLabel = fieldLabelBox();
     selectLabel.append(labelText);
+
     var selectInput = $('<select>');
-    selectInput.attr("name", inputName);
-    selectInput.attr("id", inputName + "-field");
+
+    var inputId = propertyName.split(":")[0];
+
+    selectInput.attr("name", propertyName);
+    selectInput.attr("id", inputId + "-field");
     selectInput.change(function() {
         $('#' + formId).data('edited', 'true');
         validateForm(formId);
@@ -1248,23 +1232,9 @@ function selectInputComponent(labelText, inputName, divId, formId, required) {
         makeInputRequired(selectLabel, selectInput);
     }
     selectDiv.append(selectLabel, selectInput, $('<br>'));
-    return selectDiv;
-}
 
-function functionSelectInputComponent(labelText, inputName, divId, formId, required) {
-    var selectDiv = fieldBox();
-    selectDiv.attr("id", divId);
-    var selectLabel = fieldLabelBox();
-    selectLabel.append(labelText);
-    var selectInput = $('<select>');
-    selectInput.attr("name", inputName);
-    selectInput.attr("id", inputName + "-field");
-    selectInput.change(function() {
-        validateForm(formId);
-        $('#' + formId).data('edited', 'true');
-    });
-    selectDiv.append(selectLabel, selectInput, $('<br>'));
     return selectDiv;
+
 }
 
 function editTreeNamesOnChange(newVal, unitId) {
@@ -1322,8 +1292,8 @@ function getFunctions(unitId) {
 
 function yesNo() {
     return  [
-        ['Ja', 'Yes'],
-        ['Nej', 'No']
+        ['Ja', true],
+        ['Nej', false]
     ];
 }
 

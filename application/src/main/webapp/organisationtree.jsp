@@ -83,7 +83,7 @@
                 $('#subunitform').ajaxSubmit(function(data) {
                     $.getJSON("neo/ajax/create_relationship.do", {_startNodeId:unitId, _endNodeId: data.node.id,_type:"HAS_UNIT" },
                             function() {
-                                assignManager(data.node.id, $('#subunitform #managersubunitform-field').val(), reloadPage);
+                                reloadPage();
                             });
                 });
             });
@@ -117,19 +117,12 @@
 
             saveButton.children('.saveButton').click(function() {
                 editTreeNamesOnChange($('#name-field').val(), data.node.id);
-                assignManager(data.node.id, $('#managerorganizationForm-field').val());
             });
             $('#unitsettings-general').append(saveButton);
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
             addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
         }
 
-        function assignManager(unitId, managerId, callback) {
-            $.getJSON("fairview/ajax/assign_manager.do", {_startNodeId:unitId, _endNodeId:managerId}, function() {
-                if (typeof(callback) == 'function')
-                    callback.call();
-            });
-        }
     </script>
 </head>
 <body onload="onload(<%= organization.getId()%>)" onresize="adjustViewPort()">
