@@ -199,18 +199,24 @@ public class Cloner {
 
         for (Node languageskill : languageskills) {
 
-            Map<String, Object> properties = new TreeMap<String, Object>();
-            addMultipleIfExists(languageskill, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "language"}, properties);
+            Relationship employeeRelationship = languageskill.getSingleRelationship(new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.INCOMING);
 
-            properties.put("written", skillLevel.get(languageskill.getProperty("written", "Viss")));
-            properties.put("spoken", skillLevel.get(languageskill.getProperty("spoken", "Viss")));
+            if (idMap.containsKey(employeeRelationship.getStartNode().getId())) {
 
-            if (properties.containsKey("language")) {
-                idMap.put(languageskill.getId(), createNode(properties));
-                createLink(languageskill.getSingleRelationship(new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.INCOMING));
+                Map<String, Object> properties = new TreeMap<String, Object>();
+                addMultipleIfExists(languageskill, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "language"}, properties);
+
+                properties.put("written", skillLevel.get(languageskill.getProperty("written", "Viss")));
+                properties.put("spoken", skillLevel.get(languageskill.getProperty("spoken", "Viss")));
+
+                if (properties.containsKey("language")) {
+                    idMap.put(languageskill.getId(), createNode(properties));
+                    createLink(employeeRelationship);
+                }
+
             }
-        }
 
+        }
 
     }
 
