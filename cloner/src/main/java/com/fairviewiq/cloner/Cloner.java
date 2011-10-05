@@ -220,7 +220,8 @@ public class Cloner {
         }
 
     }
-    
+
+
     public void cloneWorkExperience() {
         ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
             public boolean isReturnableNode(TraversalPosition position) {
@@ -250,9 +251,11 @@ public class Cloner {
             try {
                 properties.put("from", toDate(workExperience.getProperty("from")));
             } catch (Exception e) {
-               //no-op
+                //no-op
             }
-            idMap.put(workExperience.getId(), createNode(properties));
+            if (properties.containsKey("name")) {
+                idMap.put(workExperience.getId(), createNode(properties));
+            }
             try {
                 createLink(workExperience.getSingleRelationship(new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.INCOMING));
             } catch (Exception e) {
@@ -300,8 +303,59 @@ public class Cloner {
                     //no-op
                 }
 
-                idMap.put(course.getId(), createNode(properties));
-                createLink(employeeRelationship);
+                if (properties.containsKey("name")) {
+                    idMap.put(course.getId(), createNode(properties));
+                    createLink(employeeRelationship);
+                }
+            }
+        }
+
+    }
+
+    public void cloneEducations() {
+
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
+
+        Traverser traverser = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH,
+                returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EDUCATION"), Direction.OUTGOING);
+
+        Set<Node> educations = new HashSet<Node>();
+        for (Node education : traverser) {
+            educations.add(education);
+        }
+
+        for (Node education : educations) {
+
+            Relationship employeeRelationship = education.getSingleRelationship(new SimpleRelationshipType("HAS_EDUCATION"), Direction.INCOMING);
+
+            if (idMap.containsKey(employeeRelationship.getStartNode().getId())) {
+
+                Map<String, Object> properties = new TreeMap<String, Object>();
+                addMultipleIfExists(education, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                        "name", "description", "level", "direction", "scope", "country"}, properties);
+
+                try {
+                    properties.put("from", toDate(education.getProperty("from", "")));
+                } catch (Exception ex) {
+                    //no-op
+                }
+                try {
+                    properties.put("to", toDate(education.getProperty("to", "")));
+                } catch (Exception e) {
+                    //no-op
+                }
+
+                if (properties.containsKey("name")) {
+                    idMap.put(education.getId(), createNode(properties));
+                    createLink(employeeRelationship);
+                }
             }
         }
 
@@ -400,7 +454,7 @@ public class Cloner {
             }
             tx.success();
         } catch (Exception e) {
-              System.out.println("hello world");
+            System.out.println("hello world");
         } finally {
             tx.finish();
         }
@@ -538,6 +592,7 @@ public class Cloner {
         cloner.createEmployments();
         cloner.cloneLanguages();
         cloner.cloneWorkExperience();
+        cloner.cloneEducations();
         cloner.shutdown();
 
     }
