@@ -311,8 +311,8 @@ function generateEducationForm(form_Id, educationNode) {
     var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
     var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
     var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
@@ -362,8 +362,8 @@ function generateCertificateForm(form_Id, certificateNode) {
 
     var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
     var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict,
@@ -408,8 +408,8 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
     var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
     var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from:date:MM/dd/yyyy', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to:date:MM/dd/yyyy', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
+    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict,
@@ -1022,7 +1022,13 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("id", inputName + "_" + formId);
     textInput.attr("name", inputName);
     textInput.val(value);
-    textInput.datepicker();
+    textInput.datepicker({  changeYear: true,
+                            changeMonth:true,
+                            yearRange: "-20:+1",
+                            dateFormat: "yy-mm-dd",
+                            firstDay: 1,
+                            showMonthAfterYear: true
+                        });
     textInput.change(function() {
         $('#' + formId).data('edited', 'true');
     });
