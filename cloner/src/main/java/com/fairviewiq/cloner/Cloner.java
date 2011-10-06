@@ -88,6 +88,9 @@ public class Cloner {
 
         }, properties);
         addMultipleIfExists(address, new String[]{"address", "postalcode", "city", "country"}, properties);
+
+        properties.put("nodeclass", "organization");
+
         idMap.put(organization.getId(), createNode(properties));
 
         /* Create the link */
@@ -114,6 +117,9 @@ public class Cloner {
                     "firstname", "lastname", "email", "address", "birthday", "cell", "city", "civic", "country",
                     "gender", "nationality", "phone", "zip", "additional_info"
             }, properties);
+
+            properties.put("nodeclass", "employee");
+
             if (properties.containsKey("firstname")) {
                 idMap.put(employee.getId(), createNode(properties));
                 createLink(employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.INCOMING));
@@ -174,6 +180,8 @@ public class Cloner {
 
                 properties.put("title", oldFunctionNode.getProperty("name", ""));
 
+                properties.put("nodeclass", "employment");
+
                 createNewLink(idMap.get(employee.getId()), createNode(properties), "HAS_EMPLOYMENT");
 
             }
@@ -209,6 +217,8 @@ public class Cloner {
 
                 properties.put("written", skillLevel.get(languageskill.getProperty("written", "Viss")));
                 properties.put("spoken", skillLevel.get(languageskill.getProperty("spoken", "Viss")));
+
+                properties.put("nodeclass", "languageskill");
 
                 if (properties.containsKey("language")) {
                     idMap.put(languageskill.getId(), createNode(properties));
@@ -253,6 +263,9 @@ public class Cloner {
             } catch (Exception e) {
                 //no-op
             }
+
+            properties.put("nodeclass", "workexperience");
+
             if (properties.containsKey("name")) {
                 idMap.put(workExperience.getId(), createNode(properties));
             }
@@ -303,6 +316,8 @@ public class Cloner {
                     //no-op
                 }
 
+                properties.put("nodeclass", "course");
+
                 if (properties.containsKey("name")) {
                     idMap.put(course.getId(), createNode(properties));
                     createLink(employeeRelationship);
@@ -352,6 +367,8 @@ public class Cloner {
                     //no-op
                 }
 
+                properties.put("nodeclass", "education");
+
                 if (properties.containsKey("name")) {
                     idMap.put(education.getId(), createNode(properties));
                     createLink(employeeRelationship);
@@ -386,6 +403,8 @@ public class Cloner {
             addMultipleIfExists(unit, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
                     "name", "description", "phone", "fax", "email", "web", "address", "postalcode", "city", "country"}, properties);
             idMap.put(unit.getId(), createNode(properties));
+
+            properties.put("nodeclass", "unit");
 
             /* Link the unit to the manager */
             createLink(unit.getSingleRelationship(new SimpleRelationshipType("HAS_MANAGER"), Direction.OUTGOING));
