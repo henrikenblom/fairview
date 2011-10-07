@@ -210,12 +210,15 @@ function generateEmploymentCreationForm(data) {
     var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
     var companyCarDiv = textInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, false);
+    var fromDiv = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', ISODateString(propValue(properties.from)), formId, false);
+    var toDiv = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', propValue(properties.to), formId, false);
 
     var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, false);
     fieldSet.append(hiddenField_type,
         hiddenField_strict,
         hiddenField_username,
         titleDiv, unitDiv, '<br />',
+        fromDiv, toDiv, '<br />',
         workPhoneDiv,
         workingHoursDiv,
         responsibilityDiv, '<br />',
@@ -1254,4 +1257,15 @@ function translatePseudoCheckbox(event, form_name) {
 
     $('#' + form_name).ajaxSubmit();
 
+}
+
+function ISODateString(d){
+
+  function pad(n){
+    return n<10 ? '0'+n : n;
+  }
+
+  return d.getUTCFullYear()+'-'
+    + pad(d.getUTCMonth()+1)+'-'
+    + pad(d.getUTCDate())
 }
