@@ -611,14 +611,17 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
             $.getJSON("neo/ajax/create_relationship.do",
                 {_startNodeId:organizationNode['node'].id, _endNodeId: createdEmployee.node.id,_type:'HAS_EMPLOYEE' },
                 function() {
-                    var callbackMade = false;
+                    var dirtyFormExists = false;
                     $.each(forms, function(i, form) {
                         if ($(form).attr('id') != 'new_person_form' && $(form).data('edited') == 'true') {  //don't create the relationship twice
-                            callbackMade = true;
-                            createNodeWithRelationship(form, createdEmployee.node.id, callback);
+                            dirtyFormExists = true;
+                            if (i == (forms.length - 1))
+                                createNodeWithRelationship(form, createdEmployee.node.id, callback);
+                            else
+                                createNodeWithRelationship(form, createdEmployee.node.id);
                         }
                     });
-                    if (!callbackMade){
+                    if (!dirtyFormExists) { //if no dirty forms were submitted, no callback was made and thus we make it here instead
                         if (typeof(callback) == 'function')
                             callback.call();
                     }
@@ -629,7 +632,11 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
 function createNodes(forms, nodeId, callback) {
     $.each(forms, function(i, form) {
         if ($(form).data('edited') == 'true') {
-            createNodeWithRelationship(form, nodeId, callback, i);
+            if (i == (forms.length - 1))
+                createNodeWithRelationship(form, nodeId, callback);
+            else
+                createNodeWithRelationship(form, nodeId);
+
         }
     });
 }
@@ -644,14 +651,14 @@ function generateSaveButton(nodeId, callback) {
         saveButton.html('Sparar...');
         setTimeout(closePopup, 500);
 
-        var forms = $('form');
-        var newPerson = existsNewPersonForm(forms);
+        var editedForms = $('form:data(edited=true)');
+        var newPerson = existsNewPersonForm(editedForms);
 
         if (newPerson == true) { //in order for other nodes to be created, they need a person node to create a relationship to
-            createPersonNodeBeforeCreatingOtherNodes(forms, callback);
+            createPersonNodeBeforeCreatingOtherNodes(editedForms, callback);
         }
         else {
-            createNodes(forms, nodeId, callback);
+            createNodes(editedForms, nodeId, callback);
         }
     });
 
@@ -979,12 +986,12 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("name", inputName);
     textInput.val(value);
     textInput.datepicker({  changeYear: true,
-                            changeMonth:true,
-                            yearRange: "-50:+1",
-                            dateFormat: "yy-mm-dd",
-                            firstDay: 1,
-                            showMonthAfterYear: true
-                        });
+        changeMonth:true,
+        yearRange: "-50:+1",
+        dateFormat: "yy-mm-dd",
+        firstDay: 1,
+        showMonthAfterYear: true
+    });
     textInput.change(function() {
         $('#' + formId).data('edited', 'true');
     });
