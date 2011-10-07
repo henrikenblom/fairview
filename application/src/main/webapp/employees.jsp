@@ -46,7 +46,7 @@
                     { "mDataProp": "lastname" },
                     { "mDataProp": "unit_name" },
                     { "mDataProp": "employment_title" },
-                    { "mDataProp": null,  "sWidth": 10, fnRender: getDeleteIcon, "bSortable": false, "bSearchable": false  }
+                    { "mDataProp": null,  "sWidth": 10, fnRender: getEmployeeDeleteButton, "bSortable": false, "bSearchable": false  }
 
                 ],
                 "fnDrawCallback" : function() {

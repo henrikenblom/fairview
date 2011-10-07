@@ -39,7 +39,8 @@
                     { "mDataProp": "unit_name"},
                     { "mDataProp": "employment_title" },
                     { "mDataProp": "firstname" },
-                    { "mDataProp": "lastname" }
+                    { "mDataProp": "lastname" },
+                    { "mDataProp": null,  "sWidth": 10, fnRender: getEmploymentDeleteButton, "bSortable": false, "bSearchable": false  }
                 ],
                 "fnDrawCallback" : function() {
                     var datatable = this;
@@ -116,6 +117,7 @@
                     <th>Titel</th>
                     <th>Förnamn</th>
                     <th>Efternamn</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -127,6 +129,7 @@
                     <th>Titel</th>
                     <th>Förnamn</th>
                     <th>Efternamn</th>
+                    <th></th>
                 </tr>
                 </tfoot>
             </table>

@@ -159,7 +159,7 @@ function generateProfileForm(unitId) {
 }
 
 //---Delete
-function getDeleteIcon(obj) {
+function getEmployeeDeleteButton(obj) {
     return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
@@ -172,4 +172,8 @@ function deleteRow(id) {
     $.getJSON("neo/ajax/delete_node.do", {_nodeId: id}, function() {
         updateTable(oTable);
     });
+}
+
+function getEmploymentDeleteButton(obj) {
+    return "<a title='ta bort anställning' onclick='deleteAlert(" + obj.aData.employment_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
