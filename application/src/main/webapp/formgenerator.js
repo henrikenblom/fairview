@@ -961,7 +961,7 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
     textInput.val(value);
     textInput.datepicker({  changeYear: true,
                             changeMonth:true,
-                            yearRange: "-20:+1",
+                            yearRange: "-50:+1",
                             dateFormat: "yy-mm-dd",
                             firstDay: 1,
                             showMonthAfterYear: true
