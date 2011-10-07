@@ -214,6 +214,8 @@ function generateEmploymentCreationForm(data) {
     var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
     var companyCarDiv = textInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, false);
+    var fromDiv = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', propValue(properties.from), formId, false);
+    var toDiv = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', propValue(properties.to), formId, false);
 
     var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, false);
     fieldSet.append(hiddenField_type,
@@ -221,6 +223,7 @@ function generateEmploymentCreationForm(data) {
         hiddenField_username,
         hiddenField_nodeClass,
         titleDiv, unitDiv, '<br />',
+        fromDiv, toDiv, '<br />',
         workPhoneDiv,
         workingHoursDiv,
         responsibilityDiv, '<br />',
