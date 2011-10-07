@@ -13,7 +13,7 @@
     <title>Infero Quest - Personer</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
-    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
+    <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/plugins/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.dataTables.js"></script>
     <script type="text/javascript" src="js/popupControls.js"></script>
