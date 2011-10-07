@@ -160,7 +160,7 @@ function generateProfileForm(unitId) {
 
 //---Delete
 function getDeleteIcon(obj) {
-    return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.node_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+    return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
 function deleteAlert(id) {
