@@ -569,7 +569,7 @@ function updateTableCallback(datatable) {
         }
 }
 
-function createNodeWithRelationship(form, nodeId, callback, i) {
+function createNodeWithRelationship(form, nodeId, callback) {
     $(form).ajaxSubmit(function(data) {
         var formId = $(form).attr('id').replace(/\d+/, '');
         switch (formId) {
@@ -607,12 +607,18 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
         $.getJSON("fairview/ajax/get_organization_node.do", function(organizationNode) {
             $.getJSON("neo/ajax/create_relationship.do",
                 {_startNodeId:organizationNode['node'].id, _endNodeId: createdEmployee.node.id,_type:'HAS_EMPLOYEE' },
-                function(relationshipData) {
+                function() {
+                    var callbackMade = false;
                     $.each(forms, function(i, form) {
-                        if ($(form).attr('id') != 'new_person_form') {  //don't create the relationship twice
-                            createNodeWithRelationship(form, createdEmployee.node.id, callback, i);
+                        if ($(form).attr('id') != 'new_person_form' && $(form).data('edited') == 'true') {  //don't create the relationship twice
+                            callbackMade = true;
+                            createNodeWithRelationship(form, createdEmployee.node.id, callback);
                         }
                     });
+                    if (!callbackMade){
+                        if (typeof(callback) == 'function')
+                            callback.call();
+                    }
                 });
         });
     });
