@@ -448,10 +448,6 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
     return div;
 }
 
-function addEmployee() {
-    openEmployeeForm();
-}
-
 function addEducationButton(nodeId) {
     var button = $('<button>');
     button.attr('id', 'educationButton')
@@ -752,43 +748,6 @@ function footerButtonsComponent(nodeId, callback) {
     return saveDiv;
 }
 
-function addFunctionOptions(functionInputElement, unitId, assignedFunctionId) {
-    var func = getFunctions(unitId);
-
-    if (func.map.entry == null) { // True if the unit has no assigned function, and no functions are available
-        var nooneavailableOption = $('<option>');
-        nooneavailableOption.html('Inga lediga funktioner finns.');
-        nooneavailableOption.attr('selected', 'true');
-        nooneavailableOption.attr('value', -1);
-        functionInputElement.append(nooneavailableOption);
-    } else {
-        if (assignedFunctionId == -1) {
-            var chooseOption = $('<option>');
-            chooseOption.html('Välj...');
-            chooseOption.attr('selected', 'true');
-            chooseOption.attr('value', -1);
-            functionInputElement.append(chooseOption);
-        }
-        if (func.map.entry.length > 1) {
-            $.each(func.map.entry, function(nr, value) {
-                var functionOption = $('<option>');
-                functionOption.attr('value', value.long);
-                functionOption.html(value.string);
-                if (assignedFunctionId == value.long)
-                    functionOption.attr('selected', 'true');
-                functionInputElement.append(functionOption);
-            });
-        } else {  //if the map contains only one entry, it is not considered an array by javascript but rather a single value
-            var functionOption = $('<option>');
-            functionOption.attr('value', func.map.entry.long);
-            functionOption.html(func.map.entry.string);
-            if (assignedFunctionId == func.map.entry.long)
-                functionOption.attr('selected', 'true');
-            functionInputElement.append(functionOption);
-        }
-    }
-}
-
 function addGenderOptions(gender, genderInputElement) {
     var optionMan = $('<option>');
     optionMan.attr('value', 'M');
@@ -843,28 +802,6 @@ function addManagerOptions(unitId, managerInputElement) {
             createManagerList(assignedManagerId, managerInputElement);
         });
     }
-}
-
-function addEmploymentOptions(employment, employmentInputElement) {
-
-    var employmentOptions = new Array('Tills vidare', 'Provanställning', 'Visstidsanställning', 'Projektanställning', 'Säsongsanställning',
-        'Timanställning');
-
-    if (propValue(employment) == '' || propValue(employment) == 'Välj...') {
-        var optionChoose = $('<option>');
-        optionChoose.html('Välj...');
-        optionChoose.attr('selected', 'true');
-        employmentInputElement.append(optionChoose)
-    }
-
-    $.each(employmentOptions, function(i, data) {
-        var optionDiv = $('<option>');
-        optionDiv.attr('value', data);
-        optionDiv.html(data);
-        if (propValue(employment) == data)
-            optionDiv.attr('selected', 'true');
-        employmentInputElement.append(optionDiv);
-    });
 }
 
 function createUnitSelect(labelText, inputName, divId, formId, required, unitId) {
@@ -1278,15 +1215,6 @@ function generateSingleAddressComponent(data) {
     return addressComponent;
 }
 
-function getRelationshipData(parentNode) {
-    var data = $.parseJSON($.ajax({
-        url:"neo/ajax/create_relationship.do",
-        data:{_startNodeId:parentNode, _type:"HAS_UNIT"},
-        async:false,
-        dataType:"json"
-    }).responseText);
-    return data;
-}
 function getFunctions(unitId) {
     var data = $.parseJSON($.ajax({
         url:"fairview/ajax/get_functions.do",
