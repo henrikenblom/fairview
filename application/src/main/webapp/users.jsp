@@ -17,9 +17,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Infero Quest - Systemanvändare</title>
         <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8" />
-        <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="iq.js"></script>
-        <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery-1.4.4.min.js"></script>
+        <script type="text/javascript" src="js/iq.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery.form.js"></script>
         <script type="text/javascript">
 
             var hasLogin = false;
