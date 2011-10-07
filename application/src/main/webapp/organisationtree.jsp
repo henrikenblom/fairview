@@ -27,6 +27,7 @@
     <script type="text/javascript" src="js/plugins/jquery.curvycorners.source.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
