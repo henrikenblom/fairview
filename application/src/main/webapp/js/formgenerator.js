@@ -19,6 +19,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var hiddenField_id = hiddenField('_nodeId', unitId);
     var hiddenField_strict = hiddenField('_strict', 'true');
     var hiddenField_username = hiddenField('_username', 'admin');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'unit');
 
     var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', propValue(properties.description), formId, 'descriptionDiv');
 
@@ -30,7 +31,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId, false);
 
     //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_username, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, faxDiv,
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_username, hiddenField_nodeClass, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, faxDiv,
         emailDiv, webDiv);
     updateForm.append(fieldSet);
     updateForm.validate();
@@ -48,6 +49,7 @@ function generateSubunitCreationForm() {
 
     var hiddenField_id = hiddenField('_nodeId', null);
     var hiddenField_strict = hiddenField('_strict', 'true');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'unit');
 
     var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', '', formId, 'descriptionDiv');
 
@@ -62,7 +64,7 @@ function generateSubunitCreationForm() {
     var cityDiv = textInputComponent('Ort', 'city', '', getSubUnitCreationFormId());
     var countryDiv = textInputComponent('Land', 'country', '', getSubUnitCreationFormId());
 
-    fieldSet.append(hiddenField_id, hiddenField_strict, nameDiv, '<br/>', descriptionDiv, phoneDiv, faxDiv, emailDiv,
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass, nameDiv, '<br/>', descriptionDiv, phoneDiv, faxDiv, emailDiv,
         webDiv, addressDiv, postnummerDiv, cityDiv, countryDiv);
     form.append(fieldSet);
     form.validate();
@@ -119,6 +121,7 @@ function generateProfileGeneralForm(data) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_birthday = hiddenField('birthday', civicString);
     var hiddenField_authorization = hiddenField('authorization', authorizationString);
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'employee');
 
     var firstNameDiv = textInputComponent('Förnamn', 'firstname', firstNameString, formId, true);
     var lastNameDiv = textInputComponent('Efternamn', 'lastname', lastNameString, formId, true);
@@ -139,7 +142,7 @@ function generateProfileGeneralForm(data) {
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId, true);
     addGenderOptions(genderString, genderDiv.children('#gender-field'));
 
-    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization,
+    fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization, hiddenField_nodeClass,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
         zipDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
 
@@ -183,6 +186,7 @@ function generateEmploymentCreationForm(data) {
     var hiddenField_type = hiddenField('_type', 'node');
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_username = hiddenField('_username', 'admin');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'employment');
 
     var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
     var workPhoneDiv = textInputComponent('Arbetstelefon', 'workphone', propValue(properties.workphone), formId, false);
@@ -217,6 +221,7 @@ function generateEmploymentCreationForm(data) {
     fieldSet.append(hiddenField_type,
         hiddenField_strict,
         hiddenField_username,
+        hiddenField_nodeClass,
         titleDiv, unitDiv, '<br />',
         fromDiv, toDiv, '<br />',
         workPhoneDiv,
@@ -259,6 +264,7 @@ function generateLanguageForm(form_Id, languageNode) {
 
     var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'languageskill');
 
     var language = textInputComponent('Språk', 'language', languageString, formId, false);
 
@@ -272,7 +278,7 @@ function generateLanguageForm(form_Id, languageNode) {
     spoken.children('#spoken-field').append(generateOption('2', spokenString, 'God'));
     spoken.children('#spoken-field').append(generateOption('3', spokenString, 'Advancerad'));
 
-    languageForm.append(hiddenField_id, hiddenField_strict,
+    languageForm.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
         language, written, spoken);
     languageDiv.append(languageForm);
     return languageDiv;
@@ -310,6 +316,7 @@ function generateEducationForm(form_Id, educationNode) {
 
     var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'education');
 
     var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
     var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
@@ -330,7 +337,7 @@ function generateEducationForm(form_Id, educationNode) {
     levelComponent.children('#level-field').append(generateOption('phd', levelString, 'Licentiat eller doktorsexamen'));
     levelComponent.children('#level-field').append(generateOption('professional_license', levelString, 'Yrkeslicens'));
 
-    educationForm.append(hiddenField_id, hiddenField_strict, nameComponent,
+    educationForm.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass, nameComponent,
         levelComponent, directionComponent, scopeComponent, fromComponent, toComponent,
         countryComponent, descriptionComponent);
     educationDiv.append(educationForm);
@@ -362,6 +369,7 @@ function generateCertificateForm(form_Id, certificateNode) {
 
     var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'certificate');
 
     var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
@@ -369,7 +377,7 @@ function generateCertificateForm(form_Id, certificateNode) {
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
     var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
 
-    certificateForm.append(hiddenField_id, hiddenField_strict,
+    certificateForm.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
         nameComponent, descriptionComponent, fromComponent, toComponent
         , gradeComponent);
     certificateDiv.append(certificateForm);
@@ -406,6 +414,7 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
 
     var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'workexperience');
 
     var nameComponent = textInputComponent('Tidigare befattning', 'name', nameString, formId, false);
     var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
@@ -415,7 +424,7 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
-    form.append(hiddenField_id, hiddenField_strict,
+    form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
         nameComponent, companyComponent, tradeComponent, countryComponent,
         fromComponent, toComponent, assignmentComponent);
     div.append(form);
@@ -441,11 +450,12 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
 
     var hiddenField_id = hiddenField('_nodeId', idString);
     var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'militaryservice');
 
     var nameComponent = textInputComponent('Militärtjänst', 'name', nameString, formId, false);
     var descriptionComponent = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'description-field');
 
-    form.append(hiddenField_id, hiddenField_strict,
+    form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
         nameComponent, '<br/>', descriptionComponent);
     div.append(form);
     return div;
