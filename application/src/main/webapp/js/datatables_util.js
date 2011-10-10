@@ -124,6 +124,14 @@ function addTypeValidation() {
             number: true
         });
     });
+
+    var dateInputs = $('input[name*=":date"]');
+
+    $.each(dateInputs, function(count, object) {
+        $(object).rules("add", {
+            date: true
+        });
+    });
 }
 function generateEmploymentForm(data) {
     $('#employment-general').empty().append(generateEmploymentCreationForm(data));
