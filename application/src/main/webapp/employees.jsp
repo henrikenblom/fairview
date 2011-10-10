@@ -46,7 +46,14 @@
                     { "mDataProp": "lastname" },
                     { "mDataProp": "unit_name" },
                     { "mDataProp": "employment_title" },
-                    { "mDataProp": null,  "sWidth": 10, fnRender: getEmployeeDeleteButton, "bSortable": false, "bSearchable": false  }
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj){
+                             if (hasRole('ROLE_ADMIN'))
+                                return getEmployeeDeleteButton(obj);
+                             else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
 
                 ],
                 "fnDrawCallback" : function() {

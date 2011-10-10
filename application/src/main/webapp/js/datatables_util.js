@@ -160,11 +160,16 @@ function generateProfileForm(unitId) {
 
 //---Delete
 function getEmployeeDeleteButton(obj) {
-    return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+    return "<a title='ta bort person' onclick='deleteAlertEmployee(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
-function deleteAlert(id) {
+function deleteAlertEmployee(id) {
     generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+        deleteRow, id);
+}
+
+function deleteAlertEmployment(id) {
+    generateAlertDialog('Borttagning av anställning', 'Är du säker på att du vill ta bort anställningen?',
         deleteRow, id);
 }
 
@@ -175,5 +180,12 @@ function deleteRow(id) {
 }
 
 function getEmploymentDeleteButton(obj) {
-    return "<a title='ta bort anställning' onclick='deleteAlert(" + obj.aData.employment_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+    return "<a title='ta bort anställning' onclick='deleteAlertEmployment(" + obj.aData.employment_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
+function hasRole(role){
+    if ($.inArray(role,ROLELIST) > -1)
+        return true;
+    else
+        return false;
 }

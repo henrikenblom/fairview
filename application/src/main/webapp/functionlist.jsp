@@ -40,7 +40,14 @@
                     { "mDataProp": "employment_title" },
                     { "mDataProp": "firstname" },
                     { "mDataProp": "lastname" },
-                    { "mDataProp": null,  "sWidth": 10, fnRender: getEmploymentDeleteButton, "bSortable": false, "bSearchable": false  }
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj){
+                            if (hasRole('ROLE_ADMIN'))
+                                return getEmploymentDeleteButton(obj);
+                            else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
                 ],
                 "fnDrawCallback" : function() {
                     var datatable = this;
@@ -49,11 +56,9 @@
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentNode);
                         if (this.cellIndex == '2' || this.cellIndex == '3') {  //employee-cell
-                            //initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
                             initEmployeeCell(data, this);
                         }
                         else if (this.cellIndex == '1') { //employment-cell
-                            //initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
                             initEmploymentCell(data, this);
                         }
                         else if (this.cellIndex == '0') { // unit-cell
