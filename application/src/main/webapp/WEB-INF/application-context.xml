@@ -42,7 +42,7 @@
     <security:http>
 
         <security:intercept-url pattern="/login.jsp*" filters="none"/>
-        <security:intercept-url pattern="/images/favicon.ico" filters="none"/>
+        <security:intercept-url pattern="/favicon.ico" filters="none"/>
         <security:intercept-url pattern="/js/**" filters="none"/>
         <security:intercept-url pattern="/css/**" filters="none"/>
         <security:intercept-url pattern="/images/**" filters="none"/>
