@@ -89,20 +89,6 @@
                 return false;
         }
 
-        function createEmployeeTab(data) {
-
-            var linkData = [
-                ['profile-general', 'Personuppgifter'],
-                ['profile-education', 'Utbildning'],
-                ['profile-experience', 'Erfarenhet'],
-                ['employment-general', 'Anställningsvillkor']
-            ];
-            $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
-            generateProfileForm(data.employee_id);
-            generateEmploymentForm(data);
-        }
-
         function openEmployeeForm() {
             openPopupTab(0);
         }
