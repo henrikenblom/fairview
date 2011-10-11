@@ -23,8 +23,19 @@
         http://www.codemate.se/schema/integration/cometd
         http://www.codemate.se/schema/integration/cometd/cometd-integration-1.0.xsd">
 
+    <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <value>
+                /imageForm=ProfileImageUploadController
+            </value>
+        </property>
+    </bean>
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-<property name="exposeContextBeansAsAttributes" value="true"/>
+        <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
 
     <bean id="placeholderConfigurer"
@@ -60,7 +71,8 @@
         <security:intercept-url pattern="/edit/health/**" access="ROLE_HR" requires-channel="any"/>
         <security:intercept-url pattern="/edit/termination/**" access="ROLE_HR" requires-channel="any"/>
 
-        <security:intercept-url pattern="/edit/employees/index.do" access="ROLE_HR,ROLE_MANAGER" requires-channel="any"/>
+        <security:intercept-url pattern="/edit/employees/index.do" access="ROLE_HR,ROLE_MANAGER"
+                                requires-channel="any"/>
         <security:intercept-url pattern="/edit/employees/employment.do*" access="ROLE_HR" requires-channel="any"/>
         <security:intercept-url pattern="/edit/employees/employee.do*" access="ROLE_HR" requires-channel="any"/>
 
@@ -90,7 +102,7 @@
         <constructor-arg value="256"/>
     </bean>
 
-        <bean id="userDetailsService" class="se.codemate.spring.security.NeoUserDetailsService"/>
+    <bean id="userDetailsService" class="se.codemate.spring.security.NeoUserDetailsService"/>
 
     <security:authentication-provider user-service-ref="userDetailsService">
         <security:password-encoder ref="passwordEncoder"/>
@@ -100,7 +112,8 @@
     <security:authentication-provider>
         <security:password-encoder ref="passwordEncoder"/>
         <security:user-service>
-            <security:user name="root" password="cde453f03466ff7ab08284a61b6d3043888bc25256927366fe77aa6262d794a9" authorities="ROLE_ROOT"/>
+            <security:user name="root" password="cde453f03466ff7ab08284a61b6d3043888bc25256927366fe77aa6262d794a9"
+                           authorities="ROLE_ROOT"/>
         </security:user-service>
     </security:authentication-provider>
 
@@ -268,7 +281,8 @@
         <property name="cronExpression" value="0 0 2 * * ?"/>
     </bean>
 
-    <util:map id="cvCompletionProfile" map-class="java.util.TreeMap" key-type="java.lang.String" value-type="java.lang.Integer">
+    <util:map id="cvCompletionProfile" map-class="java.util.TreeMap" key-type="java.lang.String"
+              value-type="java.lang.Integer">
         <entry key="HAS_EDUCATION" value="1"/>
         <entry key="HAS_EDUCATION_HIGHER" value="1"/>
     </util:map>
@@ -278,7 +292,8 @@
         <property name="subject" value="CV-påminnelse"/>
         <property name="baseURL" value="${base.url}"/>
         <property name="bossTrigger" value="3"/>
-        <property name="notificationIntervalMinutes" value="2880"/><!-- Every 48 hours -->
+        <property name="notificationIntervalMinutes" value="2880"/>
+        <!-- Every 48 hours -->
         <property name="completionProfile" ref="cvCompletionProfile"/>
     </bean>
 
