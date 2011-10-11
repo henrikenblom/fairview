@@ -31,6 +31,8 @@ public class Cloner {
     private GraphDatabaseService neoOut;
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private HashMap<String, Integer> skillLevel = new HashMap<String, Integer>();
+    private HashMap<String, String> educationLevel = new HashMap<String, String>();
+    private HashSet<Relationship> relationships = new HashSet<Relationship>();
 
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
     private XStream xstream = new XStream(new DomDriver());
@@ -41,6 +43,16 @@ public class Cloner {
         skillLevel.put("Viss", 1);
         skillLevel.put("God", 2);
         skillLevel.put("Avancerad", 3);
+
+        educationLevel.put("Gymnasieskola eller motsvarande", "high_school");
+        educationLevel.put("Certifierad", "certified");
+        educationLevel.put("Yrkesutbildad", "vocational_education");
+        educationLevel.put("Enstaka kurs", "individual_course");
+        educationLevel.put("Övrig eftergymnasial kurs", "post_highschool_course");
+        educationLevel.put("Kandidatexamen", "bachelor");
+        educationLevel.put("Magister eller civilingenjörsexamen", "master");
+        educationLevel.put("Licentiat eller doktorsexamen", "phd");
+        educationLevel.put("Yrkeslicens", "professional_license");
 
         this.neoIn = neoIn;
         this.neoOut = neoOut;
@@ -94,7 +106,7 @@ public class Cloner {
         idMap.put(organization.getId(), createNode(properties));
 
         /* Create the link */
-        createLink(relationship1);
+        relationships.add(relationship1);
 
     }
 
@@ -122,8 +134,7 @@ public class Cloner {
 
             if (properties.containsKey("firstname")) {
                 idMap.put(employee.getId(), createNode(properties));
-                createLink(employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.INCOMING));
-                createLink(employee.getSingleRelationship(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING));
+                relationships.add(employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.INCOMING));
             }
         }
 
@@ -183,7 +194,14 @@ public class Cloner {
 
                 properties.put("nodeclass", "employment");
 
-                createNewLink(idMap.get(employee.getId()), createNode(properties), "HAS_EMPLOYMENT");
+                Long employmentNodeId = createNode(properties);
+
+                Long unitNodeId = employee.getSingleRelationship(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING).getEndNode().getId();
+
+                createNewLink(idMap.get(employee.getId()), employmentNodeId, "HAS_EMPLOYMENT");
+
+                createNewLink(employmentNodeId, idMap.get(unitNodeId), "BELONGS_TO");
+
 
             }
 
@@ -223,7 +241,7 @@ public class Cloner {
 
                 if (properties.containsKey("language")) {
                     idMap.put(languageskill.getId(), createNode(properties));
-                    createLink(employeeRelationship);
+                    relationships.add(employeeRelationship);
                 }
 
             }
@@ -271,7 +289,7 @@ public class Cloner {
                 idMap.put(workExperience.getId(), createNode(properties));
             }
             try {
-                createLink(workExperience.getSingleRelationship(new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.INCOMING));
+                relationships.add(workExperience.getSingleRelationship(new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.INCOMING));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -321,7 +339,7 @@ public class Cloner {
 
                 if (properties.containsKey("name")) {
                     idMap.put(course.getId(), createNode(properties));
-                    createLink(employeeRelationship);
+                    relationships.add(employeeRelationship);
                 }
             }
         }
@@ -355,7 +373,7 @@ public class Cloner {
 
                 Map<String, Object> properties = new TreeMap<String, Object>();
                 addMultipleIfExists(education, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
-                        "name", "description", "level", "direction", "scope", "country"}, properties);
+                        "name", "description", "direction", "scope", "country"}, properties);
 
                 try {
                     properties.put("from", toDate(education.getProperty("from", "")));
@@ -368,12 +386,21 @@ public class Cloner {
                     //no-op
                 }
 
-                properties.put("nodeclass", "education");
+                try {
 
-                if (properties.containsKey("name")) {
-                    idMap.put(education.getId(), createNode(properties));
-                    createLink(employeeRelationship);
+                    properties.put("level", educationLevel.get(education.getProperty("level")));
+
+                    properties.put("nodeclass", "education");
+
+                    if (properties.containsKey("name")) {
+                        idMap.put(education.getId(), createNode(properties));
+                        relationships.add(employeeRelationship);
+                    }
+
+                } catch (Exception e) {
+                    //no-op
                 }
+
             }
         }
 
@@ -408,17 +435,23 @@ public class Cloner {
             properties.put("nodeclass", "unit");
 
             /* Link the unit to the manager */
-            createLink(unit.getSingleRelationship(new SimpleRelationshipType("HAS_MANAGER"), Direction.OUTGOING));
+            relationships.add(unit.getSingleRelationship(new SimpleRelationshipType("HAS_MANAGER"), Direction.OUTGOING));
 
         }
 
         for (Node unit : units) {
             /* Link the unit to sub units */
             for (Relationship relationship : unit.getRelationships(new SimpleRelationshipType("HAS_UNIT"), Direction.INCOMING)) {
-                createLink(relationship);
+                relationships.add(relationship);
             }
         }
 
+    }
+
+    private void createLinks() {
+        for (Relationship relationship : relationships) {
+            createLink(relationship);
+        }
     }
 
     private void addMultipleIfExists(PropertyContainer propertyContainer, String[] inputNames, Map<String, Object> properties) {
@@ -474,7 +507,6 @@ public class Cloner {
             }
             tx.success();
         } catch (Exception e) {
-            System.out.println("hello world");
         } finally {
             tx.finish();
         }
@@ -562,7 +594,13 @@ public class Cloner {
 
         Date retval = null;
 
-        retval = dateTool.guessDate((String) stringValue);
+        try {
+
+            retval = dateTool.guessDate((String) stringValue);
+
+        } catch (Exception ex) {
+                       //no-op
+        }
 
         if (retval == null) {
             throw new Exception();
@@ -606,15 +644,16 @@ public class Cloner {
 
         Cloner cloner = new Cloner(args[0], neoIn, neoOut);
         cloner.cloneOrganization();
-        cloner.cloneEmployees();
         cloner.cloneUnits();
+        cloner.cloneEmployees();
         cloner.cloneCourses();
         cloner.createEmployments();
         cloner.cloneLanguages();
         cloner.cloneWorkExperience();
         cloner.cloneEducations();
-        cloner.shutdown();
+        cloner.createLinks();
 
+        cloner.shutdown();
     }
 
 }

@@ -9,7 +9,7 @@
 <%@ page import="com.fairviewiq.utils.UnitListGenerator" %>
 <%@ page import="org.springframework.security.userdetails.User" %>
 <%@ page import="org.springframework.security.GrantedAuthority" %>
-
+<%@page import="org.springframework.security.context.SecurityContextHolder" %>
 <%
     EmbeddedGraphDatabase neo = (EmbeddedGraphDatabase) WebApplicationContextUtils.getWebApplicationContext(application).getBean("neo");
     NeoSearch neoSearch = (NeoSearch) WebApplicationContextUtils.getWebApplicationContext(application).getBean("neoSearch");
