@@ -81,7 +81,7 @@ function generateImageForm(){
 
     var form = buildMultipartForm('imageForm');
     var fileInput = $('<input>');
-    fileInput.attr('id', 'fileToUpload');
+    fileInput.attr('name', 'file');
     fileInput.attr('type', 'file');
     form.append(fileInput);
 
