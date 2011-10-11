@@ -46,7 +46,7 @@ function initEmploymentCell(data, cell) {
     $(cell).css('cursor', 'pointer');
 
     $(cell).click(function() {
-        createEmployeeTab(data);
+        createEmploymentTab(data);
         openEmploymentForm();
     });
 
@@ -124,6 +124,14 @@ function addTypeValidation() {
             number: true
         });
     });
+
+    var dateInputs = $('input[name*=":date"]');
+
+    $.each(dateInputs, function(count, object) {
+        $(object).rules("add", {
+            dateISO: true
+        });
+    });
 }
 function generateEmploymentForm(data) {
     $('#employment-general').empty().append(generateEmploymentCreationForm(data));
@@ -183,8 +191,30 @@ function getEmploymentDeleteButton(obj) {
     return "<a title='ta bort anställning' onclick='deleteAlertEmployment(" + obj.aData.employment_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
-function hasRole(role){
-    if ($.inArray(role,ROLELIST) > -1)
+function createEmploymentTab(data) {
+    var linkData = [
+        ['employment-general', 'Anställningsvillkor'],
+        ['employment-requirements','Krav']
+    ];
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    bindTabs();
+    generateEmploymentForm(data);
+}
+
+function createEmployeeTab(data) {
+
+            var linkData = [
+                ['profile-general', 'Personuppgifter'],
+                ['profile-education', 'Utbildning'],
+                ['profile-experience', 'Erfarenhet']
+            ];
+            $('#popup-dialog').empty().append(generateTabs(linkData));
+            bindTabs();
+            generateProfileForm(data.employee_id);
+        }
+
+function hasRole(role) {
+    if ($.inArray(role, ROLELIST) > -1)
         return true;
     else
         return false;

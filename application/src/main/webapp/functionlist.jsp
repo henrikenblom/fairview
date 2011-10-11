@@ -39,8 +39,6 @@
                 "aoColumns": [
                     { "mDataProp": "unit_name"},
                     { "mDataProp": "employment_title" },
-                    { "mDataProp": "firstname" },
-                    { "mDataProp": "lastname" },
                     { "mDataProp": null,  "sWidth": 10,
                         fnRender: function(obj){
                             if (hasRole('ROLE_ADMIN'))
@@ -56,10 +54,7 @@
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentNode);
-                        if (this.cellIndex == '2' || this.cellIndex == '3') {  //employee-cell
-                            initEmployeeCell(data, this);
-                        }
-                        else if (this.cellIndex == '1') { //employment-cell
+                        if (this.cellIndex == '1') { //employment-cell
                             initEmploymentCell(data, this);
                         }
                         else if (this.cellIndex == '0') { // unit-cell
@@ -75,19 +70,6 @@
             fadeOutModalizer();
 
         });
-
-        function createEmployeeTab(data) {
-            var linkData = [
-                ['employment-general', 'Anställningsvillkor'],
-                ['profile-general', 'Personuppgifter'],
-                ['profile-education', 'Utbildning'],
-                ['profile-experience', 'Erfarenhet']
-            ];
-            $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
-            generateProfileForm(data.employee_id);
-            generateEmploymentForm(data);
-        }
 
         function openEmploymentForm() {
             openPopupTab(0);
@@ -121,8 +103,6 @@
                 <tr>
                     <th>Enhet</th>
                     <th>Titel</th>
-                    <th>Förnamn</th>
-                    <th>Efternamn</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -133,8 +113,6 @@
                 <tr>
                     <th>Enhet</th>
                     <th>Titel</th>
-                    <th>Förnamn</th>
-                    <th>Efternamn</th>
                     <th></th>
                 </tr>
                 </tfoot>

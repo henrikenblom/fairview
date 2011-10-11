@@ -188,6 +188,10 @@ function generateEmploymentCreationForm(data) {
     var hiddenField_username = hiddenField('_username', 'admin');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'employment');
 
+    var employedPersonDiv = $('<div>');
+    employedPersonDiv.append('Anställd: ');
+    employedPersonDiv.append(data.firstname + ' ' + data.lastname);
+
     var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
     var workPhoneDiv = textInputComponent('Arbetstelefon', 'workphone', propValue(properties.workphone), formId, false);
     var workingHoursDiv = textInputComponent('Arbetstider', 'workhours', propValue(properties.workhours), formId, false);
@@ -222,6 +226,7 @@ function generateEmploymentCreationForm(data) {
         hiddenField_strict,
         hiddenField_username,
         hiddenField_nodeClass,
+        employedPersonDiv, '<br />',
         titleDiv, unitDiv, '<br />',
         fromDiv, toDiv, '<br />',
         workPhoneDiv,
@@ -984,7 +989,7 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
     textInput.addClass("datepicker");
     textInput.attr("id", inputName + "_" + formId);
     textInput.attr("name", inputName);
-    textInput.val(value);
+    textInput.val(value.split(' ')[0]);
     textInput.datepicker({  changeYear: true,
         changeMonth:true,
         yearRange: "-50:+1",
