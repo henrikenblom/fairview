@@ -989,7 +989,7 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
     textInput.addClass("datepicker");
     textInput.attr("id", inputName + "_" + formId);
     textInput.attr("name", inputName);
-    textInput.val(value);
+    textInput.val(value.split(' ')[0]);
     textInput.datepicker({  changeYear: true,
         changeMonth:true,
         yearRange: "-50:+1",
