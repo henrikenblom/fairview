@@ -1,9 +1,10 @@
 package com.fairviewiq.spring.controllers;
 
-import com.fairviewiq.beans.FileUploadBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
@@ -22,13 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 public class ProfileImageUploadController {
 
     @RequestMapping(value = {"/fairview/ajax/submit_profileimage.do"})
-    public void submitFile(HttpServletRequest request, HttpServletResponse response, Object command, BindException errors) throws Exception {
+    public ModelAndView submitFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile f) {
 
-        FileUploadBean fileUploadBean = (FileUploadBean) command;
+        if (f == null) {
+            return new ModelAndView("upload", "msg", "The file is null.");
+        }
 
-        byte[] file = fileUploadBean.getFile();
-
-        System.err.println("############# FILE LENGHT: " + file.length);
+        return new ModelAndView("upload", "msg", "File ( " + f.getOriginalFilename() + ") successfully uploaded.");
 
     }
+
 }
