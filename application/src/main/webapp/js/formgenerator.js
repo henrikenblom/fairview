@@ -73,6 +73,7 @@ function generateSubunitCreationForm() {
 
 function generateImageForm(){
     var imageUploadContainer = $('<div>');
+    imageUploadContainer.attr('id', 'imgUploadContainer');
 
     var preview = $('<div>');
     preview.attr('id', 'imagePreview');

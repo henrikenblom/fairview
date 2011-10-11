@@ -152,9 +152,11 @@ function generateProfileForm(unitId) {
     addFormContainers();
     loadFormValues(unitId);
 
-    $('#profile-general').append(generateProfileGeneralForm(data));
+
     $('#profile-general').append(generateImageForm());
     createUploader();
+    $('#profile-general').append(generateProfileGeneralForm(data));
+
     $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
 
     $('#languages').append(addLanguageButton(unitId));
