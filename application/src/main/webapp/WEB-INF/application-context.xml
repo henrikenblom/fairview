@@ -26,20 +26,6 @@
     <bean id="multipartResolver"
         class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <value>
-                /imageForm=profileImageUploadController
-            </value>
-        </property>
-    </bean>
-
-    <bean id="profileImageUploadController" class="com.fairviewiq.spring.controllers.ProfileImageUploadController">
-        <property name="commandClass" value="com.fairviewiq.beans.FileUploadBean"/>
-        <property name="formView" value="fileuploadform"/>
-        <property name="successView" value="confirmation"/>
-    </bean>
-
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
