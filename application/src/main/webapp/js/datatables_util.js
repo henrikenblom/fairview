@@ -207,15 +207,15 @@ function createEmploymentTab(data) {
 
 function createEmployeeTab(data) {
 
-            var linkData = [
-                ['profile-general', 'Personuppgifter'],
-                ['profile-education', 'Utbildning'],
-                ['profile-experience', 'Erfarenhet']
-            ];
-            $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
-            generateProfileForm(data.employee_id);
-        }
+    var linkData = [
+        ['profile-general', 'Personuppgifter'],
+        ['profile-education', 'Utbildning'],
+        ['profile-experience', 'Erfarenhet']
+    ];
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    bindTabs();
+    generateProfileForm(data.employee_id);
+}
 
 function hasRole(role) {
     if ($.inArray(role, ROLELIST) > -1)
@@ -225,9 +225,12 @@ function hasRole(role) {
 }
 
 function createUploader() {
-            var uploader = new qq.FileUploader({
-                element: document.getElementById('imageUploadDiv'),
-                action: '/fairview/ajax/submit_profileimage.do',
-                debug: true
-            });
+    var uploader = new qq.FileUploader({
+        element: $('#imageUploadDiv')[0],
+        action: '/fairview/ajax/submit_profileimage.do',
+        debug: true,
+        onSubmit: function(file, extension) {
+            alert('test');
         }
+    });
+}

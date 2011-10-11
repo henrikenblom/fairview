@@ -79,7 +79,7 @@ function generateImageForm(){
     preview.attr('id', 'imagePreview');
     imageUploadContainer.append(preview);
 
-    var form = buildUpdateForm('imageForm');
+    var form = buildMultipartForm('imageForm');
     var fieldSet = $('<fieldset>');
     var imageUploadDiv = $('<div>');
     imageUploadDiv.attr('id', 'imageUploadDiv');
@@ -1166,6 +1166,14 @@ function buildUpdateForm(id, action) {
 
     return updateForm;
 
+}
+
+function buildMultipartForm(id) {
+    var updateForm = $('<form>');
+    updateForm.attr("id", id);
+    updateForm.attr("method", "post");
+    updateForm.attr("enctype", "multipart/form-data")
+    return updateForm;
 }
 
 function textAreaInputComponent(labelText, inputName, value, formId, divId) {
