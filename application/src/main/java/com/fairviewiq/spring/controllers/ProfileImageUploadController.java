@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ProfileImageUploadController {
 
     @RequestMapping(value = {"/fairview/ajax/submit_profileimage.do"})
-    public ModelAndView submitFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile f) {
+    public ModelAndView submitFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("qqfile") MultipartFile f) {
 
         if (f == null) {
             return new ModelAndView("upload", "msg", "The file is null.");
