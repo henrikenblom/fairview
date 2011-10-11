@@ -72,13 +72,21 @@ function generateSubunitCreationForm() {
 }
 
 function generateImageForm(){
+    var imageUploadContainer = $('<div>');
+
+    var preview = $('<div>');
+    preview.attr('id', 'imagePreview');
+    imageUploadContainer.append(preview);
+
     var form = buildUpdateForm('imageForm');
     var fieldSet = $('<fieldset>');
     var imageUploadDiv = $('<div>');
     imageUploadDiv.attr('id', 'imageUploadDiv');
     fieldSet.append(imageUploadDiv);
     form.append(fieldSet);
-    return form;
+    imageUploadContainer.append(form);
+
+    return imageUploadContainer;
 }
 
 

@@ -225,7 +225,7 @@ function hasRole(role) {
 function createUploader() {
             var uploader = new qq.FileUploader({
                 element: document.getElementById('imageUploadDiv'),
-                action: 'imageForm',
+                action: '/fairview/ajax/submit_profileimage.do',
                 debug: true
             });
         }

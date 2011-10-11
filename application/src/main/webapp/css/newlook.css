@@ -856,4 +856,10 @@ label.error {
     border-bottom: 1px solid #DDD;
 }
 
+#imagePreview{
+    height: 100px;
+    width: 100px;
+    border: 1px solid gray;
+}
+
 
