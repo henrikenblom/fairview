@@ -153,6 +153,8 @@ function generateProfileForm(unitId) {
     loadFormValues(unitId);
 
     $('#profile-general').append(generateProfileGeneralForm(data));
+    $('#profile-general').append(generateImageForm());
+    createUploader();
     $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
 
     $('#languages').append(addLanguageButton(unitId));
@@ -219,3 +221,11 @@ function hasRole(role) {
     else
         return false;
 }
+
+function createUploader() {
+            var uploader = new qq.FileUploader({
+                element: document.getElementById('imageUploadDiv'),
+                action: '/fairview/ajax/submit_profileimage.do',
+                debug: true
+            });
+        }

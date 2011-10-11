@@ -23,9 +23,11 @@
     <script type="text/javascript" src="js/datatables_util.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.validate.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
+    <script type="text/javascript" src="js/plugins/fileuploader.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
+
             $('.newperson').click(function() {
                 var data = new Array;
                 createEmployeeTab(data);
@@ -48,10 +50,10 @@
                     { "mDataProp": "unit_name" },
                     { "mDataProp": "employment_title" },
                     { "mDataProp": null,  "sWidth": 10,
-                        fnRender: function(obj){
-                             if (hasRole('ROLE_ADMIN'))
+                        fnRender: function(obj) {
+                            if (hasRole('ROLE_ADMIN'))
                                 return getEmployeeDeleteButton(obj);
-                             else
+                            else
                                 return '';
                         }
                         , "bSortable": false, "bSearchable": false  }
@@ -94,7 +96,8 @@
         }
         function openUnitForm(unitId) {
             var linkData = [
-                ['unitsettings-general', 'Avdelningsinställningar']];
+                ['unitsettings-general', 'Avdelningsinställningar']
+            ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
             bindTabs();
             var data = getUnitData(unitId);

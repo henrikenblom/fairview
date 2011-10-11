@@ -71,6 +71,25 @@ function generateSubunitCreationForm() {
     return form;
 }
 
+function generateImageForm(){
+    var imageUploadContainer = $('<div>');
+
+    var preview = $('<div>');
+    preview.attr('id', 'imagePreview');
+    imageUploadContainer.append(preview);
+
+    var form = buildUpdateForm('imageForm');
+    var fieldSet = $('<fieldset>');
+    var imageUploadDiv = $('<div>');
+    imageUploadDiv.attr('id', 'imageUploadDiv');
+    fieldSet.append(imageUploadDiv);
+    form.append(fieldSet);
+    imageUploadContainer.append(form);
+
+    return imageUploadContainer;
+}
+
+
 function generateProfileGeneralForm(data) {
     var formId = 'new_person_form';
 
