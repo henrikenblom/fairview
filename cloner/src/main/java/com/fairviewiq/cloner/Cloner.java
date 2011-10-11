@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /*
@@ -27,11 +29,18 @@ public class Cloner {
 
     private GraphDatabaseService neoIn;
     private GraphDatabaseService neoOut;
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private HashMap<String, Integer> skillLevel = new HashMap<String, Integer>();
 
     private Map<Long, Long> idMap = new HashMap<Long, Long>();
     private XStream xstream = new XStream(new DomDriver());
+    private DateTool dateTool = DateTool.getInstance();
 
     public Cloner(String initPath, EmbeddedReadOnlyGraphDatabase neoIn, EmbeddedGraphDatabase neoOut) throws ClassNotFoundException, IOException {
+
+        skillLevel.put("Viss", 1);
+        skillLevel.put("God", 2);
+        skillLevel.put("Avancerad", 3);
 
         this.neoIn = neoIn;
         this.neoOut = neoOut;
@@ -74,8 +83,14 @@ public class Cloner {
         Relationship relationship2 = organization.getSingleRelationship(new SimpleRelationshipType("HAS_ADDRESS"), Direction.OUTGOING);
         Node address = relationship2.getEndNode();
         Map<String, Object> properties = new TreeMap<String, Object>();
-        addMultipleIfExists(organization, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "name", "description", "regnr", "phone", "fax", "email", "web"}, properties);
+        addMultipleIfExists(organization, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                "address", "city", "country", "description", "email", "fax", "imageurl", "name", "phone", "postalcode", "regnr", "web"
+
+        }, properties);
         addMultipleIfExists(address, new String[]{"address", "postalcode", "city", "country"}, properties);
+
+        properties.put("nodeclass", "organization");
+
         idMap.put(organization.getId(), createNode(properties));
 
         /* Create the link */
@@ -98,10 +113,267 @@ public class Cloner {
 
         for (Node employee : employees) {
             Map<String, Object> properties = new TreeMap<String, Object>();
-            addMultipleIfExists(employee, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "firstname", "lastname", "email"}, properties);
+            addMultipleIfExists(employee, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                    "firstname", "lastname", "email", "address", "birthday", "cell", "city", "civic", "country",
+                    "gender", "nationality", "phone", "zip", "additional_info"
+            }, properties);
+
+            properties.put("nodeclass", "employee");
+
             if (properties.containsKey("firstname")) {
                 idMap.put(employee.getId(), createNode(properties));
                 createLink(employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.INCOMING));
+                createLink(employee.getSingleRelationship(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING));
+            }
+        }
+
+    }
+
+    public void createEmployments() {
+
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 1;
+            }
+        };
+
+        Traverser employees = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
+                StopEvaluator.END_OF_GRAPH, returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING);
+
+        for (Node employee : employees) {
+
+            Node oldEmploymentNode = null;
+            Node oldFunctionNode = null;
+
+            Map<String, Object> properties = new TreeMap<String, Object>();
+
+            try {
+
+                oldEmploymentNode = employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYMENT"), Direction.OUTGOING).getEndNode();
+
+            } catch (Exception ex) {
+
+                System.err.println("Employee node " + employee.getId() + " has no employment/function relationship.");
+
+            }
+
+            if (oldEmploymentNode != null) {
+
+                oldFunctionNode = oldEmploymentNode.getSingleRelationship(new SimpleRelationshipType("PERFORMS_FUNCTION"), Direction.OUTGOING).getEndNode();
+
+                properties.put("authorizationamount", toInt(employee.getProperty("authorization-amount", "0")));
+                properties.put("authorizationright", employee.getProperty("authorization", ""));
+                properties.put("budgetresponsibility", employee.getProperty("budget-responsibility", ""));
+                properties.put("companycar", employee.getProperty("company-car", ""));
+                properties.put("dismissalperiodemployee", toInt(employee.getProperty("dismissal-period-employee", "")));
+                properties.put("dismissalperiodemployeer", toInt(employee.getProperty("dismissal-period-employeer", "")));
+                properties.put("managementteam", employee.getProperty("executive", ""));
+                properties.put("overtimecompensation", employee.getProperty("overtime-compensation", ""));
+                properties.put("ownresultresponsibility", employee.getProperty("own-result-responsibility", ""));
+                properties.put("paymentform", employee.getProperty("payment-form", ""));
+                properties.put("pensioninsurances", employee.getProperty("pension-insurances", ""));
+                properties.put("salary", employee.getProperty("salary", ""));
+                properties.put("travelcompensation", employee.getProperty("travel-compensation", ""));
+                properties.put("vacationdays", toInt(employee.getProperty("vaication-days", "")));
+                properties.put("workhours", employee.getProperty("workhours", ""));
+
+                properties.put("title", oldFunctionNode.getProperty("name", ""));
+
+                properties.put("nodeclass", "employment");
+
+                createNewLink(idMap.get(employee.getId()), createNode(properties), "HAS_EMPLOYMENT");
+
+            }
+
+        }
+
+    }
+
+    public void cloneLanguages() {
+
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
+
+        Traverser languageskills = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
+                StopEvaluator.END_OF_GRAPH, returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.OUTGOING
+
+        );
+
+        for (Node languageskill : languageskills) {
+
+            Relationship employeeRelationship = languageskill.getSingleRelationship(new SimpleRelationshipType("HAS_LANGUAGESKILL"), Direction.INCOMING);
+
+            if (idMap.containsKey(employeeRelationship.getStartNode().getId())) {
+
+                Map<String, Object> properties = new TreeMap<String, Object>();
+                addMultipleIfExists(languageskill, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "language"}, properties);
+
+                properties.put("written", skillLevel.get(languageskill.getProperty("written", "Viss")));
+                properties.put("spoken", skillLevel.get(languageskill.getProperty("spoken", "Viss")));
+
+                properties.put("nodeclass", "languageskill");
+
+                if (properties.containsKey("language")) {
+                    idMap.put(languageskill.getId(), createNode(properties));
+                    createLink(employeeRelationship);
+                }
+
+            }
+
+        }
+
+    }
+
+
+    public void cloneWorkExperience() {
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
+
+        Traverser workExperiences = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST,
+                StopEvaluator.END_OF_GRAPH, returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.OUTGOING);
+
+        for (Node workExperience : workExperiences) {
+
+            Map<String, Object> properties = new TreeMap<String, Object>();
+            addMultipleIfExists(workExperience, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                    "name", "company", "trade", "country", "assignment"
+            }, properties);
+
+
+            try {
+                properties.put("to", toDate(workExperience.getProperty("to")));
+            } catch (Exception e) {
+                //no-op
+            }
+            try {
+                properties.put("from", toDate(workExperience.getProperty("from")));
+            } catch (Exception e) {
+                //no-op
+            }
+
+            properties.put("nodeclass", "workexperience");
+
+            if (properties.containsKey("name")) {
+                idMap.put(workExperience.getId(), createNode(properties));
+            }
+            try {
+                createLink(workExperience.getSingleRelationship(new SimpleRelationshipType("HAS_WORK_EXPERIENCE"), Direction.INCOMING));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+    }
+
+    public void cloneCourses() {
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
+
+        Traverser traverser = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH,
+                returnEvaluator, new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING, new SimpleRelationshipType("HAS_COURSE"),
+                Direction.OUTGOING);
+
+        Set<Node> courses = new HashSet<Node>();
+        for (Node course : traverser) {
+            courses.add(course);
+        }
+
+        for (Node course : courses) {
+            Relationship employeeRelationship = course.getSingleRelationship(new SimpleRelationshipType("HAS_COURSE"), Direction.INCOMING);
+            if (idMap.containsKey(employeeRelationship.getStartNode().getId())) {
+
+                Map<String, Object> properties = new TreeMap<String, Object>();
+                addMultipleIfExists(course, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                        "name", "description"}, properties);
+
+                try {
+                    properties.put("from", toDate(course.getProperty("from", "")));
+                } catch (Exception ex) {
+                    //no-op
+                }
+                try {
+                    properties.put("to", toDate(course.getProperty("to", "")));
+                } catch (Exception e) {
+                    //no-op
+                }
+
+                properties.put("nodeclass", "course");
+
+                if (properties.containsKey("name")) {
+                    idMap.put(course.getId(), createNode(properties));
+                    createLink(employeeRelationship);
+                }
+            }
+        }
+
+    }
+
+    public void cloneEducations() {
+
+        ReturnableEvaluator returnEvaluator = new ReturnableEvaluator() {
+            public boolean isReturnableNode(TraversalPosition position) {
+                return position.depth() > 2;
+            }
+        };
+
+        Traverser traverser = neoIn.getReferenceNode().traverse(Traverser.Order.BREADTH_FIRST, StopEvaluator.END_OF_GRAPH,
+                returnEvaluator,
+                new SimpleRelationshipType("HAS_ORGANIZATION"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.OUTGOING,
+                new SimpleRelationshipType("HAS_EDUCATION"), Direction.OUTGOING);
+
+        Set<Node> educations = new HashSet<Node>();
+        for (Node education : traverser) {
+            educations.add(education);
+        }
+
+        for (Node education : educations) {
+
+            Relationship employeeRelationship = education.getSingleRelationship(new SimpleRelationshipType("HAS_EDUCATION"), Direction.INCOMING);
+
+            if (idMap.containsKey(employeeRelationship.getStartNode().getId())) {
+
+                Map<String, Object> properties = new TreeMap<String, Object>();
+                addMultipleIfExists(education, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                        "name", "description", "level", "direction", "scope", "country"}, properties);
+
+                try {
+                    properties.put("from", toDate(education.getProperty("from", "")));
+                } catch (Exception ex) {
+                    //no-op
+                }
+                try {
+                    properties.put("to", toDate(education.getProperty("to", "")));
+                } catch (Exception e) {
+                    //no-op
+                }
+
+                properties.put("nodeclass", "education");
+
+                if (properties.containsKey("name")) {
+                    idMap.put(education.getId(), createNode(properties));
+                    createLink(employeeRelationship);
+                }
             }
         }
 
@@ -129,8 +401,11 @@ public class Cloner {
 
             /* Copy the unit node */
             Map<String, Object> properties = new TreeMap<String, Object>();
-            addMultipleIfExists(unit, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED", "name", "description", "phone", "fax", "email", "web", "address", "postalcode", "city", "country"}, properties);
+            addMultipleIfExists(unit, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
+                    "name", "description", "phone", "fax", "email", "web", "address", "postalcode", "city", "country"}, properties);
             idMap.put(unit.getId(), createNode(properties));
+
+            properties.put("nodeclass", "unit");
 
             /* Link the unit to the manager */
             createLink(unit.getSingleRelationship(new SimpleRelationshipType("HAS_MANAGER"), Direction.OUTGOING));
@@ -198,9 +473,30 @@ public class Cloner {
                 System.out.println("L " + relationship.getId() + ":" + key + " = " + value);
             }
             tx.success();
+        } catch (Exception e) {
+            System.out.println("hello world");
         } finally {
             tx.finish();
         }
+    }
+
+    private void createNewLink(long fromId, long toId, String type) {
+
+        Transaction tx = neoOut.beginTx();
+
+        try {
+
+            Node fromNode = neoOut.getNodeById(fromId);
+
+            fromNode.createRelationshipTo(neoOut.getNodeById(toId), new SimpleRelationshipType(type));
+
+            tx.success();
+
+        } finally {
+            tx.finish();
+            tx = null;
+        }
+
     }
 
     private long createNode(Map<String, Object> properties) {
@@ -246,6 +542,36 @@ public class Cloner {
         neoOut.shutdown();
     }
 
+    private Integer toInt(Object stringValue) {
+
+        Integer retval = -1;
+
+        try {
+
+            retval = Integer.parseInt((String) stringValue);
+
+        } catch (Exception ex) {
+            //no-op
+        } finally {
+            return retval;
+        }
+
+    }
+
+    private Date toDate(Object stringValue) throws Exception {
+
+        Date retval = null;
+
+        retval = dateTool.guessDate((String) stringValue);
+
+        if (retval == null) {
+            throw new Exception();
+        }
+
+        return retval;
+
+    }
+
     private static void deleteDir(File dir) {
         if (dir.isDirectory()) {
             for (File file : dir.listFiles()) {
@@ -282,6 +608,11 @@ public class Cloner {
         cloner.cloneOrganization();
         cloner.cloneEmployees();
         cloner.cloneUnits();
+        cloner.cloneCourses();
+        cloner.createEmployments();
+        cloner.cloneLanguages();
+        cloner.cloneWorkExperience();
+        cloner.cloneEducations();
         cloner.shutdown();
 
     }
