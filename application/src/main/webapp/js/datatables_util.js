@@ -129,7 +129,7 @@ function addTypeValidation() {
 
     $.each(dateInputs, function(count, object) {
         $(object).rules("add", {
-            date: true
+            dateISO: true
         });
     });
 }
