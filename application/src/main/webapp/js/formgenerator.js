@@ -71,6 +71,17 @@ function generateSubunitCreationForm() {
     return form;
 }
 
+function generateImageForm(){
+    var form = buildUpdateForm('imageForm');
+    var fieldSet = $('<fieldset>');
+    var imageUploadDiv = $('<div>');
+    imageUploadDiv.attr('id', 'imageUploadDiv');
+    fieldSet.append(imageUploadDiv);
+    form.append(fieldSet);
+    return form;
+}
+
+
 function generateProfileGeneralForm(data) {
     var formId = 'new_person_form';
 
