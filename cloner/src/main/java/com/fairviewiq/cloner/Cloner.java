@@ -123,6 +123,7 @@ public class Cloner {
             if (properties.containsKey("firstname")) {
                 idMap.put(employee.getId(), createNode(properties));
                 createLink(employee.getSingleRelationship(new SimpleRelationshipType("HAS_EMPLOYEE"), Direction.INCOMING));
+                createLink(employee.getSingleRelationship(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING));
             }
         }
 
