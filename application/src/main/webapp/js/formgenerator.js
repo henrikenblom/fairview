@@ -80,12 +80,18 @@ function generateImageForm(){
     imageUploadContainer.append(preview);
 
     var form = buildMultipartForm('imageForm');
-    var fieldSet = $('<fieldset>');
-    var imageUploadDiv = $('<div>');
-    imageUploadDiv.attr('id', 'imageUploadDiv');
-    fieldSet.append(imageUploadDiv);
-    form.append(fieldSet);
-    imageUploadContainer.append(form);
+    var fileInput = $('<input>');
+    fileInput.attr('id', 'fileToUpload');
+    fileInput.attr('type', 'file');
+    form.append(fileInput);
+
+    var uploadButton = $('<button>');
+    uploadButton.html('Ladda upp bild');
+    uploadButton.click(function(){
+        form.ajaxSubmit();
+    })
+
+    imageUploadContainer.append(form, uploadButton);
 
     return imageUploadContainer;
 }
@@ -1172,7 +1178,8 @@ function buildMultipartForm(id) {
     var updateForm = $('<form>');
     updateForm.attr("id", id);
     updateForm.attr("method", "post");
-    updateForm.attr("enctype", "multipart/form-data")
+    updateForm.attr("enctype", "multipart/form-data");
+    updateForm.attr("action", "/fairview/ajax/submit_profileimage.do");
     return updateForm;
 }
 

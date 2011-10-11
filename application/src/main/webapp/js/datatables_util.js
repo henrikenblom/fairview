@@ -154,7 +154,6 @@ function generateProfileForm(unitId) {
 
 
     $('#profile-general').append(generateImageForm());
-    createUploader();
     $('#profile-general').append(generateProfileGeneralForm(data));
 
     $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
@@ -222,15 +221,4 @@ function hasRole(role) {
         return true;
     else
         return false;
-}
-
-function createUploader() {
-    var uploader = new qq.FileUploader({
-        element: $('#imageUploadDiv')[0],
-        action: '/fairview/ajax/submit_profileimage.do',
-        debug: true,
-        onSubmit: function(file, extension) {
-            alert('test');
-        }
-    });
 }

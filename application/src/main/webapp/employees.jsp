@@ -23,7 +23,6 @@
     <script type="text/javascript" src="js/datatables_util.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.validate.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
-    <script type="text/javascript" src="js/plugins/fileuploader.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
