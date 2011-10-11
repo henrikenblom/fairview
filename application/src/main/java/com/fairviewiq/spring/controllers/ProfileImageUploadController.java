@@ -1,7 +1,6 @@
 package com.fairviewiq.spring.controllers;
 
 import com.fairviewiq.beans.FileUploadBean;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
  * To change this template use File | Settings | File Templates.
  */
 
-@Controller
 public class ProfileImageUploadController extends SimpleFormController {
 
     @Override
