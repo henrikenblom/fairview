@@ -1,15 +1,17 @@
 package com.fairviewiq.spring.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,14 +25,18 @@ import javax.servlet.http.HttpServletResponse;
 public class ProfileImageUploadController {
 
     @RequestMapping(value = {"/fairview/ajax/submit_profileimage.do"})
-    public ModelAndView submitFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("qqfile") MultipartFile f) {
+    public void submitFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile f) {
 
-        if (f == null) {
-            return new ModelAndView("upload", "msg", "The file is null.");
+        try {
+
+            InputStream in = new ByteArrayInputStream(f.getBytes());
+            BufferedImage image = ImageIO.read(in);
+
+            response.getWriter().print(image.getHeight());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
-        return new ModelAndView("upload", "msg", "File ( " + f.getOriginalFilename() + ") successfully uploaded.");
-
     }
 
 }
