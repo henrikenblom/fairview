@@ -13,15 +13,16 @@
     <title>Infero Quest - Funktioner</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
-    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
-    <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="popupControls.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
-    <script type="text/javascript" src="formgenerator.js"></script>
-    <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
+    <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/plugins/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="js/popupControls.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="js/formgenerator.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.form.js"></script>
     <script type="text/javascript" src="js/datatables_util.js"></script>
-    <script type="text/javascript" src="js/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
@@ -38,8 +39,14 @@
                 "aoColumns": [
                     { "mDataProp": "unit_name"},
                     { "mDataProp": "employment_title" },
-                    { "mDataProp": "firstname" },
-                    { "mDataProp": "lastname" }
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj){
+                            if (hasRole('ROLE_ADMIN'))
+                                return getEmploymentDeleteButton(obj);
+                            else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
                 ],
                 "fnDrawCallback" : function() {
                     var datatable = this;
@@ -47,12 +54,7 @@
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentNode);
-                        if (this.cellIndex == '2' || this.cellIndex == '3') {  //employee-cell
-                            //initEmployeeCell(data.employee_id, data.employment_id, data.unit_id, this);
-                            initEmployeeCell(data, this);
-                        }
-                        else if (this.cellIndex == '1') { //employment-cell
-                            //initEmploymentCell(data.employment_id, data.employee_id, data.unit_id, this);
+                        if (this.cellIndex == '1') { //employment-cell
                             initEmploymentCell(data, this);
                         }
                         else if (this.cellIndex == '0') { // unit-cell
@@ -68,19 +70,6 @@
             fadeOutModalizer();
 
         });
-
-        function createEmployeeTab(data) {
-            var linkData = [
-                ['employment-general', 'Anställningsvillkor'],
-                ['profile-general', 'Personuppgifter'],
-                ['profile-education', 'Utbildning'],
-                ['profile-experience', 'Erfarenhet']
-            ];
-            $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
-            generateProfileForm(data.employee_id);
-            generateEmploymentForm(data);
-        }
 
         function openEmploymentForm() {
             openPopupTab(0);
@@ -114,8 +103,7 @@
                 <tr>
                     <th>Enhet</th>
                     <th>Titel</th>
-                    <th>Förnamn</th>
-                    <th>Efternamn</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -125,8 +113,7 @@
                 <tr>
                     <th>Enhet</th>
                     <th>Titel</th>
-                    <th>Förnamn</th>
-                    <th>Efternamn</th>
+                    <th></th>
                 </tr>
                 </tfoot>
             </table>

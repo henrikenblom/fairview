@@ -46,7 +46,7 @@ function initEmploymentCell(data, cell) {
     $(cell).css('cursor', 'pointer');
 
     $(cell).click(function() {
-        createEmployeeTab(data);
+        createEmploymentTab(data);
         openEmploymentForm();
     });
 
@@ -116,9 +116,28 @@ function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
 }
 
+function addTypeValidation() {
+    var intInputs = $('input[name*=":int"]');
+
+    $.each(intInputs, function(count, object) {
+        $(object).rules("add", {
+            number: true
+        });
+    });
+
+    var dateInputs = $('input[name*=":date"]');
+
+    $.each(dateInputs, function(count, object) {
+        $(object).rules("add", {
+            dateISO: true
+        });
+    });
+}
 function generateEmploymentForm(data) {
     $('#employment-general').empty().append(generateEmploymentCreationForm(data));
-    $('#employment-general').append(footerButtonsComponent(data.unit_id, updateTableCallback(oTable)));
+    $('#employment-general').append(footerButtonsComponent(data.employee_id, updateTableCallback(oTable)));
+    addTypeValidation();
+    /*typeValidation was placed here rather than at input-creation level because that caused errors for some reason*/
 }
 
 function generateProfileForm(unitId) {
@@ -148,12 +167,17 @@ function generateProfileForm(unitId) {
 }
 
 //---Delete
-function getDeleteIcon(obj) {
-    return "<a title='ta bort person' onclick='deleteAlert(" + obj.aData.node_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+function getEmployeeDeleteButton(obj) {
+    return "<a title='ta bort person' onclick='deleteAlertEmployee(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
-function deleteAlert(id) {
+function deleteAlertEmployee(id) {
     generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+        deleteRow, id);
+}
+
+function deleteAlertEmployment(id) {
+    generateAlertDialog('Borttagning av anställning', 'Är du säker på att du vill ta bort anställningen?',
         deleteRow, id);
 }
 
@@ -161,4 +185,37 @@ function deleteRow(id) {
     $.getJSON("neo/ajax/delete_node.do", {_nodeId: id}, function() {
         updateTable(oTable);
     });
+}
+
+function getEmploymentDeleteButton(obj) {
+    return "<a title='ta bort anställning' onclick='deleteAlertEmployment(" + obj.aData.employment_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
+function createEmploymentTab(data) {
+    var linkData = [
+        ['employment-general', 'Anställningsvillkor'],
+        ['employment-requirements','Krav']
+    ];
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    bindTabs();
+    generateEmploymentForm(data);
+}
+
+function createEmployeeTab(data) {
+
+            var linkData = [
+                ['profile-general', 'Personuppgifter'],
+                ['profile-education', 'Utbildning'],
+                ['profile-experience', 'Erfarenhet']
+            ];
+            $('#popup-dialog').empty().append(generateTabs(linkData));
+            bindTabs();
+            generateProfileForm(data.employee_id);
+        }
+
+function hasRole(role) {
+    if ($.inArray(role, ROLELIST) > -1)
+        return true;
+    else
+        return false;
 }
