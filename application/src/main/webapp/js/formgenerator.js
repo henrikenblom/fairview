@@ -88,8 +88,9 @@ function generateImageForm(){
     var uploadButton = $('<button>');
     uploadButton.html('Ladda upp bild');
     uploadButton.click(function(){
+        $('#imagePreview').addClass('loading');
         form.ajaxSubmit();
-    })
+    });
 
     imageUploadContainer.append(form, uploadButton);
 

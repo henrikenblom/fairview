@@ -872,4 +872,9 @@ label.error {
     float: right;*/
 }
 
+.loading{
+    background-image:url('/images/loading.gif');
+    background-repeat: no-repeat;
+}
+
 
