@@ -79,6 +79,12 @@ function generateImageForm(nodeId) {
     preview.attr('id', 'imagePreview');
     var img = $('<img>');
     img.attr('id', 'profileImage');
+    img.attr('src', '/images/default_person_image_small.png');
+
+    $.getJSON("fairview/ajax/has_image.do", {_nodeId: nodeId}, function(response){
+        if (response == 'true')
+            img.attr('src', 'fairview/ajax/get_small_image.do?_nodeId=' + nodeId);
+    });
 
     preview.append(img);
     imageUploadContainer.append(preview);
@@ -94,12 +100,17 @@ function generateImageForm(nodeId) {
     var uploadButton = $('<button>');
     uploadButton.html('Ladda upp bild');
     uploadButton.click(function() {
-        $('#imagePreview').addClass('loading');
+        img.attr('src', '/images/loading.gif');
         form.ajaxSubmit(
-            {dataType: 'text',
-                success: function(data) {
-                    alert(data);
-//            img.attr('src', 'fairview/ajax/get_small_image.do?_nodeId='+127);
+            {dataType: 'json',
+                success: function(response) {
+                    if (response == 'success'){
+                    d = new Date(); //hack to force the browser to reload the image instead of using the cached one
+                    img.attr('src', 'fairview/ajax/get_small_image.do?_nodeId=' + nodeId + '&d=' + d.getTime());
+                    }
+                    else if (response == 'error'){
+                        generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
+                    }
                 }});
     });
 

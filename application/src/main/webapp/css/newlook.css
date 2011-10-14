@@ -860,16 +860,12 @@ label.error {
 }
 
 #imagePreview {
-    height: 100px;
-    width: 100px;
-    border: 1px solid gray;
+    height: 120px;
+    width: 80px;
 }
 
 #imgUploadContainer {
-    /*position: relative;
-    top: 10px;
-    right: 120px;
-    float: right;*/
+
 }
 
 .loading{
