@@ -71,25 +71,36 @@ function generateSubunitCreationForm() {
     return form;
 }
 
-function generateImageForm(){
+function generateImageForm(nodeId) {
     var imageUploadContainer = $('<div>');
     imageUploadContainer.attr('id', 'imgUploadContainer');
 
     var preview = $('<div>');
     preview.attr('id', 'imagePreview');
+    var img = $('<img>');
+    img.attr('id', 'profileImage');
+
+    preview.append(img);
     imageUploadContainer.append(preview);
 
     var form = buildMultipartForm('imageForm');
     var fileInput = $('<input>');
     fileInput.attr('name', 'file');
     fileInput.attr('type', 'file');
-    form.append(fileInput);
+    var hiddenField_id = hiddenField('_nodeId', nodeId);
+
+    form.append(fileInput, hiddenField_id);
 
     var uploadButton = $('<button>');
     uploadButton.html('Ladda upp bild');
-    uploadButton.click(function(){
+    uploadButton.click(function() {
         $('#imagePreview').addClass('loading');
-        form.ajaxSubmit();
+        form.ajaxSubmit(
+            {dataType: 'text',
+                success: function(data) {
+                    alert(data);
+//            img.attr('src', 'fairview/ajax/get_small_image.do?_nodeId='+127);
+                }});
     });
 
     imageUploadContainer.append(form, uploadButton);

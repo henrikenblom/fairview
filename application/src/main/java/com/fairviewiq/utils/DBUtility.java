@@ -64,4 +64,14 @@ public class DBUtility {
 
     }
 
+    public Relationship createRelationship(Long startNodeId, String type) {
+        Node startNode = neo.getNodeById(startNodeId);
+        Node endNode = neo.createNode();
+        return startNode.createRelationshipTo(endNode, new SimpleRelationshipType(type));
+    }
+
+    public Node getNode(Long nodeId){
+        return neo.getNodeById(nodeId);
+    }
+
 }

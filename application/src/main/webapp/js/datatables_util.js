@@ -140,33 +140,33 @@ function generateEmploymentForm(data) {
     /*typeValidation was placed here rather than at input-creation level because that caused errors for some reason*/
 }
 
-function generateProfileForm(unitId) {
+function generateProfileForm(nodeId) {
     var data;
 
     clearProfileForm();
 
-    if (!$.isEmptyObject(unitId)) {
-        data = getUnitData(unitId);
+    if (!$.isEmptyObject(nodeId)) {
+        data = getUnitData(nodeId);
     }
 
     addFormContainers();
-    loadFormValues(unitId);
+    loadFormValues(nodeId);
 
 
-    $('#profile-general').append(generateImageForm());
+    $('#profile-general').append(generateImageForm(nodeId));
     $('#profile-general').append(generateProfileGeneralForm(data));
 
-    $('#profile-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+    $('#profile-general').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
 
-    $('#languages').append(addLanguageButton(unitId));
-    $('#educations').append(addEducationButton(unitId));
-    $('#certificates').append(addCertificateButton(unitId));
-    $('#profile-education').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+    $('#languages').append(addLanguageButton(nodeId));
+    $('#educations').append(addEducationButton(nodeId));
+    $('#certificates').append(addCertificateButton(nodeId));
+    $('#profile-education').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
 
 
-    $('#workexperiences').append(addWorkExperienceButton(unitId));
-    $('#militaryservices').append(addMilitaryServiceButton(unitId));
-    $('#profile-experience').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
+    $('#workexperiences').append(addWorkExperienceButton(nodeId));
+    $('#militaryservices').append(addMilitaryServiceButton(nodeId));
+    $('#profile-experience').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
 }
 
 //---Delete
