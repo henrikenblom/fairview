@@ -125,6 +125,9 @@ function generateImageForm(nodeId, hasImage) {
 function generateSmallImage(nodeId, hasImage) {
     var img = $('<img>');
     img.attr('id', 'smallProfileImage');
+    img.click(function(){
+        openPopupTab(3)
+    });
     if (hasImage == 'true')
         img.attr('src', getImgUrl(nodeId, "small_image"));
     else
