@@ -79,11 +79,12 @@ function generateImageForm(nodeId) {
     preview.attr('id', 'imagePreview');
     var img = $('<img>');
     img.attr('id', 'profileImage');
-    img.attr('src', '/images/default_person_image_small.png');
 
     $.getJSON("fairview/ajax/has_image.do", {_nodeId: nodeId}, function(response){
         if (response == 'true')
-            img.attr('src', 'fairview/ajax/get_small_image.do?_nodeId=' + nodeId);
+            img.attr('src', getImgUrl(nodeId));
+        else
+            img.attr('src', '/images/default_person_image_small.png');
     });
 
     preview.append(img);
@@ -105,8 +106,7 @@ function generateImageForm(nodeId) {
             {dataType: 'json',
                 success: function(response) {
                     if (response == 'success'){
-                    d = new Date(); //hack to force the browser to reload the image instead of using the cached one
-                    img.attr('src', 'fairview/ajax/get_small_image.do?_nodeId=' + nodeId + '&d=' + d.getTime());
+                    img.attr('src', getImgUrl(nodeId));
                     }
                     else if (response == 'error'){
                         generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
@@ -119,6 +119,11 @@ function generateImageForm(nodeId) {
     return imageUploadContainer;
 }
 
+function getImgUrl(nodeId){
+    d = new Date(); //hack to force the browser to reload the image instead of using the cached one
+    var url = 'fairview/ajax/get_small_image.do?_nodeId=' + nodeId + '&d=' + d.getTime();
+    return url;
+}
 
 function generateProfileGeneralForm(data) {
     var formId = 'new_person_form';

@@ -65,13 +65,18 @@ public class ProfileImageUploadController {
                 InputStream image = new ByteArrayInputStream(f.getBytes());
                 BufferedImage originalImage = ImageIO.read(image);
                 BufferedImage smallImage = scaleImage(originalImage, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
-//              BufferedImage largeImage = scaleImage(originalImage, LARGE_IMAGE_WIDTH, LARGE_IMAGE_HEIGHT);
+                BufferedImage largeImage = scaleImage(originalImage, LARGE_IMAGE_WIDTH, LARGE_IMAGE_HEIGHT);
 
                 Relationship imageRelationship = dbUtility.getOrCreateRelationship(nodeId, "HAS_IMAGE");
                 imageNode = imageRelationship.getEndNode();
 
-                imageNode.setProperty("small_image", xstream.toXML(smallImage));
-//              imageNode.setProperty("large_image", xstream.toXML(largeImage));
+                ByteArrayOutputStream smallbos = new ByteArrayOutputStream();
+                ImageIO.write(smallImage, "png", smallbos);
+                ByteArrayOutputStream largebos = new ByteArrayOutputStream();
+                ImageIO.write(largeImage, "png", largebos);
+
+                imageNode.setProperty("small_image", smallbos.toByteArray());
+                imageNode.setProperty("large_image", largebos.toByteArray());
 
                 response.getOutputStream().print(gson.toJson("success"));
             } catch (Exception e) {
@@ -87,12 +92,12 @@ public class ProfileImageUploadController {
     public void getFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("_nodeId") Long nodeId) throws IOException {
         try {
             Node employeeNode = dbUtility.getNode(nodeId);
-
             Node imageNode = employeeNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING).getEndNode();
-            BufferedImage image = (BufferedImage) xstream.fromXML(imageNode.getProperty("small_image").toString());
 
             response.setContentType("image/png");
-            ImageIO.write(image, "png", response.getOutputStream());
+            byte[] imageData = (byte[]) imageNode.getProperty("small_image");
+            response.getOutputStream().write(imageData);
+            response.getOutputStream().flush();
         } catch (Exception ex) {
             response.getOutputStream().print(gson.toJson("error"));
         }
@@ -100,21 +105,21 @@ public class ProfileImageUploadController {
     }
 
     @RequestMapping(value = {"/fairview/ajax/has_image.do"})
-    public void hasImage(HttpServletRequest request, HttpServletResponse response, @RequestParam("_nodeId") Long nodeId) throws IOException {
+    public void hasImage(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "_nodeId", required = false) Long nodeId) throws IOException {
         response.setContentType("application/json");
         ServletOutputStream outputStream = response.getOutputStream();
         try {
             Node employeeNode = dbUtility.getNode(nodeId);
             Node imageNode = employeeNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING).getEndNode();
             outputStream.print(gson.toJson("true"));
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             outputStream.print(gson.toJson("false"));
         }
         response.getOutputStream().close();
     }
 
     private BufferedImage scaleImage(BufferedImage originalImage, int width, int height) throws IOException {
-        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         paintComponent(newImage.getGraphics(), originalImage, getRatio(originalImage, width, height));
         return newImage;
@@ -124,10 +129,10 @@ public class ProfileImageUploadController {
         Graphics2D g2 = (Graphics2D) g;
         int newW = (int) (originalImage.getWidth() * scaleFactor);
         int newH = (int) (originalImage.getHeight() * scaleFactor);
-         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2.setColor(Color.WHITE);
-        g2.fillRect(0,0,SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+        g2.fillRect(0, 0, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
         g2.drawImage(originalImage, 0, 0, newW, newH, null);
     }
 
