@@ -29,7 +29,7 @@
 
             $('.newperson').click(function() {
                 var data = new Array;
-                createEmployeeTab(data);
+                createEmployeeTab(data, true);
                 openEmployeeForm();
             });
 

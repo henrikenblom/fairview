@@ -21,7 +21,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -44,6 +43,9 @@ public class ProfileImageUploadController {
     private static final int SMALL_IMAGE_HEIGHT = 120;
     private static final int SMALL_IMAGE_WIDTH = 80;
 
+    private static final int MEDIUM_IMAGE_HEIGHT = 210;
+    private static final int MEDIUM_IMAGE_WIDTH = 140;
+
     private static final int LARGE_IMAGE_HEIGHT = 500;
     private static final int LARGE_IMAGE_WIDTH = 500;
 
@@ -65,18 +67,22 @@ public class ProfileImageUploadController {
                 InputStream image = new ByteArrayInputStream(f.getBytes());
                 BufferedImage originalImage = ImageIO.read(image);
                 BufferedImage smallImage = scaleImage(originalImage, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+                BufferedImage mediumImage = scaleImage(originalImage, MEDIUM_IMAGE_WIDTH, MEDIUM_IMAGE_HEIGHT);
                 BufferedImage largeImage = scaleImage(originalImage, LARGE_IMAGE_WIDTH, LARGE_IMAGE_HEIGHT);
 
                 Relationship imageRelationship = dbUtility.getOrCreateRelationship(nodeId, "HAS_IMAGE");
                 imageNode = imageRelationship.getEndNode();
 
-                ByteArrayOutputStream smallbos = new ByteArrayOutputStream();
-                ImageIO.write(smallImage, "png", smallbos);
-                ByteArrayOutputStream largebos = new ByteArrayOutputStream();
-                ImageIO.write(largeImage, "png", largebos);
+                ByteArrayOutputStream smallStream = new ByteArrayOutputStream();
+                ImageIO.write(smallImage, "png", smallStream);
+                ByteArrayOutputStream mediumStream = new ByteArrayOutputStream();
+                ImageIO.write(mediumImage, "png", mediumStream);
+                ByteArrayOutputStream largeStream = new ByteArrayOutputStream();
+                ImageIO.write(largeImage, "png", largeStream);
 
-                imageNode.setProperty("small_image", smallbos.toByteArray());
-                imageNode.setProperty("large_image", largebos.toByteArray());
+                imageNode.setProperty("small_image", smallStream.toByteArray());
+                imageNode.setProperty("medium_image", mediumStream.toByteArray());
+                imageNode.setProperty("large_image", largeStream.toByteArray());
 
                 response.getOutputStream().print(gson.toJson("success"));
             } catch (Exception e) {
@@ -88,14 +94,15 @@ public class ProfileImageUploadController {
         }
     }
 
-    @RequestMapping(value = {"/fairview/ajax/get_small_image.do"})
-    public void getFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("_nodeId") Long nodeId) throws IOException {
+    @RequestMapping(value = {"/fairview/ajax/get_image.do"})
+    public void getFile(HttpServletRequest request, HttpServletResponse response, @RequestParam("_nodeId") Long nodeId,
+                        @RequestParam("size") String size) throws IOException {
         try {
             Node employeeNode = dbUtility.getNode(nodeId);
             Node imageNode = employeeNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING).getEndNode();
 
             response.setContentType("image/png");
-            byte[] imageData = (byte[]) imageNode.getProperty("small_image");
+            byte[] imageData = (byte[]) imageNode.getProperty(size);
             response.getOutputStream().write(imageData);
             response.getOutputStream().flush();
         } catch (Exception ex) {
@@ -120,20 +127,25 @@ public class ProfileImageUploadController {
 
     private BufferedImage scaleImage(BufferedImage originalImage, int width, int height) throws IOException {
         BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-        paintComponent(newImage.getGraphics(), originalImage, getRatio(originalImage, width, height));
+        paintComponent(newImage.getGraphics(), originalImage, width, height);
         return newImage;
     }
 
-    public void paintComponent(Graphics g, BufferedImage originalImage, double scaleFactor) {
+    public void paintComponent(Graphics g, BufferedImage originalImage, int width, int height) {
+        double scaleFactor = getRatio(originalImage, width, height);
         Graphics2D g2 = (Graphics2D) g;
-        int newW = (int) (originalImage.getWidth() * scaleFactor);
-        int newH = (int) (originalImage.getHeight() * scaleFactor);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        int newWidth = (int) (originalImage.getWidth() * scaleFactor);
+        int newHeight = (int) (originalImage.getHeight() * scaleFactor);
+
         g2.setColor(Color.WHITE);
-        g2.fillRect(0, 0, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
-        g2.drawImage(originalImage, 0, 0, newW, newH, null);
+        g2.fillRect(0, 0, width, height);
+
+        int verticalpos = (height - newHeight)/2;
+        int horizontalpos = (width - newWidth)/2;
+        g2.drawImage(originalImage, horizontalpos, verticalpos, newWidth, newHeight, null);
     }
 
     private double getRatio(BufferedImage image, int width, int height) {

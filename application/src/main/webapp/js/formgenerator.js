@@ -71,21 +71,18 @@ function generateSubunitCreationForm() {
     return form;
 }
 
-function generateImageForm(nodeId) {
+function generateImageForm(nodeId, hasImage) {
     var imageUploadContainer = $('<div>');
     imageUploadContainer.attr('id', 'imgUploadContainer');
 
     var preview = $('<div>');
     preview.attr('id', 'imagePreview');
     var img = $('<img>');
-    img.attr('id', 'profileImage');
 
-    $.getJSON("fairview/ajax/has_image.do", {_nodeId: nodeId}, function(response){
-        if (response == 'true')
-            img.attr('src', getImgUrl(nodeId));
-        else
-            img.attr('src', '/images/default_person_image_small.png');
-    });
+    if (hasImage == 'true')
+        img.attr('src', getImgUrl(nodeId, "medium_image"));
+    else
+        img.attr('src', '/images/default_person_image.png');
 
     preview.append(img);
     imageUploadContainer.append(preview);
@@ -105,23 +102,39 @@ function generateImageForm(nodeId) {
         form.ajaxSubmit(
             {dataType: 'json',
                 success: function(response) {
-                    if (response == 'success'){
-                    img.attr('src', getImgUrl(nodeId));
+                    if (response == 'success') {
+                        img.attr('src', getImgUrl(nodeId, "medium_image"));
                     }
-                    else if (response == 'error'){
+                    else if (response == 'error') {
                         generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
+                        if (hasImage == 'true'){
+                            img.attr('src', getImgUrl(nodeId, "medium_image"));
+                        }
+                        else{
+                            img.attr('src', '/images/default_person_image.png');
+                        }
                     }
                 }});
     });
 
-    imageUploadContainer.append(form, uploadButton);
+    imageUploadContainer.append(form, uploadButton, generateCancelButton());
 
     return imageUploadContainer;
 }
 
-function getImgUrl(nodeId){
+function generateSmallImage(nodeId, hasImage) {
+    var img = $('<img>');
+    img.attr('id', 'smallProfileImage');
+    if (hasImage == 'true')
+        img.attr('src', getImgUrl(nodeId, "small_image"));
+    else
+        img.attr('src', '/images/default_person_image_small.png');
+    return img;
+}
+
+function getImgUrl(nodeId, size) {
     d = new Date(); //hack to force the browser to reload the image instead of using the cached one
-    var url = 'fairview/ajax/get_small_image.do?_nodeId=' + nodeId + '&d=' + d.getTime();
+    var url = 'fairview/ajax/get_image.do?_nodeId=' + nodeId + '&size=' + size + '&d=' + d.getTime();
     return url;
 }
 
@@ -737,7 +750,7 @@ function existsNewPersonForm(forms) {
 
 function generateCancelButton() {
     var cancelButton = $('<button>');
-    cancelButton.html('Avbryt');
+    cancelButton.html('Stäng');
     cancelButton.attr('id', 'cancelButton');
     cancelButton.click(function() {
         var edited;
