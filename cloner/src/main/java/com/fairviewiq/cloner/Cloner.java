@@ -166,13 +166,18 @@ public class Cloner {
 
             } catch (Exception ex) {
 
-                System.err.println("Employee node " + employee.getId() + " has no employment/function relationship.");
+                System.err.println("Employee node " + employee.getId() + " has no employment relationship.");
 
             }
 
             if (oldEmploymentNode != null) {
 
-                oldFunctionNode = oldEmploymentNode.getSingleRelationship(new SimpleRelationshipType("PERFORMS_FUNCTION"), Direction.OUTGOING).getEndNode();
+                try {
+                    oldFunctionNode = oldEmploymentNode.getSingleRelationship(new SimpleRelationshipType("PERFORMS_FUNCTION"), Direction.OUTGOING).getEndNode();
+                } catch (Exception e) {
+                    System.err.println("Employment node " + oldEmploymentNode.getId() + " has no function relationship.");
+                    continue; //if theres no function-relationship, there is no purpose in adding the employment
+                }
 
                 properties.put("authorizationamount", toInt(employee.getProperty("authorization-amount", "0")));
                 properties.put("authorizationright", employee.getProperty("authorization", ""));
@@ -189,7 +194,6 @@ public class Cloner {
                 properties.put("travelcompensation", employee.getProperty("travel-compensation", ""));
                 properties.put("vacationdays", toInt(employee.getProperty("vaication-days", "")));
                 properties.put("workhours", employee.getProperty("workhours", ""));
-
                 properties.put("title", oldFunctionNode.getProperty("name", ""));
 
                 properties.put("nodeclass", "employment");
@@ -435,7 +439,15 @@ public class Cloner {
             properties.put("nodeclass", "unit");
 
             /* Link the unit to the manager */
-            relationships.add(unit.getSingleRelationship(new SimpleRelationshipType("HAS_MANAGER"), Direction.OUTGOING));
+
+            try {
+                for (Relationship relationship : unit.getRelationships(new SimpleRelationshipType("HAS_MANAGER"), Direction.OUTGOING)){
+                    relationships.add(relationship);
+                    break; //only adds the first manager, units are not supposed to have multiple managers.
+                }
+            } catch (Exception e) {
+                System.out.println(unit.getId());
+            }
 
         }
 
