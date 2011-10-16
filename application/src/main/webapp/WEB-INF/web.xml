@@ -36,11 +36,6 @@
     </filter>
 
     <filter>
-        <filter-name>sitemesh</filter-name>
-        <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
-    </filter>
-
-    <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
@@ -73,13 +68,6 @@
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
 
-    <filter-mapping>
-        <filter-name>sitemesh</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
-
     <servlet>
         <servlet-name>report-images</servlet-name>
         <servlet-class>net.sf.jasperreports.j2ee.servlets.ImageServlet</servlet-class>
@@ -91,20 +79,9 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <servlet>
-        <servlet-name>cometd</servlet-name>
-        <servlet-class>se.codemate.spring.cometd.continuation.SpringContinuationCometdServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>report-images</servlet-name>
-        <url-pattern>/reports/image</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
-        <url-pattern>*.ftd</url-pattern>
+        <url-pattern>/report-images</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -117,16 +94,11 @@
         <url-pattern>/reports/*</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>cometd</servlet-name>
-        <url-pattern>/cometd/*</url-pattern>
-    </servlet-mapping>
-
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
-    <jsp-config>
+    <!--jsp-config>
         <taglib>
             <taglib-uri>http://www.springframework.org/tags</taglib-uri>
             <taglib-location>/WEB-INF/taglibs/spring.tld</taglib-location>
@@ -139,6 +111,6 @@
             <taglib-uri>http://www.springframework.org/security/tags</taglib-uri>
             <taglib-location>/WEB-INF/taglibs/security.tld</taglib-location>
         </taglib>
-    </jsp-config>
+    </jsp-config-->
 
 </web-app>

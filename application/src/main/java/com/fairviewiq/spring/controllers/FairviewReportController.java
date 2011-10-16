@@ -2,12 +2,12 @@ package com.fairviewiq.spring.controllers;
 
 import net.sf.jasperreports.engine.JasperCompileManager;
 import org.apache.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import se.codemate.spring.controllers.JasperReportController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.Authentication;
-import org.springframework.security.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

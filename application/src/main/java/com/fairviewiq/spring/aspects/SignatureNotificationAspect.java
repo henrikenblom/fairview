@@ -2,15 +2,13 @@ package com.fairviewiq.spring.aspects;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.core.MessageChannel;
-import org.springframework.integration.message.MessageBuilder;
-import org.springframework.integration.channel.MessageChannelTemplate;
+import org.springframework.integration.MessageChannel;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.userdetails.User;
-import org.springframework.security.Authentication;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,7 +39,7 @@ public class SignatureNotificationAspect {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private MessageChannelTemplate template = new MessageChannelTemplate();
+    private MessagingTemplate template = new MessagingTemplate();
 
     private MessageChannel messageChannel;
 

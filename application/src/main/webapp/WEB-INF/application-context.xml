@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:security="http://www.springframework.org/schema/security"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:integration="http://www.springframework.org/schema/integration"
-       xmlns:cometd-integration="http://www.codemate.se/schema/integration/cometd"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-        http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/util
-        http://www.springframework.org/schema/util/spring-util-2.5.xsd
+        http://www.springframework.org/schema/util/spring-util-3.0.xsd
         http://www.springframework.org/schema/security
-        http://www.springframework.org/schema/security/spring-security-2.0.xsd
+        http://www.springframework.org/schema/security/spring-security-3.0.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-2.5.xsd
-        http://www.springframework.org/schema/integration
-        http://www.springframework.org/schema/integration/spring-integration-1.0.xsd
-        http://www.codemate.se/schema/integration/cometd
-        http://www.codemate.se/schema/integration/cometd/cometd-integration-1.0.xsd">
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-<property name="exposeContextBeansAsAttributes" value="true"/>
+        <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
 
     <bean id="placeholderConfigurer"
@@ -60,7 +50,8 @@
         <security:intercept-url pattern="/edit/health/**" access="ROLE_HR" requires-channel="any"/>
         <security:intercept-url pattern="/edit/termination/**" access="ROLE_HR" requires-channel="any"/>
 
-        <security:intercept-url pattern="/edit/employees/index.do" access="ROLE_HR,ROLE_MANAGER" requires-channel="any"/>
+        <security:intercept-url pattern="/edit/employees/index.do" access="ROLE_HR,ROLE_MANAGER"
+                                requires-channel="any"/>
         <security:intercept-url pattern="/edit/employees/employment.do*" access="ROLE_HR" requires-channel="any"/>
         <security:intercept-url pattern="/edit/employees/employee.do*" access="ROLE_HR" requires-channel="any"/>
 
@@ -69,6 +60,7 @@
 
         <security:intercept-url pattern="/**" access="ROLE_USER" requires-channel="any"/>
 
+        <security:http-basic/>
         <security:form-login login-page="/login.jsp" default-target-url="/index.jsp"/>
         <security:logout logout-success-url="/login.jsp"/>
         <security:remember-me key="fairview" user-service-ref="userDetailsService"/>
@@ -77,7 +69,6 @@
 
 
     <bean id="ajaxQuirksFilter" class="com.fairviewiq.spring.security.AjaxQuirksFilter">
-        <security:custom-filter before="FILTER_SECURITY_INTERCEPTOR"/>
         <property name="uriPatterns">
             <util:list>
                 <value>/neo/ajax/**</value>
@@ -86,23 +77,28 @@
         </property>
     </bean>
 
-    <bean id="passwordEncoder" class="org.springframework.security.providers.encoding.ShaPasswordEncoder">
+    <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
         <constructor-arg value="256"/>
     </bean>
 
-        <bean id="userDetailsService" class="se.codemate.spring.security.NeoUserDetailsService"/>
+    <bean id="userDetailsService" class="se.codemate.spring.security.NeoUserDetailsService"/>
 
-    <security:authentication-provider user-service-ref="userDetailsService">
-        <security:password-encoder ref="passwordEncoder"/>
-    </security:authentication-provider>
+    <security:authentication-manager alias="authenticationManager">
 
-    <!-- ROOT Shell Backdoor -->
-    <security:authentication-provider>
-        <security:password-encoder ref="passwordEncoder"/>
-        <security:user-service>
-            <security:user name="root" password="cde453f03466ff7ab08284a61b6d3043888bc25256927366fe77aa6262d794a9" authorities="ROLE_ROOT"/>
-        </security:user-service>
-    </security:authentication-provider>
+        <security:authentication-provider user-service-ref="userDetailsService">
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+
+        <!-- ROOT Shell Backdoor -->
+        <security:authentication-provider>
+            <security:password-encoder ref="passwordEncoder"/>
+            <security:user-service>
+                <security:user name="root" password="cde453f03466ff7ab08284a61b6d3043888bc25256927366fe77aa6262d794a9"
+                               authorities="ROLE_ROOT"/>
+            </security:user-service>
+        </security:authentication-provider>
+
+    </security:authentication-manager>
 
     <security:global-method-security jsr250-annotations="enabled"/>
 
@@ -155,154 +151,5 @@
         <property name="port" value="${smtp.port}"/>
     </bean>
 
-    <!-- Spring Integration Services -->
-
-    <integration:annotation-config/>
-
-    <integration:publish-subscribe-channel id="smsChannel"/>
-    <integration:publish-subscribe-channel id="absenceChannel"/>
-    <integration:publish-subscribe-channel id="signatureChannel"/>
-
-    <bean id="signatureEndpoint" class="com.fairviewiq.spring.endpoints.SignatureEndpoint">
-        <property name="from" value="${smtp.from}"/>
-        <property name="subject" value="Brutet Sigill"/>
-        <property name="baseURL" value="${base.url}"/>
-    </bean>
-
-    <integration:service-activator input-channel="signatureChannel" ref="signatureEndpoint"/>
-
-    <cometd-integration:outbound-channel-adapter cometd-channel="/map/newpoint" bayeux="bayeux" channel="smsChannel"/>
-
-    <cometd-integration:outbound-channel-adapter cometd-channel="/employee/absence" bayeux="bayeux"
-                                                 channel="absenceChannel"/>
-
-    <!-- Cometd -->
-
-    <bean id="bayeux" class="se.codemate.spring.cometd.continuation.SpringContinuationBayeux"
-          p:timeout="120000"
-          p:interval="0"
-          p:maxInterval="10000"
-          p:multiFrameInterval="2000"
-          p:logLevel="0"
-          p:directDeliver="true">
-        <property name="filters">
-            <list>
-                <bean class="se.codemate.spring.cometd.continuation.SpringContinuationDataFilter"
-                      p:channel="/**"
-                      p:filterClass="org.mortbay.cometd.filter.NoMarkupFilter"/>
-                <bean class="se.codemate.spring.cometd.continuation.SpringContinuationDataFilter"
-                      p:channel="/map/*"
-                      p:filterClass="se.codemate.spring.cometd.filter.RegexNameFilter">
-                    <property name="init">
-                        <value><![CDATA[
-                            [
-                                [ "latitude","lat" ],
-                                [ "longitude","lng" ],
-                                [ "message","msg" ]
-                            ]
-                        ]]></value>
-                    </property>
-                </bean>
-                <bean class="se.codemate.spring.cometd.continuation.SpringContinuationDataFilter"
-                      p:channel="/map/*"
-                      p:filterClass="org.mortbay.cometd.filter.RegexFilter">
-                    <property name="init">
-                        <value><![CDATA[
-                            [
-                                [ "[fF].ck","dang" ],
-                                [ "teh ","the "]
-                            ]
-                        ]]></value>
-                    </property>
-                </bean>
-                <bean class="se.codemate.spring.cometd.continuation.SpringContinuationDataFilter"
-                      p:channel="/map/*"
-                      p:filterClass="org.mortbay.cometd.filter.RegexFilter">
-                    <property name="init">
-                        <value><![CDATA[
-                            [
-                                [ "[Mm]icrosoft", "Micro\\$oft" ],
-                                [ ".*tomcat.*", null ]
-                            ]
-                        ]]></value>
-                    </property>
-                </bean>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Scheduled Tasks -->
-
-    <bean id="nextBookingNotifier" class="com.fairviewiq.spring.timers.NextBookingNotifier">
-        <property name="from" value="${smtp.from}"/>
-        <property name="subject" value="Bokningspåminnelse"/>
-        <property name="baseURL" value="${base.url}"/>
-    </bean>
-
-    <bean id="nextBookingNotifierJobDetail"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="nextBookingNotifier"/>
-        <property name="targetMethod" value="run"/>
-        <property name="concurrent" value="false"/>
-    </bean>
-
-    <bean id="nextBookingNotifierTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-        <property name="jobDetail" ref="nextBookingNotifierJobDetail"/>
-        <property name="startDelay" value="60000"/>
-        <property name="repeatInterval" value="300000"/>
-    </bean>
-
-    <bean id="backupNeoDatabase" class="com.fairviewiq.spring.timers.BackupNeoDatabase">
-        <property name="locationXML" value="/tmp/neo-backup"/>
-    </bean>
-
-    <bean id="backupNeoDatabaseJobDetail"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="backupNeoDatabase"/>
-        <property name="targetMethod" value="run"/>
-        <property name="concurrent" value="false"/>
-    </bean>
-
-    <bean id="backupNeoDatabaseTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail" ref="backupNeoDatabaseJobDetail"/>
-        <property name="cronExpression" value="0 0 2 * * ?"/>
-    </bean>
-
-    <util:map id="cvCompletionProfile" map-class="java.util.TreeMap" key-type="java.lang.String" value-type="java.lang.Integer">
-        <entry key="HAS_EDUCATION" value="1"/>
-        <entry key="HAS_EDUCATION_HIGHER" value="1"/>
-    </util:map>
-
-    <bean id="cvCompletionNotifier" class="com.fairviewiq.spring.timers.CVCompletionNotifier">
-        <property name="from" value="${smtp.from}"/>
-        <property name="subject" value="CV-påminnelse"/>
-        <property name="baseURL" value="${base.url}"/>
-        <property name="bossTrigger" value="3"/>
-        <property name="notificationIntervalMinutes" value="2880"/><!-- Every 48 hours -->
-        <property name="completionProfile" ref="cvCompletionProfile"/>
-    </bean>
-
-    <bean id="cvCompletionNotifierJobDetail"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="cvCompletionNotifier"/>
-        <property name="targetMethod" value="run"/>
-        <property name="concurrent" value="false"/>
-    </bean>
-
-    <bean id="cvCompletionNotifierTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-        <property name="jobDetail" ref="cvCompletionNotifierJobDetail"/>
-        <property name="startDelay" value="90000"/>
-        <property name="repeatInterval" value="300000"/>
-    </bean>
-
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="triggers">
-            <list>
-                <ref bean="nextBookingNotifierTrigger"/>
-                <ref bean="backupNeoDatabaseTrigger"/>
-                <ref bean="cvCompletionNotifierTrigger"/>
-            </list>
-        </property>
-    </bean>
 
 </beans>

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:lang="http://www.springframework.org/schema/lang"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-        http://www.springframework.org/schema/lang
-        http://www.springframework.org/schema/lang/spring-lang-2.0.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <bean id="placeholderConfigurer"
           class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
@@ -19,15 +16,6 @@
 
     <context:component-scan base-package="se.codemate.spring.controllers"/>
     <context:component-scan base-package="com.fairviewiq.spring.controllers"/>
-
-    <bean id="viewResolver" class="se.codemate.spring.freemarker.AdvancedFreeMarkerViewResolver">
-        <property name="cache" value="true"/>
-        <property name="suffix" value=".ftl"/>
-        <property name="contentType" value="text/html; charset=UTF-8"/>
-        <property name="exposeRequestAttributes" value="true"/>
-        <property name="exposeSessionAttributes" value="true"/>
-        <property name="exposeSpringMacroHelpers" value="true"/>
-    </bean>
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="defaultEncoding" value="UTF-8"/>
@@ -53,17 +41,12 @@
 
     <bean id="themeChangeInterceptor" class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"/>
 
-    <bean id="decoratorController" class="org.springframework.web.servlet.mvc.ServletWrappingController">
-        <property name="servletClass" value="se.codemate.spring.sitemesh.SpringFreemarkerDecoratorServlet"/>
-        <property name="servletName" value="sitemesh"/>
-    </bean>
-   <!--
     <bean id="jasperReportController" class="com.fairviewiq.spring.controllers.FairviewReportController">
         <property name="reportRoot" value="${report.root}"/>
-        <property name="imageServletPath" value="/reports/image"/>
+        <property name="imageServletPath" value="/report-images"/>
         <property name="indexViewName" value="/reports/index"/>
     </bean>
-                -->
+
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="10000000"/>
     </bean>
@@ -74,19 +57,9 @@
             <bean id="defaultController" class="se.codemate.spring.controllers.DefaultController"/>
         </property>
         <property name="mappings">
-            <map>
-                <!--
-                <entry key="/index.do" value-ref="jasperReportController"/>
-                <entry key="/reports/*" value-ref="jasperReportController"/>
-                -->
-                <entry key="/decorators/*.ftd" value-ref="decoratorController"/>
-                <entry key="/sms.do">
-                    <bean class="se.codemate.spring.controllers.RequestChannelController">
-                        <property name="channel" ref="smsChannel"/>
-                        <property name="view" value="/sms/index"/>
-                    </bean>
-                </entry>
-            </map>
+            <props>
+                <prop key="/reports/*">jasperReportController</prop>
+            </props>
         </property>
         <property name="interceptors">
             <list>
@@ -112,9 +85,9 @@
         <property name="defaultStatusCode" value="500"/>
         <property name="defaultErrorView" value="errors/general-error"/>
         <property name="exceptionMappings">
-            <map>
-                <entry key="se.codemate.spring.aspects.NeoAjaxException" value="errors/ajax-error"/>
-            </map>
+            <props>
+                <prop key="se.codemate.spring.aspects.NeoAjaxException">errors/ajax-error</prop>
+            </props>
         </property>
         <property name="statusCodeMappings">
             <map>
@@ -122,9 +95,9 @@
             </map>
         </property>
         <property name="priorityExceptionMappings">
-            <map>
-                <entry key="org.neo4j.graphdb.NotFoundException" value="high"/>
-            </map>
+            <props>
+                <prop key="org.neo4j.graphdb.NotFoundException">high</prop>
+            </props>
         </property>
         <property name="priorityNotificationServicesMappings">
             <map>
