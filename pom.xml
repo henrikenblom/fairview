@@ -32,6 +32,13 @@
         <quartz.version>1.6.5</quartz.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>codemate-public</id>
+            <url>http://mvn.codemate.se:8080/repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.testng</groupId>
