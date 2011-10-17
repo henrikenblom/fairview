@@ -106,11 +106,13 @@ function generateImageForm(nodeId, hasImage) {
     var fileInput = $('<input>');
     fileInput.attr('name', 'file');
     fileInput.attr('type', 'file');
+    fileInput.addClass('personalImageInput');
     var hiddenField_id = hiddenField('_nodeId', nodeId);
 
     form.append(fileInput, hiddenField_id);
-
+    var buttonDiv = $('<div>');
     var uploadButton = $('<button>');
+    uploadButton.addClass('personalImageButton')
     uploadButton.html('Ladda upp bild');
     uploadButton.click(function() {
         img.attr('src', '/images/loading.gif');

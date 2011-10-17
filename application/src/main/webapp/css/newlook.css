@@ -865,8 +865,15 @@ label.error {
 }
 
 #imgUploadContainer {
-    margin-right: auto;
-    margin-left: auto;
+    margin-left: 150px;
+}
+.personalImageInput{
+    margin-left: -15px;
+    margin-top: 10px;
+}
+
+.personalImageButton{
+    margin-left: -15px;
 }
 
 .loading {
