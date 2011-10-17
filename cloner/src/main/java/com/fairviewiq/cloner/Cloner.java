@@ -196,13 +196,15 @@ public class Cloner {
 
                 Long employmentNodeId = createNode(properties);
 
-                Long unitNodeId = employee.getSingleRelationship(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING).getEndNode().getId();
+                Long unitNodeId = null;
+                try {
+                    unitNodeId = employee.getSingleRelationship(new SimpleRelationshipType("BELONGS_TO"), Direction.OUTGOING).getEndNode().getId();
+                    createNewLink(employmentNodeId, idMap.get(unitNodeId), "BELONGS_TO");
+                } catch (Exception e) {
+                    System.err.println("Employee node " + employee.getId() + " has no BELONGS_TO relationship.");
+                }
 
                 createNewLink(idMap.get(employee.getId()), employmentNodeId, "HAS_EMPLOYMENT");
-
-                createNewLink(employmentNodeId, idMap.get(unitNodeId), "BELONGS_TO");
-
-
             }
 
         }
