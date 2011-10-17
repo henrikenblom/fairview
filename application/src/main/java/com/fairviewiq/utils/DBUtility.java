@@ -64,4 +64,22 @@ public class DBUtility {
 
     }
 
+    public Relationship getOrCreateRelationship(Long startNodeId, String type) {
+        Node startNode = neo.getNodeById(startNodeId);
+        Relationship imageRelationship = startNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING);
+        if (imageRelationship != null)
+            return imageRelationship;
+        else {
+            return createRelationship(type, startNode);
+        }
+    }
+
+    private Relationship createRelationship(String type, Node startNode) {
+        return startNode.createRelationshipTo(neo.createNode(), new SimpleRelationshipType(type));
+    }
+
+    public Node getNode(Long nodeId) {
+        return neo.getNodeById(nodeId);
+    }
+
 }

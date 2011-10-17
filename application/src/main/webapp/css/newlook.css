@@ -48,7 +48,8 @@ button {
 form {
     margin-bottom: 1em;
 }
-table{
+
+table {
     white-space: nowrap;
 }
 
@@ -123,7 +124,7 @@ fieldset {
     padding: 0;
 }
 
-input[type="radio"]{
+input[type="radio"] {
     margin-left: 3px;
     margin-right: 3px;
 }
@@ -418,10 +419,11 @@ input[type="radio"]{
     /*width: 468px;*/
 }
 
-label.checkbox{
+label.checkbox {
     margin-left: 5px;
 }
-.radiobutton{
+
+.radiobutton {
     text-indent: 20px;
 }
 
@@ -733,11 +735,12 @@ label.error {
     line-height: 28px;
     margin-right: 35px;
 }
-.activetab{
+
+.activetab {
     font-weight: bold;
 }
 
-.inactivetab{
+.inactivetab {
     cursor: pointer;
     font-weight: normal;
 }
@@ -787,8 +790,8 @@ label.error {
 
 }
 
-.newperson{
-   cursor: pointer;
+.newperson {
+    cursor: pointer;
 }
 
 .newpersontop {
@@ -849,11 +852,33 @@ label.error {
     float: left;
 }
 
-.delimitedForm{
+.delimitedForm {
 }
 
-.groupedFormsContainer{
+.groupedFormsContainer {
     border-bottom: 1px solid #DDD;
+}
+
+#imagePreview {
+    height: 210px;
+    width: 140px;
+}
+
+#imgUploadContainer {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.loading {
+    background-image: url('/images/loading.gif');
+    background-repeat: no-repeat;
+}
+
+#smallProfileImage {
+    position: absolute;
+    bottom: 380px;
+    left: 220px;
+    cursor: pointer;
 }
 
 
