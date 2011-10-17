@@ -109,6 +109,7 @@
             generateOrgNrDiv(data).insertAfter("#descriptionDiv");
             generateImageUrlDiv(data).insertAfter("#descriptionDiv");
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
+            addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
         }
 
         function generateSubunitEditForm(data) {
