@@ -2,7 +2,7 @@ package com.fairviewiq.spring.endpoints;
 
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.core.Message;
+import org.springframework.integration.Message;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.mail.javamail.MimeMessageHelper;

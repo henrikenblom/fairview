@@ -1,8 +1,8 @@
 <%@page import="java.util.*"%>
 <%@page import="java.text.*"%>
 <%@ page import="org.springframework.web.servlet.support.RequestContext" %>
-<%@ page import="org.springframework.security.context.SecurityContextHolder" %>
-<%@ page import="org.springframework.security.userdetails.UserDetails" %>
+<%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
+<%@ page import="org.springframework.security.core.userdetails.UserDetails" %>
 <%@ page import="org.apache.lucene.search.Query" %>
 <%@ page import="org.apache.lucene.search.TermQuery" %>
 <%@ page import="org.apache.lucene.index.Term" %>

@@ -22,12 +22,13 @@
         <spring.version>2.5.6</spring.version>
         <testng.version>5.8</testng.version>
         <servlet-api.version>2.5</servlet-api.version>
-        <codemate-spring.version>2.2</codemate-spring.version>
+        <codemate-spring.version>2.3</codemate-spring.version>
         <jettison.version>1.0.1</jettison.version>
         <javax-mail.version>1.4</javax-mail.version>
         <commons-fileupload.version>1.2</commons-fileupload.version>
         <commons-io.version>1.4</commons-io.version>
         <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-digester.version>1.7</commons-digester.version>
         <quartz.version>1.6.5</quartz.version>
     </properties>
 
