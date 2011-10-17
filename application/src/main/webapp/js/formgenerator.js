@@ -16,19 +16,34 @@ function generateBaseUnitEditForm(data, datatable) {
 
     var fieldSet = $('<fieldset>');
 
+    var descriptionString = '';
+    var nameString = '';
+    var phoneString = '';
+    var emailString = '';
+    var faxString = '';
+    var webString = '';
+    if (properties != null){
+        descriptionString = propValue(properties.description);
+        nameString = propValue(properties.name);
+        phoneString = propValue(properties.phone);
+        faxString = propValue(properties.fax);
+        emailString = propValue(properties.email);
+        webString = propValue(properties.web);
+    }
+
     var hiddenField_id = hiddenField('_nodeId', unitId);
     var hiddenField_strict = hiddenField('_strict', 'true');
     var hiddenField_username = hiddenField('_username', 'admin');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'unit');
 
-    var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', propValue(properties.description), formId, 'descriptionDiv');
+    var descriptionDiv = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'descriptionDiv');
 
-    var nameDiv = textInputComponent('Namn', 'name', propValue(properties.name), formId, true);
+    var nameDiv = textInputComponent('Namn', 'name', nameString, formId, true);
 
-    var phoneDiv = textInputComponent('Telefonnummer', 'phone', propValue(properties.phone), formId, false);
-    var faxDiv = textInputComponent('Faxnummer', 'fax', propValue(properties.fax), formId, false);
-    var emailDiv = textInputComponent('E-post', 'email', propValue(properties.email), formId, false);
-    var webDiv = textInputComponent('Hemsida', 'web', propValue(properties.web), formId, false);
+    var phoneDiv = textInputComponent('Telefonnummer', 'phone', phoneString, formId, false);
+    var faxDiv = textInputComponent('Faxnummer', 'fax', faxString, formId, false);
+    var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
+    var webDiv = textInputComponent('Hemsida', 'web', webString, formId, false);
 
     //adds the elements to the fieldset -> the order of the elements appended equals the order of the elements displayed on the page
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_username, hiddenField_nodeClass, nameDiv, '<br/>', descriptionDiv, '<br/>', phoneDiv, faxDiv,
@@ -1223,24 +1238,44 @@ function getOrganizationFormId() {
 function generateOrgNrDiv(data) {
     var properties = data.node.properties;
 
-    var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', propValue(properties.regnr), getOrganizationFormId());
+    var regnrString = '';
+    if (properties != null){
+       regnrString = propValue(properties.regnr);
+    }
+
+    var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', regnrString, getOrganizationFormId());
     return orgnrDiv;
 }
 
 function generateImageUrlDiv(data) {
     var properties = data.node.properties;
-    var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', propValue(properties.imageurl), getOrganizationFormId());
+    var imageurlString = '';
+    if (properties != null){
+        imageurlString = propValue(properties.imageurl);
+    }
+    var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', imageurlString, getOrganizationFormId());
     return imageUrlDiv;
 }
 
 function generateSingleAddressComponent(data) {
     var properties = data.node.properties;
 
+    var addressString = '';
+    var postalcodeString = '';
+    var cityString = '';
+    var countryString = '';
+    if (properties != null){
+        addressString = propValue(properties.address);
+        postalcodeString = propValue(properties.postalcode);
+        cityString = propValue(properties.city);
+        countryString = propValue(properties.country);
+    }
+
     var addressComponent = $('<div>');
-    var addressDiv = textInputComponent('Adress', 'address', propValue(properties.address), getOrganizationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', propValue(properties.postalcode), getOrganizationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', propValue(properties.city), getOrganizationFormId());
-    var countryDiv = textInputComponent('Land', 'country', propValue(properties.country), getOrganizationFormId());
+    var addressDiv = textInputComponent('Adress', 'address', addressString, getOrganizationFormId());
+    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId());
+    var cityDiv = textInputComponent('Ort', 'city', cityString, getOrganizationFormId());
+    var countryDiv = textInputComponent('Land', 'country', countryString, getOrganizationFormId());
 
     addressComponent.append(addressDiv, postnummerDiv, cityDiv, countryDiv);
     return addressComponent;
