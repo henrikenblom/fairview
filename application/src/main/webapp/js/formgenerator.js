@@ -22,7 +22,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var emailString = '';
     var faxString = '';
     var webString = '';
-    if (properties != null){
+    if (properties != null) {
         descriptionString = propValue(properties.description);
         nameString = propValue(properties.name);
         phoneString = propValue(properties.phone);
@@ -115,19 +115,48 @@ function generateImageForm(nodeId, hasImage) {
     uploadButton.addClass('personalImageButton')
     uploadButton.html('Ladda upp bild');
     uploadButton.click(function() {
-        img.attr('src', '/images/loading.gif');
+        //img.attr('src', '/images/loading.gif');
+        $.fn.spin = function(opts) {
+            this.each(function() {
+                var $this = $(this),
+                    spinner = $this.data('spinner');
+
+                if (spinner) spinner.stop();
+                if (opts !== false) {
+                    opts = $.extend({color: $this.css('color')}, opts);
+                    spinner = new Spinner(opts).spin(this);
+                    $this.data('spinner', spinner);
+                }
+            });
+            return this;
+        };
+        var opts = {
+            lines: 12, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 5, // The line thickness
+            radius: 10, // The radius of the inner circle
+            color: '#fff', // #rbg or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 66, // Afterglow percentage
+            shadow: true // Whether to render a shadow
+        };
+
         form.ajaxSubmit(
             {dataType: 'json',
+                beforeSubmit:function(){
+                     $("#imagePreview").show().spin(opts);
+                },
                 success: function(response) {
+                    $("#imagePreview").spin(false);
                     if (response == 'success') {
                         img.attr('src', getImgUrl(nodeId, "medium_image"));
                     }
                     else if (response == 'error') {
                         generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
-                        if (hasImage == 'true'){
+                        if (hasImage == 'true') {
                             img.attr('src', getImgUrl(nodeId, "medium_image"));
                         }
-                        else{
+                        else {
                             img.attr('src', '/images/default_person_image.png');
                         }
                     }
@@ -142,7 +171,7 @@ function generateImageForm(nodeId, hasImage) {
 function generateSmallImage(nodeId, hasImage) {
     var img = $('<img>');
     img.attr('id', 'smallProfileImage');
-    img.click(function(){
+    img.click(function() {
         openPopupTab(3)
     });
     if (hasImage == 'true')
@@ -1320,8 +1349,8 @@ function generateOrgNrDiv(data) {
     var properties = data.node.properties;
 
     var regnrString = '';
-    if (properties != null){
-       regnrString = propValue(properties.regnr);
+    if (properties != null) {
+        regnrString = propValue(properties.regnr);
     }
 
     var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', regnrString, getOrganizationFormId());
@@ -1331,7 +1360,7 @@ function generateOrgNrDiv(data) {
 function generateImageUrlDiv(data) {
     var properties = data.node.properties;
     var imageurlString = '';
-    if (properties != null){
+    if (properties != null) {
         imageurlString = propValue(properties.imageurl);
     }
     var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', imageurlString, getOrganizationFormId());
@@ -1345,7 +1374,7 @@ function generateSingleAddressComponent(data) {
     var postalcodeString = '';
     var cityString = '';
     var countryString = '';
-    if (properties != null){
+    if (properties != null) {
         addressString = propValue(properties.address);
         postalcodeString = propValue(properties.postalcode);
         cityString = propValue(properties.city);
