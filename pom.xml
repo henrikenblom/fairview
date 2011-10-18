@@ -19,7 +19,7 @@
         <maven-dependency-plugin.version>2.3</maven-dependency-plugin.version>
         <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
         <jrebel-maven-plugin.version>1.0.7</jrebel-maven-plugin.version>
-        <spring.version>2.5.6</spring.version>
+        <spring.version>3.0.6.RELEASE</spring.version>
         <testng.version>5.8</testng.version>
         <servlet-api.version>2.5</servlet-api.version>
         <codemate-spring.version>2.3</codemate-spring.version>
@@ -70,13 +70,28 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/data/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <argLine>-javaagent:${settings.localRepository}/org/springframework/spring-agent/${spring.version}/spring-agent-${spring.version}.jar</argLine>
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/springframework/spring-agent/${spring.version}/spring-agent-${spring.version}.jar
+                    </argLine>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>jrebel-maven-plugin</artifactId>
                 <version>${jrebel-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-rebel-xml</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 

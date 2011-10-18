@@ -126,10 +126,15 @@ public class Cloner {
         for (Node employee : employees) {
             Map<String, Object> properties = new TreeMap<String, Object>();
             addMultipleIfExists(employee, new String[]{"UUID", "TS_CREATED", "TS_MODIFIED",
-                    "firstname", "lastname", "email", "address", "birthday", "cell", "city", "civic", "country",
+                    "firstname", "lastname", "email", "address", "cell", "city", "civic", "country",
                     "gender", "nationality", "phone", "zip", "additional_info"
             }, properties);
 
+            try {
+                properties.put("birthday", toDate(employee.getProperty("birthday")));
+            } catch (Exception e) {
+                System.err.println("Failed to convert birthday of employee with id " + employee.getId());
+            }
             properties.put("nodeclass", "employee");
 
             if (properties.containsKey("firstname")) {
