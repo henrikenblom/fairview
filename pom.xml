@@ -19,17 +19,16 @@
         <maven-dependency-plugin.version>2.3</maven-dependency-plugin.version>
         <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
         <jrebel-maven-plugin.version>1.0.7</jrebel-maven-plugin.version>
-        <spring.version>3.0.6.RELEASE</spring.version>
+        <spring-agent.version>3.0.6.RELEASE</spring-agent.version>
         <testng.version>5.8</testng.version>
         <servlet-api.version>2.5</servlet-api.version>
-        <codemate-spring.version>2.3</codemate-spring.version>
-        <jettison.version>1.0.1</jettison.version>
-        <javax-mail.version>1.4</javax-mail.version>
+        <codemate-commons.version>2.3.1</codemate-commons.version>
         <commons-fileupload.version>1.2</commons-fileupload.version>
         <commons-io.version>1.4</commons-io.version>
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-digester.version>1.7</commons-digester.version>
         <quartz.version>1.6.5</quartz.version>
+        <gson.version>1.7.1</gson.version>
     </properties>
 
     <repositories>
@@ -71,7 +70,7 @@
                         <suiteXmlFile>src/test/data/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <argLine>
-                        -javaagent:${settings.localRepository}/org/springframework/spring-agent/${spring.version}/spring-agent-${spring.version}.jar
+                        -javaagent:${settings.localRepository}/org/springframework/spring-agent/${spring-agent.version}/spring-agent-${spring-agent.version}.jar
                     </argLine>
                 </configuration>
             </plugin>
