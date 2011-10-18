@@ -125,7 +125,7 @@ function generateProfileGeneralForm(data) {
         phoneString = propValue(properties.phone);
         cellString = propValue(properties.cell);
         emailString = propValue(properties.email);
-        additionalInfoString = propValue(properties.additional__info);
+        additionalInfoString = propValue(properties.additional_info);
         genderString = propValue(properties.gender);
     }
 
