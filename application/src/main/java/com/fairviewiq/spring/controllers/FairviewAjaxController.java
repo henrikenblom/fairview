@@ -451,11 +451,17 @@ public class FairviewAjaxController {
         if (dictionary.get(category) == null) {
             dictionary.put(category, new TreeSet<String>());
         }
-        Boolean added = dictionary.get(category).add(value);
+        Boolean addedToDictionary = dictionary.get(category).add(value);
         getDictionaryNode().setProperty(category, dictionary.get(category));
 
+        String returnValue;
+        if(addedToDictionary)
+            returnValue = "Added word '" + value +"' to the dictionary.";
+        else
+            returnValue = "Word '" + value +"' already exists in the dictionary.";
+
         ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, "Added value " + value +" to dictionary: " + added);
+        mav.addObject(XStreamView.XSTREAM_ROOT, returnValue);
         return mav;
     }
 

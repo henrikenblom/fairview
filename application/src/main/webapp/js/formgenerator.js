@@ -680,7 +680,7 @@ function generateSaveButton(nodeId, callback) {
         $.each(categoryForms, function(count, data){
             var cat = $(data).data('category');
             var val = $(data).val();
-           $.getJSON("/fairview/ajax/dictionary/lookup_word.do", {category: cat, value:val}, function(response){
+           $.getJSON("/fairview/ajax/dictionary/add_word.do", {category: cat, value:val}, function(response){
            });
         });
     });
