@@ -21,6 +21,8 @@ import se.codemate.spring.mvc.XStreamView;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -42,6 +44,8 @@ public class FairviewAjaxController {
     private FunctionListGenerator functionListGenerator;
     private Gson gson = new Gson();
     private Node organization = null;
+
+    private HashMap<String, TreeSet<String>> dictionary = new HashMap<String, TreeSet<String>>();
 
     @PostConstruct
     public void initialize() {
@@ -439,5 +443,39 @@ public class FairviewAjaxController {
         ModelAndView mav = new ModelAndView(xstreamView);
         mav.addObject(XStreamView.XSTREAM_ROOT, retval);
         return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/dictionary/add_word.do"})
+    public ModelAndView lookupWord(@RequestParam("category") String category,
+                           @RequestParam("value") String value) {
+        if (dictionary.get(category) == null) {
+            dictionary.put(category, new TreeSet<String>());
+        }
+        Boolean added = dictionary.get(category).add(value);
+        getDictionaryNode().setProperty(category, dictionary.get(category));
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, "Added value " + value +" to dictionary: " + added);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/dictionary/get_words.do"})
+    public ModelAndView getTags(@RequestParam("category") String category) {
+        if(dictionary.get(category) == null)
+        {
+            dictionary.put(category,(TreeSet<String>) getDictionaryNode().getProperty(category));
+        }
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, dictionary.get(category));
+        return mav;
+    }
+
+    private Node getDictionaryNode() {
+        try {
+            Node dictionary = neo.getReferenceNode().getSingleRelationship(new SimpleRelationshipType("HAS_DICTIONARY"), Direction.OUTGOING).getEndNode();
+            return dictionary;
+        } catch (Exception e) {
+            return neo.getReferenceNode().createRelationshipTo(neo.createNode(), new SimpleRelationshipType("HAS_DICTIONARY")).getEndNode();
+        }
     }
 }
