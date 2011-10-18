@@ -445,7 +445,7 @@ public class FairviewAjaxController {
         return mav;
     }
 
-    @RequestMapping(value = {"/fairview/ajax/dictionary/add_word.do"})
+    @RequestMapping(value = {"/fairview/ajax/add_word.do"})
     public ModelAndView lookupWord(@RequestParam("category") String category,
                            @RequestParam("value") String value) {
         if (dictionary.get(category) == null) {
@@ -454,18 +454,18 @@ public class FairviewAjaxController {
         Boolean addedToDictionary = dictionary.get(category).add(value);
         getDictionaryNode().setProperty(category, dictionary.get(category));
 
-        String returnValue;
+        String response;
         if(addedToDictionary)
-            returnValue = "Added word '" + value +"' to the dictionary.";
+            response = "Added word '"+ value +"' to category '"+ category +"' of the dictionary.";
         else
-            returnValue = "Word '" + value +"' already exists in the dictionary.";
+            response = "Word '"+ value +"' already exists in the dictionary.";
 
         ModelAndView mav = new ModelAndView(xstreamView);
-        mav.addObject(XStreamView.XSTREAM_ROOT, returnValue);
+        mav.addObject(XStreamView.XSTREAM_ROOT, response);
         return mav;
     }
 
-    @RequestMapping(value = {"/fairview/ajax/dictionary/get_words.do"})
+    @RequestMapping(value = {"/fairview/ajax/get_words.do"})
     public ModelAndView getTags(@RequestParam("category") String category) {
         if(dictionary.get(category) == null)
         {
