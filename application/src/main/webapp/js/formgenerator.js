@@ -22,7 +22,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var emailString = '';
     var faxString = '';
     var webString = '';
-    if (properties != null) {
+    if (properties != null){
         descriptionString = propValue(properties.description);
         nameString = propValue(properties.name);
         phoneString = propValue(properties.phone);
@@ -552,9 +552,14 @@ function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunctio
         $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
             if (!$.isEmptyObject(data.list)) {
                 var array = data.list["node"];
-                $.each(array, function(count, object) {
-                    formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
-                });
+                if (array.length > 1) {
+                    $.each(array, function(count, object) {
+                        formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
+                    });
+                }
+                else { //an array containing only one entry is a single object
+                    formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
+                }
             }
             else { //no values of the type exists so create empty form
                 formGeneratingFunction.call(this, type).prependTo(divToPrepend);
@@ -1234,8 +1239,8 @@ function generateOrgNrDiv(data) {
     var properties = data.node.properties;
 
     var regnrString = '';
-    if (properties != null) {
-        regnrString = propValue(properties.regnr);
+    if (properties != null){
+       regnrString = propValue(properties.regnr);
     }
 
     var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', regnrString, getOrganizationFormId());
@@ -1245,7 +1250,7 @@ function generateOrgNrDiv(data) {
 function generateImageUrlDiv(data) {
     var properties = data.node.properties;
     var imageurlString = '';
-    if (properties != null) {
+    if (properties != null){
         imageurlString = propValue(properties.imageurl);
     }
     var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', imageurlString, getOrganizationFormId());
@@ -1259,7 +1264,7 @@ function generateSingleAddressComponent(data) {
     var postalcodeString = '';
     var cityString = '';
     var countryString = '';
-    if (properties != null) {
+    if (properties != null){
         addressString = propValue(properties.address);
         postalcodeString = propValue(properties.postalcode);
         cityString = propValue(properties.city);
