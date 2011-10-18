@@ -10,7 +10,7 @@
 
 <html>
 <head>
-    <title>Infero Quest - Funktioner</title>
+    <title>Infero Quest - Personer</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
