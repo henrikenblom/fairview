@@ -226,7 +226,7 @@ function generateProfileGeneralForm(data) {
         phoneString = propValue(properties.phone);
         cellString = propValue(properties.cell);
         emailString = propValue(properties.email);
-        additionalInfoString = propValue(properties.additional__info);
+        additionalInfoString = propValue(properties.additional_info);
         genderString = propValue(properties.gender);
     }
 
@@ -653,14 +653,9 @@ function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunctio
         $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
             if (!$.isEmptyObject(data.list)) {
                 var array = data.list["node"];
-                if (array.length > 1) {
-                    $.each(array, function(count, object) {
-                        formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
-                    });
-                }
-                else { //an array containing only one entry is a single object
-                    formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
-                }
+                $.each(array, function(count, object) {
+                    formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
+                });
             }
             else { //no values of the type exists so create empty form
                 formGeneratingFunction.call(this, type).prependTo(divToPrepend);
