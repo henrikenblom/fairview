@@ -680,6 +680,14 @@ function generateSaveButton(nodeId, callback) {
         else {
             createNodes(editedForms, nodeId, callback);
         }
+
+        var categoryForms = $('input:data("category")');
+        $.each(categoryForms, function(count, data){
+            var cat = $(data).data('category');
+            var val = $(data).val();
+           $.getJSON("/fairview/ajax/dictionary/lookup_word.do", {category: cat, value:val}, function(response){
+           });
+        });
     });
 
     return saveButton;
@@ -995,6 +1003,28 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     inputDiv.append(inputLabel, textInput);
     return inputDiv;
 }
+function categoryInputComponent(labelText, inputName, value, formId, category, required) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    inputLabel.append(labelText);
+    var textInput = $('<input type="text">');
+    textInput.addClass("text-field");
+    textInput.attr("id", inputName + "-field");
+    textInput.attr("name", inputName);
+    textInput.val(value);
+    textInput.change(function() {
+        $('#' + formId).data('edited', 'true');
+    });
+    textInput.keyup(function() {
+        validateForm(formId);
+    });
+    textInput.attr('data-category', category);
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
+    inputDiv.append(inputLabel, textInput);
+    return inputDiv;
+}
 
 function dateInputComponent(labelText, inputName, value, formId, required) {
     var inputDiv = fieldBox();
@@ -1275,7 +1305,7 @@ function generateSingleAddressComponent(data) {
     var addressDiv = textInputComponent('Adress', 'address', addressString, getOrganizationFormId());
     var postnummerDiv = textInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId());
     var cityDiv = textInputComponent('Ort', 'city', cityString, getOrganizationFormId());
-    var countryDiv = textInputComponent('Land', 'country', countryString, getOrganizationFormId());
+    var countryDiv = categoryInputComponent('Land', 'country', countryString, getOrganizationFormId(), 'country');
 
     addressComponent.append(addressDiv, postnummerDiv, cityDiv, countryDiv);
     return addressComponent;
