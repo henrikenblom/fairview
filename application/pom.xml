@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>fairview-application</artifactId>
-    <version>11.1</version>
+    <version>${project.parent.version}</version>
     <name>Fairview Web Application</name>
     <packaging>war</packaging>
 
@@ -90,19 +90,7 @@
         <dependency>
             <groupId>se.codemate.commons</groupId>
             <artifactId>codemate-spring</artifactId>
-            <version>${codemate-spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jettison</groupId>
-            <artifactId>jettison</artifactId>
-            <version>${jettison.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>${javax-mail.version}</version>
+            <version>${codemate-commons.version}</version>
         </dependency>
 
         <dependency>
@@ -134,10 +122,11 @@
             <artifactId>quartz</artifactId>
             <version>${quartz.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>1.7.1</version>
+            <version>${gson.version}</version>
         </dependency>
 
     </dependencies>

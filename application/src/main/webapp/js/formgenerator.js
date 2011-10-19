@@ -6,6 +6,25 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var CITY_CATEGORY = 'cities';
+var LANGUAGE_CATEGORY = 'languages';
+var COUNTRY_CATEGORY = 'countries';
+var POSTALCODE_CATEGORY = 'postalcodes';
+var NATIONALITY_CATEGORY = 'nationalities';
+var CERTIFICATE_NAME_CATEGORY = 'certificate_names';
+var CERTIFICATE_GRADE_CATEGORY = 'certificate_grades';
+var EDUCATION_NAME_CATEGORY = 'education_names';
+var EDUCATION_DIRECTION_CATEGORY = 'education_directions';
+var EDUCATION_SCOPE_CATEGORY = 'education_scopes';
+var WORKEXPERIENCE_NAME_CATEGORY = 'workexperience_names';
+var WORKEXPERIENCE_COMPANY_CATEGORY = 'workexperience_companies';
+var WORKEXPERIENCE_TRADE_CATEGORY = 'workexperience_trades';
+var MILITARYSERVICE_NAME_CATEGORY = 'militaryservice_names';
+var EMPLOYMENT_TITLE_CATEGORY = 'employment_titles';
+var EMPLOYMENT_COMPANYCAR_CATEGORY = 'employment_companycars';
+var EMPLOYMENT_PENSIONINSURANCE_CATEGORY = 'employment_pensioninsurances';
+
+
 function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
@@ -22,7 +41,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var emailString = '';
     var faxString = '';
     var webString = '';
-    if (properties != null){
+    if (properties != null) {
         descriptionString = propValue(properties.description);
         nameString = propValue(properties.name);
         phoneString = propValue(properties.phone);
@@ -75,15 +94,116 @@ function generateSubunitCreationForm() {
     var webDiv = textInputComponent('Hemsida', 'web', '', formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', '', getSubUnitCreationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getSubUnitCreationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', '', getSubUnitCreationFormId());
-    var countryDiv = textInputComponent('Land', 'country', '', getSubUnitCreationFormId());
+    var postnummerDiv = typeaheadInputComponent('Postnummer', 'postalcode', '', getSubUnitCreationFormId(), POSTALCODE_CATEGORY);
+    var cityDiv = typeaheadInputComponent('Ort', 'city', '', getSubUnitCreationFormId(), CITY_CATEGORY);
+    var countryDiv = typeaheadInputComponent('Land', 'country', '', getSubUnitCreationFormId(), COUNTRY_CATEGORY);
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass, nameDiv, '<br/>', descriptionDiv, phoneDiv, faxDiv, emailDiv,
         webDiv, addressDiv, postnummerDiv, cityDiv, countryDiv);
     form.append(fieldSet);
     form.validate();
     return form;
+}
+
+function generateImageForm(nodeId, hasImage) {
+    var imageUploadContainer = $('<div>');
+    imageUploadContainer.attr('id', 'imgUploadContainer');
+
+    var preview = $('<div>');
+    preview.attr('id', 'imagePreview');
+    var img = $('<img>');
+
+    if (hasImage == 'true')
+        img.attr('src', getImgUrl(nodeId, "medium_image"));
+    else
+        img.attr('src', '/images/default_person_image.png');
+
+    preview.append(img);
+    imageUploadContainer.append(preview);
+
+    var form = buildMultipartForm('imageForm');
+    var fileInput = $('<input>');
+    fileInput.attr('name', 'file');
+    fileInput.attr('type', 'file');
+    fileInput.addClass('personalImageInput');
+    var hiddenField_id = hiddenField('_nodeId', nodeId);
+
+    form.append(fileInput, hiddenField_id);
+    var buttonDiv = $('<div>');
+    var uploadButton = $('<button>');
+    uploadButton.addClass('personalImageButton')
+    uploadButton.html('Ladda upp bild');
+    uploadButton.click(function() {
+        //img.attr('src', '/images/loading.gif');
+        $.fn.spin = function(opts) {
+            this.each(function() {
+                var $this = $(this),
+                    spinner = $this.data('spinner');
+
+                if (spinner) spinner.stop();
+                if (opts !== false) {
+                    opts = $.extend({color: $this.css('color')}, opts);
+                    spinner = new Spinner(opts).spin(this);
+                    $this.data('spinner', spinner);
+                }
+            });
+            return this;
+        };
+        var opts = {
+            lines: 12, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 5, // The line thickness
+            radius: 10, // The radius of the inner circle
+            color: '#fff', // #rbg or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 66, // Afterglow percentage
+            shadow: true // Whether to render a shadow
+        };
+
+        form.ajaxSubmit(
+            {dataType: 'json',
+                beforeSubmit:function(){
+                     $("#imagePreview").show().spin(opts);
+                },
+                success: function(response) {
+                    $("#imagePreview").spin(false);
+                    if (response == 'success') {
+                        img.attr('src', getImgUrl(nodeId, "medium_image"));
+                    }
+                    else if (response == 'error') {
+                        generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
+                        if (hasImage == 'true') {
+                            img.attr('src', getImgUrl(nodeId, "medium_image"));
+                        }
+                        else {
+                            img.attr('src', '/images/default_person_image.png');
+                        }
+                    }
+                }});
+    });
+
+    imageUploadContainer.append(form, uploadButton, generateCancelButton());
+
+    return imageUploadContainer;
+}
+
+function generateSmallImage(nodeId, hasImage) {
+    var img = $('<img>');
+    img.attr('id', 'smallProfileImage');
+    img.click(function() {
+        openPopupTab(3)
+    });
+    if (hasImage == 'true')
+        img.attr('src', getImgUrl(nodeId, "small_image"));
+    else
+        img.attr('src', '/images/default_person_image_small.png');
+    return img;
+}
+
+function getImgUrl(nodeId, size) {
+    d = new Date(); //hack to force the browser to reload the image instead of using the cached one
+    var url = 'fairview/ajax/get_image.do?_nodeId=' + nodeId + '&size=' + size + '&d=' + d.getTime();
+    return url;
 }
 
 function generateProfileGeneralForm(data) {
@@ -98,7 +218,7 @@ function generateProfileGeneralForm(data) {
     var nationalityString = '';
     var civicString = '';
     var addressString = '';
-    var zipString = '';
+    var postalString = '';
     var cityString = '';
     var countryString = '';
     var phoneString = '';
@@ -119,13 +239,13 @@ function generateProfileGeneralForm(data) {
         nationalityString = propValue(properties.nationality);
         civicString = propValue(properties.civic);
         addressString = propValue(properties.address);
-        zipString = propValue(properties.zip);
+        postalString = propValue(properties.postalcode);
         cityString = propValue(properties.city);
         countryString = propValue(properties.country);
         phoneString = propValue(properties.phone);
         cellString = propValue(properties.cell);
         emailString = propValue(properties.email);
-        additionalInfoString = propValue(properties.additional__info);
+        additionalInfoString = propValue(properties.additional_info);
         genderString = propValue(properties.gender);
     }
 
@@ -140,14 +260,14 @@ function generateProfileGeneralForm(data) {
 
     var firstNameDiv = textInputComponent('Förnamn', 'firstname', firstNameString, formId, true);
     var lastNameDiv = textInputComponent('Efternamn', 'lastname', lastNameString, formId, true);
-    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', nationalityString, formId, false);
+    var nationalityDiv = typeaheadInputComponent('Nationalitet', 'nationality', nationalityString, formId, NATIONALITY_CATEGORY,false);
     var civicDiv = civicInputComponent('Personnummer', 'civic', civicString, formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', addressString, formId, false);
-    var zipDiv = textInputComponent('Postnummer', 'zip', zipString, formId, false);
+    var postalcodeDiv = typeaheadInputComponent('Postnummer', 'postalcode', postalString, formId, POSTALCODE_CATEGORY,false);
 
-    var cityDiv = textInputComponent('Postort', 'city', cityString, formId, false);
-    var countryDiv = textInputComponent('Land', 'country', countryString, formId, false);
+    var cityDiv = typeaheadInputComponent('Postort', 'city', cityString, formId, CITY_CATEGORY,false);
+    var countryDiv = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var phoneDiv = textInputComponent('Telefon', 'phone', phoneString, formId, false);
     var cellDiv = textInputComponent('Mobiltelefon', 'cell', cellString, formId, false);
     var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
@@ -159,7 +279,7 @@ function generateProfileGeneralForm(data) {
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization, hiddenField_nodeClass,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
-        zipDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
+        postalcodeDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     form.validate();
@@ -207,7 +327,7 @@ function generateEmploymentCreationForm(data) {
     employedPersonDiv.append('Anställd: ');
     employedPersonDiv.append(data.firstname + ' ' + data.lastname);
 
-    var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
+    var titleDiv = typeaheadInputComponent('Titel', 'title', propValue(properties.title), formId, EMPLOYMENT_TITLE_CATEGORY,false);
     var workPhoneDiv = textInputComponent('Arbetstelefon', 'workphone', propValue(properties.workphone), formId, false);
     var workingHoursDiv = textInputComponent('Arbetstider', 'workhours', propValue(properties.workhours), formId, false);
     var responsibilitys = [
@@ -232,11 +352,11 @@ function generateEmploymentCreationForm(data) {
     addDismissalPeriod(properties.dismissalperiodemployee, dismissalPeriodEmployeeDiv.children('#dismissalperiodemployee-field'));
     var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
-    var companyCarDiv = textInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, false);
+    var companyCarDiv = typeaheadInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, EMPLOYMENT_COMPANYCAR_CATEGORY,false);
     var fromDiv = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', propValue(properties.from), formId, false);
     var toDiv = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', propValue(properties.to), formId, false);
 
-    var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, false);
+    var pensionInsurancesDiv = typeaheadInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, EMPLOYMENT_PENSIONINSURANCE_CATEGORY,false);
     fieldSet.append(hiddenField_type,
         hiddenField_strict,
         hiddenField_username,
@@ -312,7 +432,7 @@ function generateLanguageForm(form_Id, languageNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'languageskill');
 
-    var language = textInputComponent('Språk', 'language', languageString, formId, false);
+    var language = typeaheadInputComponent('Språk', 'language', languageString, formId, LANGUAGE_CATEGORY,false);
 
     var written = selectInputComponent('Skriftligt', 'written', 'written-field:byte', formId, false);
     written.children('#written-field').append(generateOption('1', writtenString, 'Viss'));
@@ -364,12 +484,12 @@ function generateEducationForm(form_Id, educationNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'education');
 
-    var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
-    var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
-    var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
+    var nameComponent = typeaheadInputComponent('Benämning', 'name', nameString, formId, EDUCATION_NAME_CATEGORY,false);
+    var directionComponent = typeaheadInputComponent('Inriktning', 'direction', directionString, formId, EDUCATION_DIRECTION_CATEGORY,false);
+    var scopeComponent = typeaheadInputComponent('Omfattning', 'scope', scopeString, formId, EDUCATION_SCOPE_CATEGORY,false);
     var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
-    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
     var levelComponent = selectInputComponent('Utbildningsnivå', 'level', 'level-field', formId, false);
@@ -417,11 +537,11 @@ function generateCertificateForm(form_Id, certificateNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'certificate');
 
-    var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
+    var nameComponent = typeaheadInputComponent('Namn', 'name', nameString, formId, CERTIFICATE_NAME_CATEGORY,false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
     var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
-    var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
+    var gradeComponent = typeaheadInputComponent('Betyg', 'grade', gradeString, formId, CERTIFICATE_GRADE_CATEGORY,false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
         nameComponent, descriptionComponent, fromComponent, toComponent
@@ -462,10 +582,10 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'workexperience');
 
-    var nameComponent = textInputComponent('Tidigare befattning', 'name', nameString, formId, false);
-    var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
-    var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
-    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var nameComponent = typeaheadInputComponent('Tidigare befattning', 'name', nameString, formId, WORKEXPERIENCE_NAME_CATEGORY,false);
+    var companyComponent = typeaheadInputComponent('Företag', 'company', companyString, formId, WORKEXPERIENCE_COMPANY_CATEGORY,false);
+    var tradeComponent = typeaheadInputComponent('Bransch', 'trade', tradeString, formId, WORKEXPERIENCE_TRADE_CATEGORY,false);
+    var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
@@ -498,7 +618,7 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'militaryservice');
 
-    var nameComponent = textInputComponent('Militärtjänst', 'name', nameString, formId, false);
+    var nameComponent = typeaheadInputComponent('Militärtjänst', 'name', nameString, formId, MILITARYSERVICE_NAME_CATEGORY,false);
     var descriptionComponent = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'description-field');
 
     form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
@@ -578,14 +698,9 @@ function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunctio
         $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
             if (!$.isEmptyObject(data.list)) {
                 var array = data.list["node"];
-                if (array.length > 1) {
-                    $.each(array, function(count, object) {
-                        formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
-                    });
-                }
-                else { //an array containing only one entry is a single object
-                    formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
-                }
+                $.each(array, function(count, object) {
+                    formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
+                });
             }
             else { //no values of the type exists so create empty form
                 formGeneratingFunction.call(this, type).prependTo(divToPrepend);
@@ -686,6 +801,17 @@ function createNodes(forms, nodeId, callback) {
         }
     });
 }
+function addWordsToDictionary() {
+    var editedCategoryInputs = $('input:data(edited=true)');
+    $.each(editedCategoryInputs, function(count, data) {
+        var cat = $(data).data('category');
+        var val = $(data).val();
+        if (cat != null && val != '') {
+            $.getJSON("/fairview/ajax/add_word.do", {category: cat, value:val}, function(response) {
+            });
+        }
+    });
+}
 function generateSaveButton(nodeId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
@@ -706,6 +832,7 @@ function generateSaveButton(nodeId, callback) {
         else {
             createNodes(editedForms, nodeId, callback);
         }
+        addWordsToDictionary();
     });
 
     return saveButton;
@@ -724,7 +851,7 @@ function existsNewPersonForm(forms) {
 
 function generateCancelButton() {
     var cancelButton = $('<button>');
-    cancelButton.html('Avbryt');
+    cancelButton.html('Stäng');
     cancelButton.attr('id', 'cancelButton');
     cancelButton.click(function() {
         var edited;
@@ -886,7 +1013,7 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         validateForm(formId);
     });
     if (required == true) {
@@ -1010,11 +1137,58 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("name", inputName);
     textInput.val(value);
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textInput.keyup(function() {
         validateForm(formId);
     });
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
+    inputDiv.append(inputLabel, textInput);
+    return inputDiv;
+}
+function setFormEdited(formId) {
+    $('#' + formId).data('edited', 'true');
+}
+function setInputEdited(input) {
+    input.data('edited', 'true');
+}
+function typeaheadInputComponent(labelText, inputName, value, formId, category, required) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    inputLabel.append(labelText);
+    var textInput = $('<input type="text">');
+    textInput.addClass("text-field");
+    textInput.attr("id", inputName + "-field");
+    textInput.attr("name", inputName);
+    textInput.val(value);
+    textInput.change(function() {
+        setFormEdited(formId);
+        setInputEdited(textInput);
+    });
+    textInput.keyup(function() {
+        validateForm(formId);
+    });
+    textInput.attr('data-category', category);
+    $.getJSON("/fairview/ajax/get_words.do", {category:category}, function(response) {
+        if (response.sortedset != null) { //if the response is a string, an error has occured
+            var array = response.sortedset.string;
+            $.each(array, function(count, object) {
+                array[count] = object.toString();
+            });
+            textInput.autocomplete({
+                source: array,
+                minLength: 2,
+                select: function() {
+                    setFormEdited(formId);
+                    setInputEdited(textInput);
+                }
+            });
+        }
+    });
+
+
     if (required == true) {
         makeInputRequired(inputLabel, textInput);
     }
@@ -1039,7 +1213,7 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
         showMonthAfterYear: true
     });
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textInput.keyup(function() {
         validateForm(formId);
@@ -1069,7 +1243,7 @@ function radioButtonInputComponent(labelText, inputName, formId, radioButtonData
             validateForm(formId);
         });
         radioButton.change(function() {
-            $('#' + formId).data('edited', 'true');
+            setFormEdited(formId);
         });
         if (radioButtonData[i][1] == selected)
             radioButton.attr('checked', 'checked');
@@ -1112,7 +1286,7 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
             validateForm(formId);
         });
         checkbox.change(function() {
-            $('#' + formId).data('edited', 'true');
+            setFormEdited(formId);
         });
 
         inputBoxDiv.append(hidden);
@@ -1137,7 +1311,7 @@ function civicInputComponent(labelText, inputName, value, formId, required) {
         validateForm(formId);
     });
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         $('#birthday-field').val(makeBirthdate(this.value));
     });
     if (required == true) {
@@ -1189,6 +1363,15 @@ function buildUpdateForm(id, action) {
 
 }
 
+function buildMultipartForm(id) {
+    var updateForm = $('<form>');
+    updateForm.attr("id", id);
+    updateForm.attr("method", "post");
+    updateForm.attr("enctype", "multipart/form-data");
+    updateForm.attr("action", "/fairview/ajax/submit_profileimage.do");
+    return updateForm;
+}
+
 function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     var textareaDiv = fieldBox();
     textareaDiv.attr("id", divId);
@@ -1199,7 +1382,7 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
     textareaInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textareaInput.keyup(function() {
         validateForm(formId);
@@ -1241,7 +1424,7 @@ function selectInputComponent(labelText, propertyName, divId, formId, required) 
     selectInput.attr("name", propertyName);
     selectInput.attr("id", inputId + "-field");
     selectInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         validateForm(formId);
     });
     if (required == true) {
@@ -1265,8 +1448,8 @@ function generateOrgNrDiv(data) {
     var properties = data.node.properties;
 
     var regnrString = '';
-    if (properties != null){
-       regnrString = propValue(properties.regnr);
+    if (properties != null) {
+        regnrString = propValue(properties.regnr);
     }
 
     var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', regnrString, getOrganizationFormId());
@@ -1276,7 +1459,7 @@ function generateOrgNrDiv(data) {
 function generateImageUrlDiv(data) {
     var properties = data.node.properties;
     var imageurlString = '';
-    if (properties != null){
+    if (properties != null) {
         imageurlString = propValue(properties.imageurl);
     }
     var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', imageurlString, getOrganizationFormId());
@@ -1290,7 +1473,7 @@ function generateSingleAddressComponent(data) {
     var postalcodeString = '';
     var cityString = '';
     var countryString = '';
-    if (properties != null){
+    if (properties != null) {
         addressString = propValue(properties.address);
         postalcodeString = propValue(properties.postalcode);
         cityString = propValue(properties.city);
@@ -1299,9 +1482,9 @@ function generateSingleAddressComponent(data) {
 
     var addressComponent = $('<div>');
     var addressDiv = textInputComponent('Adress', 'address', addressString, getOrganizationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', cityString, getOrganizationFormId());
-    var countryDiv = textInputComponent('Land', 'country', countryString, getOrganizationFormId());
+    var postnummerDiv = typeaheadInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId(), POSTALCODE_CATEGORY);
+    var cityDiv = typeaheadInputComponent('Ort', 'city', cityString, getOrganizationFormId(), CITY_CATEGORY);
+    var countryDiv = typeaheadInputComponent('Land', 'country', countryString, getOrganizationFormId(), COUNTRY_CATEGORY);
 
     addressComponent.append(addressDiv, postnummerDiv, cityDiv, countryDiv);
     return addressComponent;

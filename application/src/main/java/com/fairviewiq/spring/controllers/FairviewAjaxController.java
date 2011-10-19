@@ -21,6 +21,8 @@ import se.codemate.spring.mvc.XStreamView;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -43,8 +45,20 @@ public class FairviewAjaxController {
     private Gson gson = new Gson();
     private Node organization = null;
 
+    private HashMap<String, TreeSet<String>> dictionary = new HashMap<String, TreeSet<String>>();
+
     @PostConstruct
     public void initialize() {
+        //Executing the transaction in the initializemethod prevents concurrent transactions that create new nodes
+        Transaction transaction = neo.beginTx();
+        try {
+            getDictionaryNode();
+            transaction.success();
+        } catch (Exception e) {
+            transaction.failure();
+        } finally {
+            transaction.finish();
+        }
 
         neoUtils = new NeoUtils(neo);
         XStream xstream = new XStream(new JettisonMappedXmlDriver());
@@ -92,6 +106,11 @@ public class FairviewAjaxController {
 
         } catch (ClassNotFoundException e) {
             // no-op
+        }
+        try {
+            xstream.alias("sortedset", SortedSet.class);
+        } catch (Exception e) {
+            //no-op
         }
 
         xstreamView = new XStreamView(xstream, "text/json");
@@ -439,5 +458,49 @@ public class FairviewAjaxController {
         ModelAndView mav = new ModelAndView(xstreamView);
         mav.addObject(XStreamView.XSTREAM_ROOT, retval);
         return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/add_word.do"})
+    public ModelAndView addWord(@RequestParam("category") String category,
+                                             @RequestParam("value") String value) {
+        if (dictionary.get(category) == null) {
+            dictionary.put(category, new TreeSet<String>());
+        }
+        Boolean addedToDictionary = dictionary.get(category).add(value);
+        getDictionaryNode().setProperty(category, dictionary.get(category));
+
+        String response;
+        if (addedToDictionary)
+            response = "Added word '" + value + "' to category '" + category + "' of the dictionary.";
+        else
+            response = "Word '" + value + "' already exists in the dictionary.";
+
+        ModelAndView mav = new ModelAndView(xstreamView);
+        mav.addObject(XStreamView.XSTREAM_ROOT, response);
+        return mav;
+    }
+
+    @RequestMapping(value = {"/fairview/ajax/get_words.do"})
+    public ModelAndView getWords(@RequestParam("category") String category) {
+        ModelAndView mav = new ModelAndView(xstreamView);
+        if (dictionary.get(category) == null) {
+            try {
+                dictionary.put(category, (TreeSet<String>) getDictionaryNode().getProperty(category));
+            } catch (Exception e) {
+                mav.addObject(XStreamView.XSTREAM_ROOT, "error: category " + category + " doesn't exist in the dictionary.");
+                return mav;
+            }
+        }
+        mav.addObject(XStreamView.XSTREAM_ROOT, dictionary.get(category));
+        return mav;
+    }
+
+    private Node getDictionaryNode() {
+        try {
+            Node dictionary = neo.getReferenceNode().getSingleRelationship(new SimpleRelationshipType("HAS_DICTIONARY"), Direction.OUTGOING).getEndNode();
+            return dictionary;
+        } catch (Exception e) {
+            return neo.getReferenceNode().createRelationshipTo(neo.createNode(), new SimpleRelationshipType("HAS_DICTIONARY")).getEndNode();
+        }
     }
 }
