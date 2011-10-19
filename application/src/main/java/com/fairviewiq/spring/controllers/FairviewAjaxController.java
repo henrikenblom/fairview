@@ -49,7 +49,7 @@ public class FairviewAjaxController {
 
     @PostConstruct
     public void initialize() {
-        //Transaction executed in the initialize method to prevent it from being handled by a transaction handler higher up in the hierarchy
+        //Executing the transaction in the initializemethod prevents concurrent transactions that create new nodes
         Transaction transaction = neo.beginTx();
         try {
             getDictionaryNode();
