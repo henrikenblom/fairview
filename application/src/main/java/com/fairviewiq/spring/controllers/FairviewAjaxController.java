@@ -49,6 +49,16 @@ public class FairviewAjaxController {
 
     @PostConstruct
     public void initialize() {
+        //Transaction executed in the initialize method to prevent it from being handled by a transaction handler higher up in the hierarchy
+        Transaction transaction = neo.beginTx();
+        try {
+            getDictionaryNode();
+            transaction.success();
+        } catch (Exception e) {
+            transaction.failure();
+        } finally {
+            transaction.finish();
+        }
 
         neoUtils = new NeoUtils(neo);
         XStream xstream = new XStream(new JettisonMappedXmlDriver());
@@ -96,6 +106,11 @@ public class FairviewAjaxController {
 
         } catch (ClassNotFoundException e) {
             // no-op
+        }
+        try {
+            xstream.alias("sortedset", SortedSet.class);
+        } catch (Exception e) {
+            //no-op
         }
 
         xstreamView = new XStreamView(xstream, "text/json");
@@ -446,8 +461,8 @@ public class FairviewAjaxController {
     }
 
     @RequestMapping(value = {"/fairview/ajax/add_word.do"})
-    public ModelAndView lookupWord(@RequestParam("category") String category,
-                           @RequestParam("value") String value) {
+    public ModelAndView addWord(@RequestParam("category") String category,
+                                             @RequestParam("value") String value) {
         if (dictionary.get(category) == null) {
             dictionary.put(category, new TreeSet<String>());
         }
@@ -455,10 +470,10 @@ public class FairviewAjaxController {
         getDictionaryNode().setProperty(category, dictionary.get(category));
 
         String response;
-        if(addedToDictionary)
-            response = "Added word '"+ value +"' to category '"+ category +"' of the dictionary.";
+        if (addedToDictionary)
+            response = "Added word '" + value + "' to category '" + category + "' of the dictionary.";
         else
-            response = "Word '"+ value +"' already exists in the dictionary.";
+            response = "Word '" + value + "' already exists in the dictionary.";
 
         ModelAndView mav = new ModelAndView(xstreamView);
         mav.addObject(XStreamView.XSTREAM_ROOT, response);
@@ -466,12 +481,16 @@ public class FairviewAjaxController {
     }
 
     @RequestMapping(value = {"/fairview/ajax/get_words.do"})
-    public ModelAndView getTags(@RequestParam("category") String category) {
-        if(dictionary.get(category) == null)
-        {
-            dictionary.put(category,(TreeSet<String>) getDictionaryNode().getProperty(category));
-        }
+    public ModelAndView getWords(@RequestParam("category") String category) {
         ModelAndView mav = new ModelAndView(xstreamView);
+        if (dictionary.get(category) == null) {
+            try {
+                dictionary.put(category, (TreeSet<String>) getDictionaryNode().getProperty(category));
+            } catch (Exception e) {
+                mav.addObject(XStreamView.XSTREAM_ROOT, "error: category " + category + " doesn't exist in the dictionary.");
+                return mav;
+            }
+        }
         mav.addObject(XStreamView.XSTREAM_ROOT, dictionary.get(category));
         return mav;
     }

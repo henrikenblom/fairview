@@ -6,6 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var CITY_CATEGORY = 'cities';
+var LANGUAGE_CATEGORY = 'languages';
+var COUNTRY_CATEGORY = 'countries';
+var POSTALCODE_CATEGORY = 'postalcodes';
+var NATIONALITY_CATEGORY = 'nationalities';
+
+
 function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
@@ -75,9 +82,9 @@ function generateSubunitCreationForm() {
     var webDiv = textInputComponent('Hemsida', 'web', '', formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', '', getSubUnitCreationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getSubUnitCreationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', '', getSubUnitCreationFormId());
-    var countryDiv = textInputComponent('Land', 'country', '', getSubUnitCreationFormId());
+    var postnummerDiv = categoryInputComponent('Postnummer', 'postalcode', '', getSubUnitCreationFormId(), POSTALCODE_CATEGORY);
+    var cityDiv = categoryInputComponent('Ort', 'city', '', getSubUnitCreationFormId(), CITY_CATEGORY);
+    var countryDiv = categoryInputComponent('Land', 'country', '', getSubUnitCreationFormId(), COUNTRY_CATEGORY);
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass, nameDiv, '<br/>', descriptionDiv, phoneDiv, faxDiv, emailDiv,
         webDiv, addressDiv, postnummerDiv, cityDiv, countryDiv);
@@ -98,7 +105,7 @@ function generateProfileGeneralForm(data) {
     var nationalityString = '';
     var civicString = '';
     var addressString = '';
-    var zipString = '';
+    var postalString = '';
     var cityString = '';
     var countryString = '';
     var phoneString = '';
@@ -119,7 +126,7 @@ function generateProfileGeneralForm(data) {
         nationalityString = propValue(properties.nationality);
         civicString = propValue(properties.civic);
         addressString = propValue(properties.address);
-        zipString = propValue(properties.zip);
+        postalString = propValue(properties.postalcode);
         cityString = propValue(properties.city);
         countryString = propValue(properties.country);
         phoneString = propValue(properties.phone);
@@ -140,14 +147,14 @@ function generateProfileGeneralForm(data) {
 
     var firstNameDiv = textInputComponent('Förnamn', 'firstname', firstNameString, formId, true);
     var lastNameDiv = textInputComponent('Efternamn', 'lastname', lastNameString, formId, true);
-    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', nationalityString, formId, false);
+    var nationalityDiv = categoryInputComponent('Nationalitet', 'nationality', nationalityString, formId, NATIONALITY_CATEGORY,false);
     var civicDiv = civicInputComponent('Personnummer', 'civic', civicString, formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', addressString, formId, false);
-    var zipDiv = textInputComponent('Postnummer', 'zip', zipString, formId, false);
+    var postalcodeDiv = categoryInputComponent('Postnummer', 'postalcode', postalString, formId, POSTALCODE_CATEGORY,false);
 
-    var cityDiv = textInputComponent('Postort', 'city', cityString, formId, false);
-    var countryDiv = textInputComponent('Land', 'country', countryString, formId, false);
+    var cityDiv = categoryInputComponent('Postort', 'city', cityString, formId, CITY_CATEGORY,false);
+    var countryDiv = categoryInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var phoneDiv = textInputComponent('Telefon', 'phone', phoneString, formId, false);
     var cellDiv = textInputComponent('Mobiltelefon', 'cell', cellString, formId, false);
     var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
@@ -159,7 +166,7 @@ function generateProfileGeneralForm(data) {
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization, hiddenField_nodeClass,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
-        zipDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
+        postalcodeDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     form.validate();
@@ -286,7 +293,7 @@ function generateLanguageForm(form_Id, languageNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'languageskill');
 
-    var language = textInputComponent('Språk', 'language', languageString, formId, false);
+    var language = categoryInputComponent('Språk', 'language', languageString, formId, LANGUAGE_CATEGORY,false);
 
     var written = selectInputComponent('Skriftligt', 'written', 'written-field:byte', formId, false);
     written.children('#written-field').append(generateOption('1', writtenString, 'Viss'));
@@ -655,6 +662,17 @@ function createNodes(forms, nodeId, callback) {
         }
     });
 }
+function addWordsToDictionary() {
+    var editedCategoryInputs = $('input:data(edited=true)');
+    $.each(editedCategoryInputs, function(count, data) {
+        var cat = $(data).data('category');
+        var val = $(data).val();
+        if (cat != null && val != '') {
+            $.getJSON("/fairview/ajax/add_word.do", {category: cat, value:val}, function(response) {
+            });
+        }
+    });
+}
 function generateSaveButton(nodeId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
@@ -675,14 +693,7 @@ function generateSaveButton(nodeId, callback) {
         else {
             createNodes(editedForms, nodeId, callback);
         }
-
-        var categoryForms = $('input:data("category")');
-        $.each(categoryForms, function(count, data){
-            var cat = $(data).data('category');
-            var val = $(data).val();
-           $.getJSON("/fairview/ajax/dictionary/add_word.do", {category: cat, value:val}, function(response){
-           });
-        });
+        addWordsToDictionary();
     });
 
     return saveButton;
@@ -863,7 +874,7 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         validateForm(formId);
     });
     if (required == true) {
@@ -987,7 +998,7 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("name", inputName);
     textInput.val(value);
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textInput.keyup(function() {
         validateForm(formId);
@@ -997,6 +1008,12 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     }
     inputDiv.append(inputLabel, textInput);
     return inputDiv;
+}
+function setFormEdited(formId) {
+    $('#' + formId).data('edited', 'true');
+}
+function setInputEdited(inputName) {
+    $('#' + inputName + '-field').data('edited', 'true');
 }
 function categoryInputComponent(labelText, inputName, value, formId, category, required) {
     var inputDiv = fieldBox();
@@ -1008,12 +1025,31 @@ function categoryInputComponent(labelText, inputName, value, formId, category, r
     textInput.attr("name", inputName);
     textInput.val(value);
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
+        setInputEdited(inputName);
     });
     textInput.keyup(function() {
         validateForm(formId);
     });
     textInput.attr('data-category', category);
+    $.getJSON("/fairview/ajax/get_words.do", {category:category}, function(response) {
+        if (response.sortedset != null) { //if the response is a string, an error has occured
+            var array = response.sortedset.string;
+            $.each(array, function(count, object) {
+                array[count] = object.toString();
+            });
+            textInput.autocomplete({
+                source: array,
+                minLength: 2,
+                select: function() {
+                    setFormEdited(formId);
+                    setInputEdited(inputName);
+                }
+            });
+        }
+    });
+
+
     if (required == true) {
         makeInputRequired(inputLabel, textInput);
     }
@@ -1038,7 +1074,7 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
         showMonthAfterYear: true
     });
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textInput.keyup(function() {
         validateForm(formId);
@@ -1068,7 +1104,7 @@ function radioButtonInputComponent(labelText, inputName, formId, radioButtonData
             validateForm(formId);
         });
         radioButton.change(function() {
-            $('#' + formId).data('edited', 'true');
+            setFormEdited(formId);
         });
         if (radioButtonData[i][1] == selected)
             radioButton.attr('checked', 'checked');
@@ -1111,7 +1147,7 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
             validateForm(formId);
         });
         checkbox.change(function() {
-            $('#' + formId).data('edited', 'true');
+            setFormEdited(formId);
         });
 
         inputBoxDiv.append(hidden);
@@ -1136,7 +1172,7 @@ function civicInputComponent(labelText, inputName, value, formId, required) {
         validateForm(formId);
     });
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         $('#birthday-field').val(makeBirthdate(this.value));
     });
     if (required == true) {
@@ -1198,7 +1234,7 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
     textareaInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textareaInput.keyup(function() {
         validateForm(formId);
@@ -1240,7 +1276,7 @@ function selectInputComponent(labelText, propertyName, divId, formId, required) 
     selectInput.attr("name", propertyName);
     selectInput.attr("id", inputId + "-field");
     selectInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         validateForm(formId);
     });
     if (required == true) {
@@ -1298,9 +1334,9 @@ function generateSingleAddressComponent(data) {
 
     var addressComponent = $('<div>');
     var addressDiv = textInputComponent('Adress', 'address', addressString, getOrganizationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', cityString, getOrganizationFormId());
-    var countryDiv = categoryInputComponent('Land', 'country', countryString, getOrganizationFormId(), 'country');
+    var postnummerDiv = categoryInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId(), POSTALCODE_CATEGORY);
+    var cityDiv = categoryInputComponent('Ort', 'city', cityString, getOrganizationFormId(), CITY_CATEGORY);
+    var countryDiv = categoryInputComponent('Land', 'country', countryString, getOrganizationFormId(), COUNTRY_CATEGORY);
 
     addressComponent.append(addressDiv, postnummerDiv, cityDiv, countryDiv);
     return addressComponent;
