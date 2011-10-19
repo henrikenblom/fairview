@@ -27,7 +27,7 @@
         <property name="location" value="classpath:default.properties"/>
     </bean>
 
-    <context:component-scan base-package="com.fairviewiq"/>
+    <context:component-scan base-package="com.fairviewiq"><context:exclude-filter type="regex" expression="com.fairviewiq.spring.controllers.*"/></context:component-scan>
     <!--suppress UnparsedCustomBeanInspection -->
     <context:spring-configured/>
     <context:load-time-weaver/>

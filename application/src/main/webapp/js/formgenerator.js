@@ -6,6 +6,25 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var CITY_CATEGORY = 'cities';
+var LANGUAGE_CATEGORY = 'languages';
+var COUNTRY_CATEGORY = 'countries';
+var POSTALCODE_CATEGORY = 'postalcodes';
+var NATIONALITY_CATEGORY = 'nationalities';
+var CERTIFICATE_NAME_CATEGORY = 'certificate_names';
+var CERTIFICATE_GRADE_CATEGORY = 'certificate_grades';
+var EDUCATION_NAME_CATEGORY = 'education_names';
+var EDUCATION_DIRECTION_CATEGORY = 'education_directions';
+var EDUCATION_SCOPE_CATEGORY = 'education_scopes';
+var WORKEXPERIENCE_NAME_CATEGORY = 'workexperience_names';
+var WORKEXPERIENCE_COMPANY_CATEGORY = 'workexperience_companies';
+var WORKEXPERIENCE_TRADE_CATEGORY = 'workexperience_trades';
+var MILITARYSERVICE_NAME_CATEGORY = 'militaryservice_names';
+var EMPLOYMENT_TITLE_CATEGORY = 'employment_titles';
+var EMPLOYMENT_COMPANYCAR_CATEGORY = 'employment_companycars';
+var EMPLOYMENT_PENSIONINSURANCE_CATEGORY = 'employment_pensioninsurances';
+
+
 function generateBaseUnitEditForm(data, datatable) {
 
     var unitId = data.node.id;
@@ -75,9 +94,9 @@ function generateSubunitCreationForm() {
     var webDiv = textInputComponent('Hemsida', 'web', '', formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', '', getSubUnitCreationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', '', getSubUnitCreationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', '', getSubUnitCreationFormId());
-    var countryDiv = textInputComponent('Land', 'country', '', getSubUnitCreationFormId());
+    var postnummerDiv = typeaheadInputComponent('Postnummer', 'postalcode', '', getSubUnitCreationFormId(), POSTALCODE_CATEGORY);
+    var cityDiv = typeaheadInputComponent('Ort', 'city', '', getSubUnitCreationFormId(), CITY_CATEGORY);
+    var countryDiv = typeaheadInputComponent('Land', 'country', '', getSubUnitCreationFormId(), COUNTRY_CATEGORY);
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass, nameDiv, '<br/>', descriptionDiv, phoneDiv, faxDiv, emailDiv,
         webDiv, addressDiv, postnummerDiv, cityDiv, countryDiv);
@@ -199,7 +218,7 @@ function generateProfileGeneralForm(data) {
     var nationalityString = '';
     var civicString = '';
     var addressString = '';
-    var zipString = '';
+    var postalString = '';
     var cityString = '';
     var countryString = '';
     var phoneString = '';
@@ -220,7 +239,7 @@ function generateProfileGeneralForm(data) {
         nationalityString = propValue(properties.nationality);
         civicString = propValue(properties.civic);
         addressString = propValue(properties.address);
-        zipString = propValue(properties.zip);
+        postalString = propValue(properties.postalcode);
         cityString = propValue(properties.city);
         countryString = propValue(properties.country);
         phoneString = propValue(properties.phone);
@@ -241,14 +260,14 @@ function generateProfileGeneralForm(data) {
 
     var firstNameDiv = textInputComponent('Förnamn', 'firstname', firstNameString, formId, true);
     var lastNameDiv = textInputComponent('Efternamn', 'lastname', lastNameString, formId, true);
-    var nationalityDiv = textInputComponent('Nationalitet', 'nationality', nationalityString, formId, false);
+    var nationalityDiv = typeaheadInputComponent('Nationalitet', 'nationality', nationalityString, formId, NATIONALITY_CATEGORY,false);
     var civicDiv = civicInputComponent('Personnummer', 'civic', civicString, formId, false);
 
     var addressDiv = textInputComponent('Adress', 'address', addressString, formId, false);
-    var zipDiv = textInputComponent('Postnummer', 'zip', zipString, formId, false);
+    var postalcodeDiv = typeaheadInputComponent('Postnummer', 'postalcode', postalString, formId, POSTALCODE_CATEGORY,false);
 
-    var cityDiv = textInputComponent('Postort', 'city', cityString, formId, false);
-    var countryDiv = textInputComponent('Land', 'country', countryString, formId, false);
+    var cityDiv = typeaheadInputComponent('Postort', 'city', cityString, formId, CITY_CATEGORY,false);
+    var countryDiv = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var phoneDiv = textInputComponent('Telefon', 'phone', phoneString, formId, false);
     var cellDiv = textInputComponent('Mobiltelefon', 'cell', cellString, formId, false);
     var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
@@ -260,7 +279,7 @@ function generateProfileGeneralForm(data) {
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization, hiddenField_nodeClass,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
-        zipDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
+        postalcodeDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     form.validate();
@@ -308,7 +327,7 @@ function generateEmploymentCreationForm(data) {
     employedPersonDiv.append('Anställd: ');
     employedPersonDiv.append(data.firstname + ' ' + data.lastname);
 
-    var titleDiv = textInputComponent('Titel', 'title', propValue(properties.title), formId, false);
+    var titleDiv = typeaheadInputComponent('Titel', 'title', propValue(properties.title), formId, EMPLOYMENT_TITLE_CATEGORY,false);
     var workPhoneDiv = textInputComponent('Arbetstelefon', 'workphone', propValue(properties.workphone), formId, false);
     var workingHoursDiv = textInputComponent('Arbetstider', 'workhours', propValue(properties.workhours), formId, false);
     var responsibilitys = [
@@ -333,11 +352,11 @@ function generateEmploymentCreationForm(data) {
     addDismissalPeriod(properties.dismissalperiodemployee, dismissalPeriodEmployeeDiv.children('#dismissalperiodemployee-field'));
     var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
     addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
-    var companyCarDiv = textInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, false);
+    var companyCarDiv = typeaheadInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, EMPLOYMENT_COMPANYCAR_CATEGORY,false);
     var fromDiv = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', propValue(properties.from), formId, false);
     var toDiv = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', propValue(properties.to), formId, false);
 
-    var pensionInsurancesDiv = textInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, false);
+    var pensionInsurancesDiv = typeaheadInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, EMPLOYMENT_PENSIONINSURANCE_CATEGORY,false);
     fieldSet.append(hiddenField_type,
         hiddenField_strict,
         hiddenField_username,
@@ -413,7 +432,7 @@ function generateLanguageForm(form_Id, languageNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'languageskill');
 
-    var language = textInputComponent('Språk', 'language', languageString, formId, false);
+    var language = typeaheadInputComponent('Språk', 'language', languageString, formId, LANGUAGE_CATEGORY,false);
 
     var written = selectInputComponent('Skriftligt', 'written', 'written-field:byte', formId, false);
     written.children('#written-field').append(generateOption('1', writtenString, 'Viss'));
@@ -465,12 +484,12 @@ function generateEducationForm(form_Id, educationNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'education');
 
-    var nameComponent = textInputComponent('Benämning', 'name', nameString, formId, false);
-    var directionComponent = textInputComponent('Inriktning', 'direction', directionString, formId, false);
-    var scopeComponent = textInputComponent('Omfattning', 'scope', scopeString, formId, false);
+    var nameComponent = typeaheadInputComponent('Benämning', 'name', nameString, formId, EDUCATION_NAME_CATEGORY,false);
+    var directionComponent = typeaheadInputComponent('Inriktning', 'direction', directionString, formId, EDUCATION_DIRECTION_CATEGORY,false);
+    var scopeComponent = typeaheadInputComponent('Omfattning', 'scope', scopeString, formId, EDUCATION_SCOPE_CATEGORY,false);
     var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
-    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
     var levelComponent = selectInputComponent('Utbildningsnivå', 'level', 'level-field', formId, false);
@@ -518,11 +537,11 @@ function generateCertificateForm(form_Id, certificateNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'certificate');
 
-    var nameComponent = textInputComponent('Namn', 'name', nameString, formId, false);
+    var nameComponent = typeaheadInputComponent('Namn', 'name', nameString, formId, CERTIFICATE_NAME_CATEGORY,false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
     var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
-    var gradeComponent = textInputComponent('Betyg', 'grade', gradeString, formId, false);
+    var gradeComponent = typeaheadInputComponent('Betyg', 'grade', gradeString, formId, CERTIFICATE_GRADE_CATEGORY,false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
         nameComponent, descriptionComponent, fromComponent, toComponent
@@ -563,10 +582,10 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'workexperience');
 
-    var nameComponent = textInputComponent('Tidigare befattning', 'name', nameString, formId, false);
-    var companyComponent = textInputComponent('Företag', 'company', companyString, formId, false);
-    var tradeComponent = textInputComponent('Bransch', 'trade', tradeString, formId, false);
-    var countryComponent = textInputComponent('Land', 'country', countryString, formId, false);
+    var nameComponent = typeaheadInputComponent('Tidigare befattning', 'name', nameString, formId, WORKEXPERIENCE_NAME_CATEGORY,false);
+    var companyComponent = typeaheadInputComponent('Företag', 'company', companyString, formId, WORKEXPERIENCE_COMPANY_CATEGORY,false);
+    var tradeComponent = typeaheadInputComponent('Bransch', 'trade', tradeString, formId, WORKEXPERIENCE_TRADE_CATEGORY,false);
+    var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
@@ -599,7 +618,7 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'militaryservice');
 
-    var nameComponent = textInputComponent('Militärtjänst', 'name', nameString, formId, false);
+    var nameComponent = typeaheadInputComponent('Militärtjänst', 'name', nameString, formId, MILITARYSERVICE_NAME_CATEGORY,false);
     var descriptionComponent = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'description-field');
 
     form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
@@ -782,6 +801,17 @@ function createNodes(forms, nodeId, callback) {
         }
     });
 }
+function addWordsToDictionary() {
+    var editedCategoryInputs = $('input:data(edited=true)');
+    $.each(editedCategoryInputs, function(count, data) {
+        var cat = $(data).data('category');
+        var val = $(data).val();
+        if (cat != null && val != '') {
+            $.getJSON("/fairview/ajax/add_word.do", {category: cat, value:val}, function(response) {
+            });
+        }
+    });
+}
 function generateSaveButton(nodeId, callback) {
     var saveButton = $('<button>');
     saveButton.html('Spara');
@@ -802,6 +832,7 @@ function generateSaveButton(nodeId, callback) {
         else {
             createNodes(editedForms, nodeId, callback);
         }
+        addWordsToDictionary();
     });
 
     return saveButton;
@@ -982,7 +1013,7 @@ function createUnitSelect(labelText, inputName, divId, formId, required, unitId)
     selectInput.attr("name", inputName);
     selectInput.attr("id", inputName + "-field");
     selectInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         validateForm(formId);
     });
     if (required == true) {
@@ -1106,11 +1137,58 @@ function textInputComponent(labelText, inputName, value, formId, required) {
     textInput.attr("name", inputName);
     textInput.val(value);
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textInput.keyup(function() {
         validateForm(formId);
     });
+    if (required == true) {
+        makeInputRequired(inputLabel, textInput);
+    }
+    inputDiv.append(inputLabel, textInput);
+    return inputDiv;
+}
+function setFormEdited(formId) {
+    $('#' + formId).data('edited', 'true');
+}
+function setInputEdited(input) {
+    input.data('edited', 'true');
+}
+function typeaheadInputComponent(labelText, inputName, value, formId, category, required) {
+    var inputDiv = fieldBox();
+    var inputLabel = fieldLabelBox();
+    inputLabel.append(labelText);
+    var textInput = $('<input type="text">');
+    textInput.addClass("text-field");
+    textInput.attr("id", inputName + "-field");
+    textInput.attr("name", inputName);
+    textInput.val(value);
+    textInput.change(function() {
+        setFormEdited(formId);
+        setInputEdited(textInput);
+    });
+    textInput.keyup(function() {
+        validateForm(formId);
+    });
+    textInput.attr('data-category', category);
+    $.getJSON("/fairview/ajax/get_words.do", {category:category}, function(response) {
+        if (response.sortedset != null) { //if the response is a string, an error has occured
+            var array = response.sortedset.string;
+            $.each(array, function(count, object) {
+                array[count] = object.toString();
+            });
+            textInput.autocomplete({
+                source: array,
+                minLength: 2,
+                select: function() {
+                    setFormEdited(formId);
+                    setInputEdited(textInput);
+                }
+            });
+        }
+    });
+
+
     if (required == true) {
         makeInputRequired(inputLabel, textInput);
     }
@@ -1135,7 +1213,7 @@ function dateInputComponent(labelText, inputName, value, formId, required) {
         showMonthAfterYear: true
     });
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textInput.keyup(function() {
         validateForm(formId);
@@ -1165,7 +1243,7 @@ function radioButtonInputComponent(labelText, inputName, formId, radioButtonData
             validateForm(formId);
         });
         radioButton.change(function() {
-            $('#' + formId).data('edited', 'true');
+            setFormEdited(formId);
         });
         if (radioButtonData[i][1] == selected)
             radioButton.attr('checked', 'checked');
@@ -1208,7 +1286,7 @@ function checkboxInputComponent(labelText, formId, checkboxData) {
             validateForm(formId);
         });
         checkbox.change(function() {
-            $('#' + formId).data('edited', 'true');
+            setFormEdited(formId);
         });
 
         inputBoxDiv.append(hidden);
@@ -1233,7 +1311,7 @@ function civicInputComponent(labelText, inputName, value, formId, required) {
         validateForm(formId);
     });
     textInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         $('#birthday-field').val(makeBirthdate(this.value));
     });
     if (required == true) {
@@ -1304,7 +1382,7 @@ function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     textareaInput.attr("id", inputName + "-field");
     textareaInput.val(value);
     textareaInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
     });
     textareaInput.keyup(function() {
         validateForm(formId);
@@ -1346,7 +1424,7 @@ function selectInputComponent(labelText, propertyName, divId, formId, required) 
     selectInput.attr("name", propertyName);
     selectInput.attr("id", inputId + "-field");
     selectInput.change(function() {
-        $('#' + formId).data('edited', 'true');
+        setFormEdited(formId);
         validateForm(formId);
     });
     if (required == true) {
@@ -1404,9 +1482,9 @@ function generateSingleAddressComponent(data) {
 
     var addressComponent = $('<div>');
     var addressDiv = textInputComponent('Adress', 'address', addressString, getOrganizationFormId());
-    var postnummerDiv = textInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId());
-    var cityDiv = textInputComponent('Ort', 'city', cityString, getOrganizationFormId());
-    var countryDiv = textInputComponent('Land', 'country', countryString, getOrganizationFormId());
+    var postnummerDiv = typeaheadInputComponent('Postnummer', 'postalcode', postalcodeString, getOrganizationFormId(), POSTALCODE_CATEGORY);
+    var cityDiv = typeaheadInputComponent('Ort', 'city', cityString, getOrganizationFormId(), CITY_CATEGORY);
+    var countryDiv = typeaheadInputComponent('Land', 'country', countryString, getOrganizationFormId(), COUNTRY_CATEGORY);
 
     addressComponent.append(addressDiv, postnummerDiv, cityDiv, countryDiv);
     return addressComponent;
