@@ -362,7 +362,7 @@ function generateEducationForm(form_Id, educationNode) {
     var scopeComponent = typeaheadInputComponent('Omfattning', 'scope', scopeString, formId, EDUCATION_SCOPE_CATEGORY,false);
     var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
     var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
-    var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, LANGUAGE_CATEGORY,false);
+    var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY,false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
     var levelComponent = selectInputComponent('Utbildningsnivå', 'level', 'level-field', formId, false);
