@@ -13,6 +13,9 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+    <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
@@ -36,26 +39,10 @@
         <security:intercept-url pattern="/js/**" filters="none"/>
         <security:intercept-url pattern="/css/**" filters="none"/>
         <security:intercept-url pattern="/images/**" filters="none"/>
-        <security:intercept-url pattern="/comet/**" filters="none"/>
-        <security:intercept-url pattern="/cometd/**" filters="none"/>
-        <security:intercept-url pattern="/wireit/**" filters="none"/>
-        <security:intercept-url pattern="/decorators/**" filters="none"/>
         <security:intercept-url pattern="/login.do*" filters="none"/>
 
         <security:intercept-url pattern="/bd.jsp" access="ROLE_ADMIN" requires-channel="any"/>
-        <security:intercept-url pattern="/edit/index.do" access="ROLE_HR,ROLE_MANAGER" requires-channel="any"/>
 
-        <security:intercept-url pattern="/edit/organization/**" access="ROLE_HR" requires-channel="any"/>
-        <security:intercept-url pattern="/edit/functions/**" access="ROLE_HR" requires-channel="any"/>
-        <security:intercept-url pattern="/edit/health/**" access="ROLE_HR" requires-channel="any"/>
-        <security:intercept-url pattern="/edit/termination/**" access="ROLE_HR" requires-channel="any"/>
-
-        <security:intercept-url pattern="/edit/employees/index.do" access="ROLE_HR,ROLE_MANAGER"
-                                requires-channel="any"/>
-        <security:intercept-url pattern="/edit/employees/employment.do*" access="ROLE_HR" requires-channel="any"/>
-        <security:intercept-url pattern="/edit/employees/employee.do*" access="ROLE_HR" requires-channel="any"/>
-
-        <security:intercept-url pattern="/sms.do*" access="ROLE_ADMIN,ROLE_SMS" requires-channel="any"/>
         <security:intercept-url pattern="/neo/shell*" access="ROLE_ADMIN,ROLE_ROOT" requires-channel="any"/>
 
         <security:intercept-url pattern="/**" access="ROLE_USER" requires-channel="any"/>
@@ -127,21 +114,6 @@
         <property name="configuration" value="classpath:neo4j.xml"/>
         <property name="forceInitialization" value="false"/>
         <property name="indexGraph" value="${neo4j.index}"/>
-    </bean>
-
-    <!-- The following beans need to be accessible for all servlets -->
-
-    <bean id="freeMarkerConfigurer" class="se.codemate.spring.freemarker.AdvancedFreemarkerConfigurer">
-        <property name="objectWrapper">
-            <bean class="se.codemate.spring.freemarker.NeoObjectWrapper"/>
-        </property>
-        <property name="templateLoaderPath" value="WEB-INF/templates/"/>
-        <property name="freemarkerSettings">
-            <props>
-                <prop key="tag_syntax">square_bracket</prop>
-                <prop key="number_format">0.####</prop>
-            </props>
-        </property>
     </bean>
 
     <!-- Spring E-Mail Services -->

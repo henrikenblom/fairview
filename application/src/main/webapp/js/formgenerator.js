@@ -22,7 +22,7 @@ function generateBaseUnitEditForm(data, datatable) {
     var emailString = '';
     var faxString = '';
     var webString = '';
-    if (properties != null){
+    if (properties != null) {
         descriptionString = propValue(properties.description);
         nameString = propValue(properties.name);
         phoneString = propValue(properties.phone);
@@ -86,6 +86,107 @@ function generateSubunitCreationForm() {
     return form;
 }
 
+function generateImageForm(nodeId, hasImage) {
+    var imageUploadContainer = $('<div>');
+    imageUploadContainer.attr('id', 'imgUploadContainer');
+
+    var preview = $('<div>');
+    preview.attr('id', 'imagePreview');
+    var img = $('<img>');
+
+    if (hasImage == 'true')
+        img.attr('src', getImgUrl(nodeId, "medium_image"));
+    else
+        img.attr('src', '/images/default_person_image.png');
+
+    preview.append(img);
+    imageUploadContainer.append(preview);
+
+    var form = buildMultipartForm('imageForm');
+    var fileInput = $('<input>');
+    fileInput.attr('name', 'file');
+    fileInput.attr('type', 'file');
+    fileInput.addClass('personalImageInput');
+    var hiddenField_id = hiddenField('_nodeId', nodeId);
+
+    form.append(fileInput, hiddenField_id);
+    var buttonDiv = $('<div>');
+    var uploadButton = $('<button>');
+    uploadButton.addClass('personalImageButton')
+    uploadButton.html('Ladda upp bild');
+    uploadButton.click(function() {
+        //img.attr('src', '/images/loading.gif');
+        $.fn.spin = function(opts) {
+            this.each(function() {
+                var $this = $(this),
+                    spinner = $this.data('spinner');
+
+                if (spinner) spinner.stop();
+                if (opts !== false) {
+                    opts = $.extend({color: $this.css('color')}, opts);
+                    spinner = new Spinner(opts).spin(this);
+                    $this.data('spinner', spinner);
+                }
+            });
+            return this;
+        };
+        var opts = {
+            lines: 12, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 5, // The line thickness
+            radius: 10, // The radius of the inner circle
+            color: '#fff', // #rbg or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 66, // Afterglow percentage
+            shadow: true // Whether to render a shadow
+        };
+
+        form.ajaxSubmit(
+            {dataType: 'json',
+                beforeSubmit:function(){
+                     $("#imagePreview").show().spin(opts);
+                },
+                success: function(response) {
+                    $("#imagePreview").spin(false);
+                    if (response == 'success') {
+                        img.attr('src', getImgUrl(nodeId, "medium_image"));
+                    }
+                    else if (response == 'error') {
+                        generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
+                        if (hasImage == 'true') {
+                            img.attr('src', getImgUrl(nodeId, "medium_image"));
+                        }
+                        else {
+                            img.attr('src', '/images/default_person_image.png');
+                        }
+                    }
+                }});
+    });
+
+    imageUploadContainer.append(form, uploadButton, generateCancelButton());
+
+    return imageUploadContainer;
+}
+
+function generateSmallImage(nodeId, hasImage) {
+    var img = $('<img>');
+    img.attr('id', 'smallProfileImage');
+    img.click(function() {
+        openPopupTab(3)
+    });
+    if (hasImage == 'true')
+        img.attr('src', getImgUrl(nodeId, "small_image"));
+    else
+        img.attr('src', '/images/default_person_image_small.png');
+    return img;
+}
+
+function getImgUrl(nodeId, size) {
+    d = new Date(); //hack to force the browser to reload the image instead of using the cached one
+    var url = 'fairview/ajax/get_image.do?_nodeId=' + nodeId + '&size=' + size + '&d=' + d.getTime();
+    return url;
+}
+
 function generateProfileGeneralForm(data) {
     var formId = 'new_person_form';
 
@@ -125,7 +226,7 @@ function generateProfileGeneralForm(data) {
         phoneString = propValue(properties.phone);
         cellString = propValue(properties.cell);
         emailString = propValue(properties.email);
-        additionalInfoString = propValue(properties.additional__info);
+        additionalInfoString = propValue(properties.additional_info);
         genderString = propValue(properties.gender);
     }
 
@@ -578,14 +679,9 @@ function addExistingValuesOrCreateEmptyForms(nodeId, type, formGeneratingFunctio
         $.getJSON("fairview/ajax/get_relationship_endnodes.do", {_nodeId: nodeId, _type: type}, function(data) {
             if (!$.isEmptyObject(data.list)) {
                 var array = data.list["node"];
-                if (array.length > 1) {
-                    $.each(array, function(count, object) {
-                        formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
-                    });
-                }
-                else { //an array containing only one entry is a single object
-                    formGeneratingFunction.call(this, array.id, array).prependTo(divToPrepend);
-                }
+                $.each(array, function(count, object) {
+                    formGeneratingFunction.call(this, object.id, object).prependTo(divToPrepend);
+                });
             }
             else { //no values of the type exists so create empty form
                 formGeneratingFunction.call(this, type).prependTo(divToPrepend);
@@ -724,7 +820,7 @@ function existsNewPersonForm(forms) {
 
 function generateCancelButton() {
     var cancelButton = $('<button>');
-    cancelButton.html('Avbryt');
+    cancelButton.html('Stäng');
     cancelButton.attr('id', 'cancelButton');
     cancelButton.click(function() {
         var edited;
@@ -1189,6 +1285,15 @@ function buildUpdateForm(id, action) {
 
 }
 
+function buildMultipartForm(id) {
+    var updateForm = $('<form>');
+    updateForm.attr("id", id);
+    updateForm.attr("method", "post");
+    updateForm.attr("enctype", "multipart/form-data");
+    updateForm.attr("action", "/fairview/ajax/submit_profileimage.do");
+    return updateForm;
+}
+
 function textAreaInputComponent(labelText, inputName, value, formId, divId) {
     var textareaDiv = fieldBox();
     textareaDiv.attr("id", divId);
@@ -1265,8 +1370,8 @@ function generateOrgNrDiv(data) {
     var properties = data.node.properties;
 
     var regnrString = '';
-    if (properties != null){
-       regnrString = propValue(properties.regnr);
+    if (properties != null) {
+        regnrString = propValue(properties.regnr);
     }
 
     var orgnrDiv = textInputComponent('Organisationsnummer', 'regnr', regnrString, getOrganizationFormId());
@@ -1276,7 +1381,7 @@ function generateOrgNrDiv(data) {
 function generateImageUrlDiv(data) {
     var properties = data.node.properties;
     var imageurlString = '';
-    if (properties != null){
+    if (properties != null) {
         imageurlString = propValue(properties.imageurl);
     }
     var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', imageurlString, getOrganizationFormId());
@@ -1290,7 +1395,7 @@ function generateSingleAddressComponent(data) {
     var postalcodeString = '';
     var cityString = '';
     var countryString = '';
-    if (properties != null){
+    if (properties != null) {
         addressString = propValue(properties.address);
         postalcodeString = propValue(properties.postalcode);
         cityString = propValue(properties.city);
