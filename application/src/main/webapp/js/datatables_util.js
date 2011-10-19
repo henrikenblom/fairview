@@ -203,15 +203,24 @@ function createEmploymentTab(data) {
 
 function createEmployeeTab(data) {
 
-            var linkData = [
-                ['profile-general', 'Personuppgifter'],
-                ['profile-education', 'Utbildning'],
-                ['profile-experience', 'Erfarenhet']
-            ];
-            $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
-            generateProfileForm(data.employee_id);
-        }
+    var linkData = [
+        ['profile-general', 'Personuppgifter'],
+        ['profile-education', 'Utbildning'],
+        ['profile-experience', 'Erfarenhet']
+    ];
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    bindTabs();
+    generateProfileForm(data.employee_id);
+}
+function createFunctionTab(data) {
+    var linkData = [
+        ['function-general', 'Funktion'],
+        ['function-tasks', 'Uppgifter']
+    ];
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    bindTabs();
+    generateFunctionForm(data);
+}
 
 function hasRole(role) {
     if ($.inArray(role, ROLELIST) > -1)

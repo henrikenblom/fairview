@@ -262,6 +262,32 @@ function generateEmploymentCreationForm(data) {
     return form;
 }
 
+function generateFunctionForm(data){
+    var properties =new Array();
+    var formId = 'function_form';
+
+    var form = buildUpdateForm(formId);
+    var fieldSet = $('<fieldset>');
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'employment');
+
+    var function_name = textInputComponent('Funktion', 'functionname', propValue(properties.functiomname), formId, false);
+    var function_description = textAreaInputComponent('Beskrivning', 'functiondescription', propValue((properties.functiondescription)), formId, 'functiondescriptiondiv');
+
+    fieldSet.append(
+        hiddenField_type,
+        hiddenField_strict,
+        hiddenField_username,
+        hiddenField_nodeClass,
+        function_name,
+        function_description
+    );
+    form.append(fieldSet);
+    return form;
+}
+
 function generateLanguageForm(form_Id, languageNode) {
     var formId = form_Id;
 
