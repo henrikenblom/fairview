@@ -787,15 +787,15 @@ label.error {
 
 }
 
-.newperson{
+.addnew{
    cursor: pointer;
 }
 
-.newpersontop {
+.addnewtop {
     margin-bottom: 10px;
 }
 
-.newpersonbottom {
+.addnewbottom {
     margin-top: 25px;
 }
 

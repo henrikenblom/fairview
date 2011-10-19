@@ -1,16 +1,17 @@
 <%--
   Created by IntelliJ IDEA.
-  User: fairview
-  Date: 9/1/11
-  Time: 10:15 AM
+  User: daniel
+  Date: 2011-10-18
+  Time: 11:18
   To change this template use File | Settings | File Templates.
 --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="WEB-INF/jspf/beanMapper.jsp" %>
 
 <html>
 <head>
-    <title>Infero Quest - Personer</title>
+    <title>Infero Quest - Anställningar</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
@@ -25,11 +26,11 @@
     <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
     <script type="text/javascript">
         var oTable;
-        $(document).ready(function() {
+        $(document).ready(function(){
             $('.addnew').click(function() {
                 var data = new Array;
-                createEmployeeTab(data);
-                openEmployeeForm();
+                createFunctionTab(data);
+                openFunctionForm();
             });
 
             oTable = $('#datatable').dataTable({
@@ -41,70 +42,47 @@
                     "sInfo": "Visar _START_ - _END_ av totalt _TOTAL_ rader",
                     "sLengthMenu": "Visa _MENU_ rader"
                 },
-                "sAjaxSource": "fairview/ajax/datatables/get_employee_data.do",
+                "sAjaxSource": "fairview/ajax/datatables/get_function_data.do",
                 "aoColumns": [
-                    { "mDataProp": "firstname"},
-                    { "mDataProp": "lastname" },
-                    { "mDataProp": "unit_name" },
-                    { "mDataProp": "employment_title" },
-                    { "mDataProp": null,  "sWidth": 10,
+                    {"mDataProp": "function"},
+                    {"mDataProp": "description"},
+                    {"mDataProp": null, "sWidth": 10,
                         fnRender: function(obj){
-                             if (hasRole('ROLE_ADMIN'))
-                                return getEmployeeDeleteButton(obj);
-                             else
+                            if(hasRole('ROLE_ADMIN'))
+                                return getFunctionDeleteButton;
+                            else
                                 return '';
-                        }
-                        , "bSortable": false, "bSearchable": false  }
-
+                        },
+                        "bSortable": false,
+                        "bSearchable": false
+                    }
                 ],
-                "fnDrawCallback" : function() {
+                "fnDrawCallback": function(){
                     var datatable = this;
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
-                    $.each(tdNodes, function() {
-                        var data = datatable.fnGetData(this.parentNode);
-                        if (this.cellIndex == '3') {  //employee-cell
-                            initEmploymentCell(data, this);
+                    $.each(tdNodes, function(){
+                        var data = datatable.fnGetData(this.parentNode());
+                        if(this.cellIndex == '0'){
+                            initFunctionCell(data, this);
                         }
-                        else if (this.cellIndex == '2') { //unit-cell
-                            initUnitCell(data.unit_id, this);
-                        }
-                        else if (isEmployeeDataColumn(this.cellIndex)) {
-                            initEmployeeCell(data, this);
+                        else if (this.cellIndex == '1'){
+                            initTaskCell(data, this);
                         }
                     });
-                    $('td', datatable.fnGetNodes()).hover(function() {
+                    $('td', datatable.fnGetNodes()).hover(function(){
                         $('td').removeClass('cell_highlight');
                         $(this).addClass('cell_highlight');
                     });
                 }
-            });
+            })
             fadeOutModalizer();
         });
-
-        function isEmployeeDataColumn(cellIndex) {
-            if (cellIndex == '0' || cellIndex == '1' || cellIndex == '3')
-                return true;
-            else
-                return false;
-        }
-
-        function openEmployeeForm() {
+        function openFunctionForm(){
+            var data;
+            $('#function-general').append(generateFunctionForm(data));
+            $('#function-general').append(footerButtonsComponent(data, updateTableCallback(oTable)));
             openPopupTab(0);
-        }
-        function openUnitForm(unitId) {
-            var linkData = [
-                ['unitsettings-general', 'Avdelningsinställningar']];
-            $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
-            var data = getUnitData(unitId);
-            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
-            generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
-            $('#unitsettings-general').append(footerButtonsComponent(unitId, updateTableCallback(oTable)));
-            openPopupTab(0);
-        }
-        function openEmploymentForm() {
-            openPopupTab(3);
         }
     </script>
 </head>
@@ -112,16 +90,12 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="addnew addnewtop"><img src="images/newperson.png"
-                                                 class="helpbox-image"><span>Lägg till person</span>
-        </div>
+        <div class="addnew addnewtop"><img src="images/newfunction.png"class="helpbox-image"><span>Lägg till funktion</span></div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
                 <tr>
-                    <th>Förnamn</th>
-                    <th>Efternamn</th>
-                    <th>Enhet</th>
+                    <th>Funktion</th>
                     <th>Titel</th>
                     <th></th>
                 </tr>
@@ -131,16 +105,14 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th>Förnamn</th>
-                    <th>Efternamn</th>
-                    <th>Enhet</th>
+                    <th>Funktion</th>
                     <th>Titel</th>
                     <th></th>
                 </tr>
                 </tfoot>
             </table>
         </div>
-        <div class="addnew addnewbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        <div class="addnew addnewbottom"><img src="images/newfunction.png" class="helpbox-image"><span>Lägg till funktion</span>
         </div>
     </div>
 </div>
