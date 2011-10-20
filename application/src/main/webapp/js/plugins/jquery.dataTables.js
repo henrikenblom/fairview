@@ -965,22 +965,22 @@
 			 *   by javascript
 			 */
 			this.oLanguage = {
-				"sProcessing": "Processing...",
-				"sLengthMenu": "Show _MENU_ entries",
+				"sProcessing": "Laddar...",
+				"sLengthMenu": "Visa _MENU_ rader",
 				"sZeroRecords": "No matching records found",
-				"sEmptyTable": "No data available in table",
-				"sLoadingRecords": "Loading...",
-				"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
-				"sInfoEmpty": "Showing 0 to 0 of 0 entries",
-				"sInfoFiltered": "(filtered from _MAX_ total entries)",
+				"sEmptyTable": "Ingen data tillgänglig i databasen",
+				"sLoadingRecords": "Laddar...",
+				"sInfo": "Visar _START_ - _END_ av totalt _TOTAL_ rader",
+				"sInfoEmpty": "Visar 0 till 0 av 0 rader",
+				"sInfoFiltered": "(filtrerat från _MAX_ rader)",
 				"sInfoPostFix": "",
-				"sSearch": "Search:",
+				"sSearch": "Sök:",
 				"sUrl": "",
 				"oPaginate": {
-					"sFirst":    "First",
-					"sPrevious": "Previous",
-					"sNext":     "Next",
-					"sLast":     "Last"
+					"sFirst":    "Första",
+					"sPrevious": "Föregående",
+					"sNext":     "Nästa",
+					"sLast":     "Sista"
 				},
 				"fnInfoCallback": null
 			};

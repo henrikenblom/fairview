@@ -391,7 +391,7 @@ function generateFunctionForm(data){
     var hiddenField_type = hiddenField('_type', 'node');
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_username = hiddenField('_username', 'admin');
-    var hiddenField_nodeClass = hiddenField('nodeclass', 'employment');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'function');
 
     var name = textInputComponent('Funktion', 'name', propValue(properties.name), formId, false);
     var description = textAreaInputComponent('Beskrivning', 'description', propValue((properties.description)), formId, 'descriptiondiv');
