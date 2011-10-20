@@ -1009,7 +1009,7 @@ function addGenderOptions(gender, genderInputElement) {
 function appendManagerOption(node, assignedManagerId, managerInputElement) {
     var option = $('<option>');
     option.attr('value', node.id);
-    option.html(propValue(node.properties.firstname) + ' ' + propValue(node.properties.lastname));
+    option.html(propValue(node.properties.lastname) + ', ' + propValue(node.properties.firstname));
     if (assignedManagerId.long == node.id)
         option.attr('selected', 'true');
     managerInputElement.append(option);
