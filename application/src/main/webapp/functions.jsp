@@ -44,12 +44,12 @@
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_function_data.do",
                 "aoColumns": [
-                    {"mDataProp": "function"},
+                    {"mDataProp": "name"},
                     {"mDataProp": "description"},
                     {"mDataProp": null, "sWidth": 10,
                         fnRender: function(obj){
                             if(hasRole('ROLE_ADMIN'))
-                                return getFunctionDeleteButton;
+                                return getFunctionDeleteButton();
                             else
                                 return '';
                         },

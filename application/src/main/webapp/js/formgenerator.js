@@ -393,16 +393,16 @@ function generateFunctionForm(data){
     var hiddenField_username = hiddenField('_username', 'admin');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'employment');
 
-    var function_name = textInputComponent('Funktion', 'functionname', propValue(properties.functiomname), formId, false);
-    var function_description = textAreaInputComponent('Beskrivning', 'functiondescription', propValue((properties.functiondescription)), formId, 'functiondescriptiondiv');
+    var name = textInputComponent('Funktion', 'name', propValue(properties.name), formId, false);
+    var description = textAreaInputComponent('Beskrivning', 'description', propValue((properties.description)), formId, 'descriptiondiv');
 
     fieldSet.append(
         hiddenField_type,
         hiddenField_strict,
         hiddenField_username,
         hiddenField_nodeClass,
-        function_name,
-        function_description
+        name,
+        description
     );
     form.append(fieldSet);
     return form;
@@ -757,8 +757,13 @@ function createNodeWithRelationship(form, nodeId, callback) {
                 break;
             case "new_person_form":
                 $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
-                    createRelationship(organizationNode.id, data.node.id, 'HAS_EMPLOYEE', callback);
-                })
+                    createRelationship(organizationNode.node.id, data.node.id, 'HAS_EMPLOYEE', callback);
+                });
+                break;
+            case "function_form":
+                $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
+                    createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
+                });
                 break;
             default:
                 if (typeof(callback) == 'function')
@@ -790,6 +795,28 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
         });
     });
 }
+
+function createFunctionNodeBeforeCreatingOtherNodes(form, callback){
+    $('#new_function_form').ajaxSetup(function(createdFunction){
+        $.getJSON("fairview/ajax/get_organization_node.do", function(organizationNode){
+            $.getJSON("neo/ajax/create_relationship.do",
+                {_startNodeId:organizationNode['node'].id, _endNodeId:createdFunction.node.id,_type:'ASSIGNED_FUNCTION'},
+                function() {
+                    var dirtyFormExists = false;
+                    $.each(forms, function(i, form){
+                        if($(form).attr('id') != 'new_function_form' && $(form).data('edited') == 'true') {
+                            dirtyFormExists = true;
+                            if (i == (forms.length - 1)) {
+
+                            }
+
+                        }
+                    });
+                });
+        });
+    });
+}
+
 function createNodes(forms, nodeId, callback) {
     $.each(forms, function(i, form) {
         if ($(form).data('edited') == 'true') {
@@ -847,6 +874,17 @@ function existsNewPersonForm(forms) {
         }
     });
     return newPerson;
+}
+
+function existsNewFunctionForm(form){
+    var newFunction = false;
+    $.each(form, function(i, form){
+        if ($(form).attr('id') == 'new_function_form'){
+            newFunction = true;
+            return false;
+        }
+    });
+    return newFunction;
 }
 
 function generateCancelButton() {
