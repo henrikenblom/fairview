@@ -76,7 +76,7 @@
                 <div <%= request.getRequestURI().endsWith("/organisationinfo.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('organisationinfo.jsp')" name="organisationinfo">Organisation</div>
             </sec:authorize>
             <div <%= request.getRequestURI().endsWith("/employees.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employees.jsp')" name="persons">Personer</div>
-            <div <%= request.getRequestURI().endsWith("/functionlist.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functionlist.jsp')" name="company-functions">Anställningar</div>
+            <div <%= request.getRequestURI().endsWith("/employments.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employments.jsp')" name="company-functions">Anställningar</div>
             <div <%= request.getRequestURI().endsWith("/functions.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functions.jsp')" name="functions">Funktioner</div>
             <%--<sec:authorize ifAnyGranted="ROLE_MANAGER">--%>
                 <%--<div <%= request.getRequestURI().endsWith("/users.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('users.jsp')" name="company-functions">Systemanvändare</div>--%>

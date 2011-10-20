@@ -755,11 +755,6 @@ function createNodeWithRelationship(form, nodeId, callback) {
             case "new_employment_form":
                 createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT', callback);
                 break;
-            case "new_person_form":
-                $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
-                    createRelationship(organizationNode.node.id, data.node.id, 'HAS_EMPLOYEE', callback);
-                });
-                break;
             case "function_form":
                 $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
                     createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
