@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
-    <link type="text/css" href="css/jquery-ui/jquery-ui-override.css" rel="stylesheet"/>
     <script type="text/javascript" src="js/plugins/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.dataTables.js"></script>
     <script type="text/javascript" src="js/popupControls.js"></script>
@@ -39,9 +38,7 @@
                 "bSortClasses": false,
                 "bStateSave": true,
                 "oLanguage": {
-                    "sSearch": "Sök:",
-                    "sInfo": "Visar _START_ - _END_ av totalt _TOTAL_ rader",
-                    "sLengthMenu": "Visa _MENU_ rader"
+                    "sEmptyTable": "Inga personer finns i databasen."
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_employee_data.do",
                 "aoColumns": [

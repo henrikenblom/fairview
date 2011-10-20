@@ -12,6 +12,7 @@
 <head>
     <link type="text/css" href="formalizeme/css/formalize.css" rel="stylesheet"/>
     <script type="text/javascript" src="formalizeme/js/jquery.formalize.js"></script>
+    <link type="text/css" href="css/jquery-ui/jquery-ui-override.css" rel="stylesheet"/>
 </head>
 
 
