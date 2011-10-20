@@ -56,6 +56,16 @@ function initEmploymentCell(data, cell) {
 
 }
 
+function initFunctionCell(data, cell){
+    $(cell).unbind();
+    $(cell).css('cursor', 'pointer');
+
+    $(cell).click(function(){
+        createFunctionTab(data);
+        openFunctionForm();
+    });
+}
+
 function initEmployeeCell(data, cell) {
     if (data.employee_id != "") {
         $(cell).unbind();
@@ -228,6 +238,17 @@ function createEmployeeTab(data, newEmployee) {
     $('#popup-dialog').empty().append(generateTabs(linkData));
     bindTabs();
     generateProfileForm(data.employee_id, newEmployee);
+}
+
+function createFunctionTab(data){
+    var linkData = [
+        ['function-general', 'Funktion'],
+        ['function-task', 'Uppgifter']
+    ];
+
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    bindTabs();
+    generateFunctionForm(data.node_Id);
 }
 
 function hasRole(role) {
