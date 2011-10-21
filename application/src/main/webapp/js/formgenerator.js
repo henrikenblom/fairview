@@ -166,11 +166,11 @@ function generateImageForm(nodeId, hasImage) {
                      $("#imagePreview").show().spin(opts);
                 },
                 success: function(response) {
+                    console.log(response);
                     $("#imagePreview").spin(false);
-                    if (response == 'success') {
+                    if (response.success) {
                         img.attr('src', getImgUrl(nodeId, "medium_image"));
-                    }
-                    else if (response == 'error') {
+                    } else  {
                         generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
                         if (hasImage == 'true') {
                             img.attr('src', getImgUrl(nodeId, "medium_image"));

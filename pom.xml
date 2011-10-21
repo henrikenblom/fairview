@@ -22,7 +22,7 @@
         <spring-agent.version>3.0.6.RELEASE</spring-agent.version>
         <testng.version>5.8</testng.version>
         <servlet-api.version>2.5</servlet-api.version>
-        <codemate-commons.version>2.3.1</codemate-commons.version>
+        <codemate-commons.version>2.3.2</codemate-commons.version>
         <commons-fileupload.version>1.2</commons-fileupload.version>
         <commons-io.version>1.4</commons-io.version>
         <commons-collections.version>3.2.1</commons-collections.version>
