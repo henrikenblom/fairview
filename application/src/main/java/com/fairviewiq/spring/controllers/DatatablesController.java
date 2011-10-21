@@ -84,14 +84,16 @@ public class DatatablesController {
     }
 
     private void loadFunctionData(Node functionNode, HashMap<String, String> row) {
-        addEmploymentValuesToRow(row, String.valueOf(functionNode.getId()), functionNode.getProperty("name", "").toString());
+        row.put("name", functionNode.getProperty("name", "").toString());
         row.put("description", functionNode.getProperty("description", "").toString());
-        Node unitNode = dbUtility.getUnitOfEmployment(functionNode);
+        row.put("function_id", String.valueOf(functionNode.getId()));
+        //row.put("relation", functionNode.getId().get)
+        /*Node unitNode = dbUtility.getUnitOfEmployment(functionNode);
         if (unitNode != null) {
             addUnitValuesToRow(row, String.valueOf(unitNode.getId()), unitNode.getProperty("name").toString());
         } else {
             addUnitValuesToRow(row, "", "");
-        }
+        } */
     }
 
     @RequestMapping(value = {"/fairview/ajax/datatables/get_employee_data.do"})

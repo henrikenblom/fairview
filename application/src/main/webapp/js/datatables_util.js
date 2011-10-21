@@ -41,7 +41,7 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 }
 
-function initEmploymentCell(data, cell) {
+function initEmploymentCell(data, cell ) {
     $(cell).unbind();
     $(cell).css('cursor', 'pointer');
 
@@ -56,13 +56,13 @@ function initEmploymentCell(data, cell) {
 
 }
 
-function initFunctionCell(data, cell){
+function initFunctionCell(data, cell, popupIndex){
     $(cell).unbind();
     $(cell).css('cursor', 'pointer');
 
     $(cell).click(function(){
         createFunctionTab(data);
-        openFunctionForm();
+        openFunctionForm(data, popupIndex);
     });
 }
 
@@ -75,6 +75,16 @@ function initEmployeeCell(data, cell) {
             openEmployeeForm();
         })
     }
+}
+
+function initTaskCell(data, cell, popupIndex){
+    $(cell).unbind();
+    $(cell).css('cursor', 'pointer');
+
+    $(cell).click(function(){
+        createFunctionTab(data);
+        openFunctionForm(data, popupIndex)
+    });
 }
 
 function initUnitCell(unitId, cell) {

@@ -385,9 +385,17 @@ function generateEmploymentCreationForm(data) {
 function generateFunctionForm(data){
     var properties =new Array();
     var formId = 'function_form';
+    var fieldSet = $('<fieldset>');
+
+
+    if(!$.isEmptyObject(data)){
+        var functionId = data.function_id;
+        EmploymentData = getUnitData(functionId);
+        fieldSet.append(hiddenField('_nodeId', EmploymentData.node.id));
+        properties = EmploymentData.node.properties;
+    }
 
     var form = buildUpdateForm(formId);
-    var fieldSet = $('<fieldset>');
     var hiddenField_type = hiddenField('_type', 'node');
     var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_username = hiddenField('_username', 'admin');
@@ -762,7 +770,9 @@ function createNodeWithRelationship(form, nodeId, callback) {
                 break;
             case "function_form":
                 $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
-                    createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
+                    if(data.node.id.getRel != 'ASSIGNED_FUNCTION'){
+                        createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
+                    }
                 });
                 break;
             default:

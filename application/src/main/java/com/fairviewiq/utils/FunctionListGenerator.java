@@ -39,7 +39,7 @@ public class FunctionListGenerator {
 
         Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
 
-        for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_FUNCTION"), Direction.OUTGOING)) {
+        for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("ASSIGNED_FUNCTION"), Direction.OUTGOING)) {
 
             if (!entry.getEndNode().getProperty("name", "").equals("")) {
 
