@@ -384,12 +384,13 @@ function generateEmploymentCreationForm(data) {
 
 function generateFunctionForm(data){
     var properties =new Array();
-    var formId = 'function_form';
+    var formId = 'new_function_form';
     var fieldSet = $('<fieldset>');
 
 
     if(!$.isEmptyObject(data)){
         var functionId = data.function_id;
+        formId = 'function_form'+ functionId; //if the form isn't new, give it another formname to prevent a new relationship to be created
         EmploymentData = getUnitData(functionId);
         fieldSet.append(hiddenField('_nodeId', EmploymentData.node.id));
         properties = EmploymentData.node.properties;
@@ -744,7 +745,7 @@ function updateTableCallback(datatable) {
 function createNodeWithRelationship(form, nodeId, callback) {
     $(form).ajaxSubmit(function(data) {
         var formId = $(form).attr('id').replace(/\d+/, '');
-        switch (formId) {
+        switch (formId) { //if the formId is any of the below, that should mean that the form is new and that a relationship must be created
             case "HAS_MILITARY_SERVICE":
                 createRelationship(nodeId, data.node.id, formId, callback);
                 break;
@@ -768,11 +769,9 @@ function createNodeWithRelationship(form, nodeId, callback) {
                     createRelationship(organizationNode.node.id, data.node.id, 'HAS_EMPLOYEE', callback);
                 });
                 break;
-            case "function_form":
+            case "new_function_form":
                 $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
-                    if(data.node.id.getRel != 'ASSIGNED_FUNCTION'){
                         createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
-                    }
                 });
                 break;
             default:
