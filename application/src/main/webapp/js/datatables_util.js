@@ -136,6 +136,10 @@ function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
 }
 
+function loadFirstFunctionForm(functionId){
+    addExistingValuesOrCreateEmptyForms(functionId, 'HAS_TASK', generateTaskForm, '#function-task');
+}
+
 function addTypeValidation() {
     var intInputs = $('input[name*=":int"]');
 
@@ -193,6 +197,18 @@ function generateProfileForm(nodeId, newEmployee) {
     });
 }
 
+function generateFunctionForm(nodeId){
+    var data;
+    loadFirstFunctionForm(nodeId);
+
+    if(!$.isEmptyObject(nodeId)){
+        data = getUnitData(nodeId);
+    }
+    $('#function-general').append(generateFunctionGeneralForm(data));
+    $('#function-task').append(addTaskButton(nodeId));
+    $('#function-task').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
+}
+
 //---Delete
 function getEmployeeDeleteButton(obj) {
     return "<a title='ta bort person' onclick='deleteAlertEmployee(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
@@ -224,7 +240,7 @@ function createEmploymentTab(data) {
         ['employment-requirements','Krav']
     ];
     $('#popup-dialog').empty().append(generateTabs(linkData));
-    bindTabs();
+    bindEmployeeTabs();
     generateEmploymentForm(data);
 }
 
@@ -246,7 +262,7 @@ function createEmployeeTab(data, newEmployee) {
     }
 
     $('#popup-dialog').empty().append(generateTabs(linkData));
-    bindTabs();
+    bindEmployeeTabs();
     generateProfileForm(data.employee_id, newEmployee);
 }
 
@@ -257,8 +273,8 @@ function createFunctionTab(data){
     ];
 
     $('#popup-dialog').empty().append(generateTabs(linkData));
-    bindTabs();
-    generateFunctionForm(data.node_Id);
+    bindEmployeeTabs();
+    generateFunctionForm(data.function_id);
 }
 
 function hasRole(role) {

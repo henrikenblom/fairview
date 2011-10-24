@@ -23,6 +23,7 @@ var MILITARYSERVICE_NAME_CATEGORY = 'militaryservice_names';
 var EMPLOYMENT_TITLE_CATEGORY = 'employment_titles';
 var EMPLOYMENT_COMPANYCAR_CATEGORY = 'employment_companycars';
 var EMPLOYMENT_PENSIONINSURANCE_CATEGORY = 'employment_pensioninsurances';
+var OUTPUTUNIT_CATEGORY = 'output_unit';
 
 
 function generateBaseUnitEditForm(data, datatable) {
@@ -382,14 +383,14 @@ function generateEmploymentCreationForm(data) {
     return form;
 }
 
-function generateFunctionForm(data){
+function generateFunctionGeneralForm(data){
     var properties =new Array();
     var formId = 'new_function_form';
     var fieldSet = $('<fieldset>');
 
 
     if(!$.isEmptyObject(data)){
-        var functionId = data.function_id;
+        var functionId = data.node.id;
         formId = 'function_form'+ functionId; //if the form isn't new, give it another formname to prevent a new relationship to be created
         EmploymentData = getUnitData(functionId);
         fieldSet.append(hiddenField('_nodeId', EmploymentData.node.id));
@@ -402,7 +403,7 @@ function generateFunctionForm(data){
     var hiddenField_username = hiddenField('_username', 'admin');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'function');
 
-    var name = textInputComponent('Funktion', 'name', propValue(properties.name), formId, false);
+    var name = textInputComponent('Funktion', 'name', propValue(properties.name), formId, true);
     var description = textAreaInputComponent('Beskrivning', 'description', propValue((properties.description)), formId, 'descriptiondiv');
 
     fieldSet.append(
@@ -635,6 +636,48 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
     div.append(form);
     return div;
 }
+function generateTaskForm(form_id, taskNode){
+    var formId = form_id;
+    var descriptionString = '';
+    var timeString = '';
+    var timeUnit = '';
+    var outputString = '';
+    var outputUnit = '';
+    var idString = '';
+
+    if(!$.isEmptyObject(taskNode)){
+        var properties = taskNode.properties;
+        descriptionString = propValue(properties.description);
+        timeString = propValue(properties.time);
+        timeUnit = propValue(properties.timeunit);
+        outputString = propValue(properties.output);
+        outputUnit = propValue(properties.outputunit);
+        idString = taskNode.id;
+    }
+
+    var form = buildUpdateForm(formId);
+    var div = $('<div>');
+    div.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_nodeId', idString);
+    var hiddenField_strict = hiddenField('_strict','false');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'task');
+
+    var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
+    var timeComponent = textInputComponent('Tid', 'time', timeString, formId, false);
+    var timeUnitComponent = selectInputComponent('Tidsenhet', 'timeunit', 'timeunit-field', formId,false);
+    timeUnitComponent.children('#timeunit-field').append(generateOption('percent', timeUnit, '%'));
+    timeUnitComponent.children('#timeunit-field').append(generateOption('hoursperday', timeUnit, 'timmar per dag'));
+    timeUnitComponent.children('#timeunit-field').append(generateOption('hoursperweek', timeUnit, 'timmar per vecka'));
+    timeUnitComponent.children('#timeunit-field').append(generateOption('hourspermonth', timeUnit, 'timmar per månad'));
+    var outputComponent = textInputComponent('Output', 'output', outputString, formId, false);
+    var outputUnitComponent = typeaheadInputComponent('Outputenhet', 'outputunit', outputUnit, formId, OUTPUTUNIT_CATEGORY, false);
+
+    form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
+        descriptionComponent, '<br />', timeComponent, timeUnitComponent, '<br />', outputComponent, outputUnitComponent);
+    div.append(form);
+    return div;
+}
 
 function addEducationButton(nodeId) {
     var button = $('<button>');
@@ -687,6 +730,17 @@ function addMilitaryServiceButton(nodeId) {
     button.click(function() {
         var formId = getFormId("HAS_MILITARY_SERVICE", 0);
         generateMilitaryServiceForm(formId).insertBefore('#militaryServiceButton');
+    });
+    return button;
+}
+
+function addTaskButton(nodeId){
+    var button = $('<button>');
+    button.attr('id', 'taskButton');
+    button.html('Lägg till uppgift');
+    button.click(function(){
+        var formId = getFormId("HAS_TASK", 0);
+        generateTaskForm(formId).insertBefore('#taskButton');
     });
     return button;
 }
@@ -774,21 +828,24 @@ function createNodeWithRelationship(form, nodeId, callback) {
                         createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
                 });
                 break;
+            case "HAS_TASK":
+                createRelationship(nodeId, data.node.id, formId, callback);
+            break;
             default:
                 if (typeof(callback) == 'function')
                     callback.call();
         }
     });
 }
-function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
-    $('#new_person_form').ajaxSubmit(function(createdEmployee) {
+function createPersonNodeBeforeCreatingOtherNodes(forms, relationshipType, formId, callback) {
+    $("#" + formId).ajaxSubmit(function(createdEmployee) {
         $.getJSON("fairview/ajax/get_organization_node.do", function(organizationNode) {
             $.getJSON("neo/ajax/create_relationship.do",
-                {_startNodeId:organizationNode['node'].id, _endNodeId: createdEmployee.node.id,_type:'HAS_EMPLOYEE' },
+                {_startNodeId:organizationNode['node'].id, _endNodeId: createdEmployee.node.id,_type:relationshipType },
                 function() {
                     var dirtyFormExists = false;
                     $.each(forms, function(i, form) {
-                        if ($(form).attr('id') != 'new_person_form' && $(form).data('edited') == 'true') {  //don't create the relationship twice
+                        if ($(form).attr('id') != formId && $(form).data('edited') == 'true') {  //don't create the relationship twice
                             dirtyFormExists = true;
                             if (i == (forms.length - 1))
                                 createNodeWithRelationship(form, createdEmployee.node.id, callback);
@@ -800,27 +857,6 @@ function createPersonNodeBeforeCreatingOtherNodes(forms, callback) {
                         if (typeof(callback) == 'function')
                             callback.call();
                     }
-                });
-        });
-    });
-}
-
-function createFunctionNodeBeforeCreatingOtherNodes(form, callback){
-    $('#new_function_form').ajaxSetup(function(createdFunction){
-        $.getJSON("fairview/ajax/get_organization_node.do", function(organizationNode){
-            $.getJSON("neo/ajax/create_relationship.do",
-                {_startNodeId:organizationNode['node'].id, _endNodeId:createdFunction.node.id,_type:'ASSIGNED_FUNCTION'},
-                function() {
-                    var dirtyFormExists = false;
-                    $.each(forms, function(i, form){
-                        if($(form).attr('id') != 'new_function_form' && $(form).data('edited') == 'true') {
-                            dirtyFormExists = true;
-                            if (i == (forms.length - 1)) {
-
-                            }
-
-                        }
-                    });
                 });
         });
     });
@@ -860,10 +896,13 @@ function generateSaveButton(nodeId, callback) {
         setTimeout(closePopup, 500);
 
         var editedForms = $('form:data(edited=true)');
-        var newPerson = existsNewPersonForm(editedForms);
+        var newObject = existsNewObjectForm(editedForms);
+        //var newPerson = existsNewPersonForm(editedForms);
 
-        if (newPerson == true) { //in order for other nodes to be created, they need a person node to create a relationship to
-            createPersonNodeBeforeCreatingOtherNodes(editedForms, callback);
+        if (newObject == true) { //in order for other nodes to be created, they need a person node to create a relationship to
+            var relationshipType = getRelationshipType(editedForms);
+            var formId = $(editedForms).attr('id');
+            createPersonNodeBeforeCreatingOtherNodes(editedForms, relationshipType, formId, callback);
         }
         else {
             createNodes(editedForms, nodeId, callback);
@@ -874,26 +913,33 @@ function generateSaveButton(nodeId, callback) {
     return saveButton;
 }
 
-function existsNewPersonForm(forms) {
-    var newPerson = false;
+function existsNewObjectForm(forms) {
+    var newObject = false;
     $.each(forms, function(i, form) {
-        if ($(form).attr('id') == 'new_person_form') {
-            newPerson = true;
+        var isNew = $(form).attr('id').split('_')
+        if (isNew[0] == 'new') {
+            newObject = true;
             return false;
         }
     });
-    return newPerson;
+    return newObject;
 }
 
-function existsNewFunctionForm(form){
-    var newFunction = false;
-    $.each(form, function(i, form){
-        if ($(form).attr('id') == 'new_function_form'){
-            newFunction = true;
-            return false;
-        }
-    });
-    return newFunction;
+function getRelationshipType(form){
+    var formIdArray = $(form).attr('id').split('_');
+    var formType = formIdArray[1];
+    var relationshipType;
+    switch(formType){
+        case "person":
+            relationshipType = "HAS_EMPLOYEE";
+            break;
+        case "function":
+            relationshipType = "ASSIGNED_FUNCTION";
+            break;
+        default:
+            break;
+    }
+    return relationshipType;
 }
 
 function generateCancelButton() {

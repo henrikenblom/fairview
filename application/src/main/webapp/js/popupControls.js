@@ -21,12 +21,30 @@ function closePopup() {
     $('#modalizer').fadeOut(500);
 }
 
-function bindTabs() {
+function bindEmployeeTabs() {
     $("#popup-tabs").tabs(
         {
             selected: 0,
             select: function(event, ui) {
                 var formId = $('#profile-general form').attr('id');
+                if (formId != null){
+                var isValid = validateForm(formId);
+                if (isValid == false)
+                    generateWarningDialog('Ofullständiga uppgifter', "Vänligen fyll i de obligatoriska uppgifterna innan du går vidare.")
+                return isValid;
+                }
+                return true;
+            }
+        }
+    );
+}
+
+function bindFunctionTabs() {
+    $("#popup-tabs").tabs(
+        {
+            selected: 0,
+            select: function(event, ui) {
+                var formId = $('#function-general form').attr('id');
                 if (formId != null){
                 var isValid = validateForm(formId);
                 if (isValid == false)
