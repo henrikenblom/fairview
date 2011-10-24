@@ -81,7 +81,7 @@
                 ['unitsettings-general', 'Avdelningsinställningar']
             ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
+            bindEmployeeTabs();
             var data = getUnitData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());

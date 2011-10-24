@@ -11,7 +11,7 @@
 
 <html>
 <head>
-    <title>Infero Quest - Anställningar</title>
+    <title>Infero Quest - Funktioner</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
@@ -29,8 +29,9 @@
         $(document).ready(function(){
             $('.addnew').click(function() {
                 var data = new Array;
+                var popupIndex = 0;
                 createFunctionTab(data);
-                openFunctionForm();
+                openFunctionForm(data, popupIndex);
             });
 
             oTable = $('#datatable').dataTable({
@@ -43,7 +44,8 @@
                 "sAjaxSource": "fairview/ajax/datatables/get_function_data.do",
                 "aoColumns": [
                     {"mDataProp": "name"},
-                    {"mDataProp": "description"},
+                    {"mDataProp": "description"}
+                    /*,
                     {"mDataProp": null, "sWidth": 10,
                         fnRender: function(obj){
                             if(hasRole('ROLE_ADMIN'))
@@ -53,19 +55,20 @@
                         },
                         "bSortable": false,
                         "bSearchable": false
-                    }
+                    }  */
                 ],
                 "fnDrawCallback": function(){
                     var datatable = this;
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function(){
-                        var data = datatable.fnGetData(this.parentNode());
+                        var data = datatable.fnGetData(this.parentNode);
                         if(this.cellIndex == '0'){
-                            initFunctionCell(data, this);
+                            initFunctionCell(data, this, 0);
                         }
                         else if (this.cellIndex == '1'){
-                            initTaskCell(data, this);
+                            initFunctionCell(data, this, 0);
+                            //initTaskCell(data, this, this.cellIndex);
                         }
                     });
                     $('td', datatable.fnGetNodes()).hover(function(){
@@ -76,11 +79,10 @@
             })
             fadeOutModalizer();
         });
-        function openFunctionForm(){
-            var data;
-            $('#function-general').append(generateFunctionForm(data));
-            $('#function-general').append(footerButtonsComponent(data, updateTableCallback(oTable)));
-            openPopupTab(0);
+        function openFunctionForm(data, popupIndex){
+            $('#function-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
+            bindFunctionTabs();
+            openPopupTab(popupIndex);
         }
     </script>
 </head>
@@ -94,8 +96,8 @@
                 <thead>
                 <tr>
                     <th>Funktion</th>
-                    <th>Titel</th>
-                    <th></th>
+                    <th>Beskrivning</th>
+                    <%--<th></th>--%>
                 </tr>
                 </thead>
                 <tbody>
@@ -104,8 +106,8 @@
                 <tfoot>
                 <tr>
                     <th>Funktion</th>
-                    <th>Titel</th>
-                    <th></th>
+                    <th>Beskrivning</th>
+                    <%--<th></th>--%>
                 </tr>
                 </tfoot>
             </table>

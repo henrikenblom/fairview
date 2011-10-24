@@ -38,7 +38,7 @@
 
             adjustViewPort();
             fadeOutModalizer();
-            bindTabs();
+            bindEmployeeTabs();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
                 generateMainOrganizationPopup(unitId);
