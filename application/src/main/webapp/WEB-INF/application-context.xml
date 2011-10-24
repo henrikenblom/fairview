@@ -45,7 +45,7 @@
 
         <security:intercept-url pattern="/neo/shell*" access="ROLE_ADMIN,ROLE_ROOT" requires-channel="any"/>
 
-        <security:intercept-url pattern="/**" access="ROLE_USER" requires-channel="any"/>
+        <security:intercept-url pattern="/**" access="ROLE_USER, ROLE_HR" requires-channel="any"/>
 
         <security:http-basic/>
         <security:form-login login-page="/login.jsp" default-target-url="/index.jsp"/>

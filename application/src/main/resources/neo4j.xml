@@ -75,11 +75,11 @@
                 <properties>
                     <username>
                         <class>string</class>
-                        <value>sms</value>
+                        <value>hr</value>
                     </username>
                     <password>
                         <class>string</class>
-                        <value>14938c8f55737f342a36e93d485a1f30cdf0cd34b5e9c835f43a481655b650ea</value> <!-- 6nFgZUnaXa7yqT -->
+                        <value>9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08</value> <!-- test -->
                     </password>
                 </properties>
             </node>
@@ -88,7 +88,16 @@
                 <properties>
                     <authority>
                         <class>string</class>
-                        <value>ROLE_SMS</value>
+                        <value>ROLE_HR</value>
+                    </authority>
+                </properties>
+            </node>
+            <node>
+                <id>10</id>
+                <properties>
+                    <authority>
+                        <class>string</class>
+                        <value>ROLE_USER</value>
                     </authority>
                 </properties>
             </node>
