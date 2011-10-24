@@ -37,6 +37,8 @@
 
     <bean id="neoTransactionInterceptor" class="se.codemate.spring.mvc.NeoTransactionInterceptor"/>
 
+    <bean id="fairviewUserResolver" class="com.fairviewiq.spring.web.interceptor.FairviewUserResolver"/>
+
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
 
     <bean id="themeChangeInterceptor" class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"/>
@@ -66,6 +68,7 @@
                 <ref local="themeChangeInterceptor"/>
                 <ref local="localeChangeInterceptor"/>
                 <ref local="neoTransactionInterceptor"/>
+                <ref local="fairviewUserResolver"/>
             </list>
         </property>
     </bean>

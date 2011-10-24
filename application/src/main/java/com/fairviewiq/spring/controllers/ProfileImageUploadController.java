@@ -26,7 +26,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +74,7 @@ public class ProfileImageUploadController {
                            @RequestParam("_nodeId") Long nodeId) {
         try {
             Node imageNode = null;
-            response.setContentType("application/json");
+            response.setContentType("text/html");
             try {
                 InputStream image = new ByteArrayInputStream(f.getBytes());
                 BufferedImage originalImage = ImageIO.read(image);
@@ -98,11 +101,11 @@ public class ProfileImageUploadController {
                 imageNode.setProperty("raw_image", rawImageStream.toByteArray());
                 imageNode.setProperty("raw_image_mimetype", f.getContentType());
 
-                response.getOutputStream().print(gson.toJson("success"));
+                response.getWriter().print("<textarea>{\"success\":true}</textarea>");
             } catch (Exception e) {
-                response.getOutputStream().print(gson.toJson("error"));
+                response.getWriter().print("<textarea>{\"success\":false}</textarea>");
             }
-            response.getOutputStream().close();
+            response.getWriter().close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -114,13 +117,16 @@ public class ProfileImageUploadController {
         try {
 
             Node employeeNode = dbUtility.getNode(nodeId);
-            Node imageNode = employeeNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING).getEndNode();
-
-            response.setContentType("image/png");
-            byte[] imageData = (byte[]) imageNode.getProperty(size);
-            response.getOutputStream().write(imageData);
-            response.getOutputStream().flush();
-
+            Relationship imageRelationship = employeeNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING);
+            if (imageRelationship == null) {
+                response.sendRedirect("/images/default_person_image.png");
+            } else {
+                Node imageNode = imageRelationship.getEndNode();
+                response.setContentType("image/png");
+                byte[] imageData = (byte[]) imageNode.getProperty(size);
+                response.getOutputStream().write(imageData);
+                response.getOutputStream().flush();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             response.getOutputStream().print(gson.toJson("error"));
@@ -144,31 +150,31 @@ public class ProfileImageUploadController {
 
     private BufferedImage blurImage(BufferedImage image) {
 
-		float factor = 1.0f/9.0f;
+        float factor = 1.0f / 9.0f;
 
-		float[] matrix = {
-				factor, factor, factor,
-				factor, factor, factor,
-				factor, factor, factor
-		};
+        float[] matrix = {
+                factor, factor, factor,
+                factor, factor, factor,
+                factor, factor, factor
+        };
 
-		Map<RenderingHints.Key, Object> map = new HashMap<RenderingHints.Key, Object>();
+        Map<RenderingHints.Key, Object> map = new HashMap<RenderingHints.Key, Object>();
 
-		map.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		map.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		map.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        map.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        map.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        map.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		RenderingHints hints = new RenderingHints(map);
-		BufferedImageOp op = new ConvolveOp(new Kernel(3, 3, matrix), ConvolveOp.EDGE_NO_OP, hints);
+        RenderingHints hints = new RenderingHints(map);
+        BufferedImageOp op = new ConvolveOp(new Kernel(3, 3, matrix), ConvolveOp.EDGE_NO_OP, hints);
 
-		return op.filter(image, null);
+        return op.filter(image, null);
 
-	}
+    }
 
     private BufferedImage scaleImage(BufferedImage originalImage, int width, int height) throws IOException {
 
         GraphicsConfiguration gc = BufferedImageGraphicsConfig.getConfig(originalImage);
-		BufferedImage newImage = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+        BufferedImage newImage = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
         paintComponent(newImage.getGraphics(), originalImage, width, height);
         return newImage;
 
@@ -178,7 +184,7 @@ public class ProfileImageUploadController {
 
         double scaleFactor = getRatio(originalImage, width, height);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
@@ -188,8 +194,8 @@ public class ProfileImageUploadController {
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, width, height);
 
-        int verticalpos = (height - newHeight)/2;
-        int horizontalpos = (width - newWidth)/2;
+        int verticalpos = (height - newHeight) / 2;
+        int horizontalpos = (width - newWidth) / 2;
         g2.drawImage(originalImage, horizontalpos, verticalpos, newWidth, newHeight, null);
 
     }

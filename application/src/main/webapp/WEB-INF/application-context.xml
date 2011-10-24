@@ -45,12 +45,12 @@
 
         <security:intercept-url pattern="/neo/shell*" access="ROLE_ADMIN,ROLE_ROOT" requires-channel="any"/>
 
-        <security:intercept-url pattern="/**" access="ROLE_USER" requires-channel="any"/>
+        <security:intercept-url pattern="/**" access="ROLE_USER, ROLE_HR" requires-channel="any"/>
 
         <security:http-basic/>
         <security:form-login login-page="/login.jsp" default-target-url="/index.jsp"/>
         <security:logout logout-success-url="/login.jsp"/>
-        <security:remember-me key="fairview" user-service-ref="userDetailsService"/>
+        <security:remember-me key="fairview" user-service-ref="neoUserDetailsService"/>
 
     </security:http>
 
@@ -68,11 +68,17 @@
         <constructor-arg value="256"/>
     </bean>
 
-    <bean id="userDetailsService" class="se.codemate.spring.security.NeoUserDetailsService"/>
+    <bean id="neoUserDetailsService" class="se.codemate.spring.security.NeoUserDetailsService"/>
+
+    <bean id="fairviewUserDetailsService" class="com.fairviewiq.spring.security.FairviewUserDetailsService"/>
 
     <security:authentication-manager alias="authenticationManager">
 
-        <security:authentication-provider user-service-ref="userDetailsService">
+        <security:authentication-provider user-service-ref="fairviewUserDetailsService">
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+
+        <security:authentication-provider user-service-ref="neoUserDetailsService">
             <security:password-encoder ref="passwordEncoder"/>
         </security:authentication-provider>
 

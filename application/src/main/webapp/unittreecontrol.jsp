@@ -1,3 +1,4 @@
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page import="org.neo4j.kernel.EmbeddedGraphDatabase" %>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
@@ -15,7 +16,9 @@
 %>
 
 <button class="imageonly-button" title="Lägg till underenhet" onclick="javascript:generateSubunitPopup(<%=unitId%>); openPopupTab(1);"><img src="images/newunit.png" alt="Ny underenhet"></button>
+<sec:authorize ifAnyGranted="ROLE_ADMIN">
 <button class="imageonly-button" title="Ta bort enhet" onclick="javascript:generateDeleteDialog(<%=unitId%>);"><img src="images/delete.png" alt="Ny underenhet"></button>
+</sec:authorize>
 
 <%
     for (Relationship entry : unitNode.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {

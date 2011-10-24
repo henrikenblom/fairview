@@ -31,9 +31,7 @@
                 "bSortClasses": false,
                 "bStateSave": true,
                 "oLanguage": {
-                    "sSearch": "Sök:",
-                    "sInfo": "Visar _START_ - _END_ av totalt _TOTAL_ rader",
-                    "sLengthMenu": "Visa _MENU_ rader"
+                    "sEmptyTable": "Inga anställningar finns i databasen."
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_employment_data.do",
                 "aoColumns": [

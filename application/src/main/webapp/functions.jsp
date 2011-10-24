@@ -39,9 +39,7 @@
                 "bSortClasses": false,
                 "bStateSave": true,
                 "oLanguage": {
-                    "sSearch": "Sök:",
-                    "sInfo": "Visar _START_ - _END_ av totalt _TOTAL_ rader",
-                    "sLengthMenu": "Visa _MENU_ rader"
+                    "sEmptyTable": "Inga funktioner finns i databasen."
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_function_data.do",
                 "aoColumns": [
