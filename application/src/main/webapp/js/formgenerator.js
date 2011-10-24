@@ -302,7 +302,7 @@ function generateEmploymentCreationForm(data) {
     var unitId = data.unit_id;
     var EmploymentData;
 
-    var formId = 'new_employment_form';
+    var formId = 'employment_form';
     if (employeeId != null && employmentId != null && employmentId != '')
         formId = 'employment_form' + employeeId;
 
@@ -815,7 +815,7 @@ function createNodeWithRelationship(form, nodeId, callback) {
             case "HAS_WORK_EXPERIENCE":
                 createRelationship(nodeId, data.node.id, formId, callback);
                 break;
-            case "new_employment_form":
+            case "employment_form":
                 createRelationship(nodeId, data.node.id, 'HAS_EMPLOYMENT', callback);
                 break;
             case "new_person_form":
@@ -896,10 +896,11 @@ function generateSaveButton(nodeId, callback) {
         setTimeout(closePopup, 500);
 
         var editedForms = $('form:data(edited=true)');
-        var newObject = existsNewObjectForm(editedForms);
-        //var newPerson = existsNewPersonForm(editedForms);
+        var dependantForm = existsDependantForm(editedForms);
+       /* dependant forms are forms that need another node to be created first.
+        Ex) the educationform when creating a new employee needs the employee to exist first*/
 
-        if (newObject == true) { //in order for other nodes to be created, they need a person node to create a relationship to
+        if (dependantForm == true) {
             var relationshipType = getRelationshipType(editedForms);
             var formId = $(editedForms).attr('id');
             createPersonNodeBeforeCreatingOtherNodes(editedForms, relationshipType, formId, callback);
@@ -913,7 +914,7 @@ function generateSaveButton(nodeId, callback) {
     return saveButton;
 }
 
-function existsNewObjectForm(forms) {
+function existsDependantForm(forms) {
     var newObject = false;
     $.each(forms, function(i, form) {
         var isNew = $(form).attr('id').split('_')
