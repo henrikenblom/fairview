@@ -35,7 +35,6 @@
                 <div id="frontpage-box">
                     <div id="frontpage-image-box">
                         <img src=<%=organization.getProperty("imageurl", "Länk till företagslogotyp saknas.")%>>
-                       <!-- <h1>TESTINSTALLATION</h1>     -->
                     </div>
                     <div id="frontpage-information-box">
                         <h2><%=organization.getProperty("name", "Namnlös")%></h2>
