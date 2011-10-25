@@ -54,25 +54,6 @@ public class FunctionListGenerator {
 
         }
 
-        //Transaction tx = neo.beginTx();
-
-        //try {
-
-        //   for (Node zombie : zombieNodes) {
-
-        //        zombie.delete();
-
-        //    }
-
-        //    tx.success();
-
-        //} catch (Exception ex) {
-
-        //    tx.finish();
-        //    tx = null;
-
-        //}
-
         if (sortOrder == ALPHABETICAL) {
 
             Collections.sort(functionKeys);
