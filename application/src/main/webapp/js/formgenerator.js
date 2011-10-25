@@ -986,7 +986,7 @@ function generateCancelButton() {
             }
         });
         if (edited == 'true') {
-            generateAlertDialog('Är du säker?', 'Du har osparade ändringar. Är du säker på att du vill stänga formuläret?',
+            generateAlertDialog('Är du säker?', 'Du har ej sparade ändringar. Är du säker på att du vill stänga formuläret?',
                 closePopup);
         } else {
             closePopup();

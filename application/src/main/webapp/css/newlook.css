@@ -4,6 +4,12 @@
     Author     : henrik
 */
 
+h3{
+    font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+}
+
 .hidden {
     display: none;
 }
@@ -158,6 +164,11 @@ input[type="radio"] {
     -webkit-border-radius: 7px 7px 0px 0px;
     -moz-border-radius: 7px 7px 0px 0px;
     border-radius: 7px 7px 0px 0px;
+}
+
+.education-header{
+    border-bottom: 1px solid #DDD;
+    margin-top: 10px;
 }
 
 .helpbox-content {

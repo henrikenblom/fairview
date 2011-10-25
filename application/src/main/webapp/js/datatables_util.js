@@ -115,26 +115,28 @@ function clearProfileForm() {
     $('#profile-education').empty();
 }
 
+function getContainer(id, headerLabel) {
+    var container = $('<div>');
+    var formsDiv = $('<div>');
+    formsDiv.attr('id', id);
+    formsDiv.addClass('groupedFormsContainer');
+    var headerDiv = $('<div>');
+    var header = $('<h3>');
+    header.html(headerLabel);
+    headerDiv.append(header);
+    headerDiv.addClass("education-header");
+    container.append(headerDiv, formsDiv);
+    return container;
+}
 function addFormContainers() {
-    var languageDiv = $('<div>');
-    languageDiv.attr('id', 'languages');
-    languageDiv.addClass('groupedFormsContainer');
-    var certificateDiv = $('<div>');
-    certificateDiv.attr('id', 'certificates');
-    certificateDiv.addClass('groupedFormsContainer');
-    var educationDiv = $('<div>');
-    educationDiv.addClass('groupedFormsContainer');
-    educationDiv.attr('id', 'educations');
+    var languageContainer = getContainer('languages', 'Språk');
+    var certificateContainer = getContainer('certificates', 'Certifikat');
+    var educationContainer = getContainer('educations', 'Utbildningar');
+    var workExperienceContainer = getContainer('workexperiences', 'Tidigare befattningar');
+    var militaryServiceContainer = getContainer('militaryservices', 'Militärtjänst');
 
-    var workExperienceDiv = $('<div>');
-    workExperienceDiv.addClass('groupedFormsContainer');
-    workExperienceDiv.attr('id', 'workexperiences');
-    var militaryServiceDiv = $('<div>');
-    militaryServiceDiv.addClass('groupedFormsContainer');
-    militaryServiceDiv.attr('id', 'militaryservices');
-
-    $('#profile-education').append(languageDiv, certificateDiv, educationDiv);
-    $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
+    $('#profile-education').append(languageContainer, certificateContainer, educationContainer);
+    $('#profile-experience').append(workExperienceContainer, militaryServiceContainer);
 }
 
 function addExperienceProfileFormContainers() {
