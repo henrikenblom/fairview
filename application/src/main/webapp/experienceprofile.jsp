@@ -1,17 +1,16 @@
 <%--
   Created by IntelliJ IDEA.
-  User: daniel
-  Date: 2011-10-18
-  Time: 11:18
+  User: Daniel
+  Date: 10/24/11
+  Time: 03:35 PM
   To change this template use File | Settings | File Templates.
 --%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="WEB-INF/jspf/beanMapper.jsp" %>
 
 <html>
 <head>
-    <title>Infero Quest - Funktioner</title>
+    <title>Infero Quest - Kompetensprofil</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
@@ -24,53 +23,47 @@
     <script type="text/javascript" src="js/datatables_util.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.validate.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
+    <script type="text/javascript" src="js/plugins/spin.min.js"></script>
     <script type="text/javascript">
-        var oTable;
         $(document).ready(function() {
             $('.addnew').click(function() {
                 var data = new Array;
-                var popupIndex = 0;
-                createFunctionTab(data);
-                openFunctionForm(data, popupIndex);
+                createExperienceProfileTab(data);
+                openExperienceProfileForm(data);
             });
-
             oTable = $('#datatable').dataTable({
                 "bProcessing": true,
                 "bSortClasses": false,
                 "bStateSave": true,
                 "oLanguage": {
-                    "sEmptyTable": "Inga funktioner finns i databasen."
+                    "sEmptyTable": "Inga profiler finns i databasen."
                 },
-                "sAjaxSource": "fairview/ajax/datatables/get_function_data.do",
+                "sAjaxSource": "fairview/ajax/datatables/get_experience_profile_data.do",
                 "aoColumns": [
                     {"mDataProp": null,  "sWidth": 5,
                         fnRender: function(obj) {
                             return '<img src="/images/details_open.png" class="openbutton">';
                         }
                         , "bSortable": false, "bSearchable": false},
-                    {"mDataProp": "name"},
-                    {"mDataProp": "description"},
+                    { "mDataProp": "name"},
+                    { "mDataProp": "description" },
                     { "mDataProp": null,  "sWidth": 10,
                         fnRender: function(obj) {
                             if (hasRole('ROLE_ADMIN'))
-                                return getFunctionDeleteButton(obj);
+                                return getExperienceProfileDeleteButton(obj);
                             else
                                 return '';
                         }
                         , "bSortable": false, "bSearchable": false  }
-
                 ],
-                "fnDrawCallback": function() {
+                "fnDrawCallback" : function() {
                     var datatable = this;
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentNode);
-                        if (this.cellIndex == '1') {
-                            initFunctionCell(data, this, 0);
-                        }
-                        else if (this.cellIndex == '2') {
-                            initFunctionCell(data, this, 0);
+                        if (this.cellIndex == '1' || this.cellIndex == '2') {  //employee-cell
+                            intExperienceProfileCell(data, this, 0);
                         }
                     });
                     $('td', datatable.fnGetNodes()).hover(function() {
@@ -89,25 +82,21 @@
                 else {
                     /* Open this row */
                     this.src = "/images/details_close.png";
-                    oTable.fnOpen(nTr, getFunctionDetails(oTable, nTr), 'details');
+                    oTable.fnOpen(nTr, getExperienceProfileDetails(oTable, nTr), 'details');
                 }
             });
             fadeOutModalizer();
         });
-        function getFunctionDetails(oTable, nTr) {
+        function getExperienceProfileDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-            sOut += '<tr><td><b>Uppgifter</b></td></td></tr>';
-            $.each(aData.tasks, function(count, obj) {
-                sOut += '<tr><td> &#149; ' + obj.description + ', Tid: ' + obj.time + ' ' + obj.timeunit + ' Output: '
-                        + obj.output + ' ' + obj.outputunit + '</td></tr>';
-            });
+            sOut += '<tr><td> &#149; ' + aData.name + ', ' + aData.description + '</td></tr>';
             sOut += '</table>';
             return sOut;
         }
-        function openFunctionForm(data, popupIndex) {
-            $('#function-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
-            bindFunctionTabs();
+        function openExperienceProfileForm(data, popupIndex) {
+            $('#experience-profile-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
+            bindExperienceProfileTabs();
             openPopupTab(popupIndex);
         }
     </script>
@@ -117,13 +106,14 @@
 <div id="main">
     <div id="content">
         <div class="addnew addnewtop"><img src="images/newfunction.png"
-                                           class="helpbox-image"><span>Lägg till funktion</span></div>
+                                           class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
+        </div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
                 <tr>
                     <th></th>
-                    <th>Funktion</th>
+                    <th>Namn</th>
                     <th>Beskrivning</th>
                     <th></th>
                 </tr>
@@ -134,14 +124,15 @@
                 <tfoot>
                 <tr>
                     <th></th>
-                    <th>Funktion</th>
+                    <th>Namn</th>
                     <th>Beskrivning</th>
                     <th></th>
                 </tr>
                 </tfoot>
             </table>
         </div>
-        <div class="addnew addnewbottom"><img src="images/newfunction.png" class="helpbox-image"><span>Lägg till funktion</span>
+        <div class="addnew addnewtop"><img src="images/newfunction.png"
+                                           class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
     </div>
 </div>

@@ -41,7 +41,7 @@ $.fn.dataTableExt.oApi.fnReloadAjax = function (oSettings, sNewSource, fnCallbac
     }, oSettings);
 }
 
-function initEmploymentCell(data, cell ) {
+function initEmploymentCell(data, cell) {
     $(cell).unbind();
     $(cell).css('cursor', 'pointer');
 
@@ -56,13 +56,22 @@ function initEmploymentCell(data, cell ) {
 
 }
 
-function initFunctionCell(data, cell, popupIndex){
+function initFunctionCell(data, cell, popupIndex) {
     $(cell).unbind();
     $(cell).css('cursor', 'pointer');
 
-    $(cell).click(function(){
+    $(cell).click(function() {
         createFunctionTab(data);
         openFunctionForm(data, popupIndex);
+    });
+}
+
+function intExperienceProfileCell(data, cell, popupIndex){
+    $(cell).unbind();
+    $(cell).css('cursor', 'pointer');
+    $(cell).click(function(){
+        createExperienceProfileTab(data);
+        openExperienceProfileForm(data, popupIndex);
     });
 }
 
@@ -77,11 +86,11 @@ function initEmployeeCell(data, cell) {
     }
 }
 
-function initTaskCell(data, cell, popupIndex){
+function initTaskCell(data, cell, popupIndex) {
     $(cell).unbind();
     $(cell).css('cursor', 'pointer');
 
-    $(cell).click(function(){
+    $(cell).click(function() {
         createFunctionTab(data);
         openFunctionForm(data, popupIndex)
     });
@@ -128,6 +137,28 @@ function addFormContainers() {
     $('#profile-experience').append(workExperienceDiv, militaryServiceDiv);
 }
 
+function addExperienceProfileFormContainers() {
+    var languageDiv = $('<div>');
+    languageDiv.attr('id', 'languages');
+    languageDiv.addClass('groupedFormsContainer');
+    var certificateDiv = $('<div>');
+    certificateDiv.attr('id', 'certificates');
+    certificateDiv.addClass('groupedFormsContainer');
+    var educationDiv = $('<div>');
+    educationDiv.addClass('groupedFormsContainer');
+    educationDiv.attr('id', 'educations');
+
+    var workExperienceDiv = $('<div>');
+    workExperienceDiv.addClass('groupedFormsContainer');
+    workExperienceDiv.attr('id', 'workexperiences');
+    var militaryServiceDiv = $('<div>');
+    militaryServiceDiv.addClass('groupedFormsContainer');
+    militaryServiceDiv.attr('id', 'militaryservices');
+
+    $('#experience-profile-education').append(languageDiv, certificateDiv, educationDiv);
+    $('#experience-profile-experience').append(workExperienceDiv, militaryServiceDiv);
+}
+
 function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_LANGUAGESKILL', generateLanguageForm, '#languages');
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_EDUCATION', generateEducationForm, '#educations');
@@ -136,7 +167,7 @@ function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
 }
 
-function loadFirstFunctionForm(functionId){
+function loadFirstFunctionForm(functionId) {
     addExistingValuesOrCreateEmptyForms(functionId, 'HAS_TASK', generateTaskForm, '#function-task');
 }
 
@@ -197,11 +228,42 @@ function generateProfileForm(nodeId, newEmployee) {
     });
 }
 
-function generateFunctionForm(nodeId){
+function generateEducationExperienceForExperienceProfileForm(nodeId) {
+    var data;
+    addExperienceProfileFormContainers();
+    loadFormValues(nodeId);
+
+    if (!$.isEmptyObject(nodeId)) {
+        data = getUnitData(nodeId);
+    }
+
+    $('#languages').append(addLanguageButton(nodeId));
+    $('#educations').append(addEducationButton(nodeId));
+    $('#certificates').append(addCertificateButton(nodeId));
+    $('#experience-profile-education').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
+
+
+    $('#workexperiences').append(addWorkExperienceButton(nodeId));
+    $('#militaryservices').append(addMilitaryServiceButton(nodeId));
+    $('#experience-profile-experience').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
+}
+
+function generateExperienceProfileForm(nodeId) {
+    var data;
+
+    if (!$.isEmptyObject(nodeId)) {
+        data = getUnitData(nodeId);
+    }
+    $('#experience-profile-general').append(generateExperienceProfileGeneralForm(data));
+    $('#experience-profile-education');
+    $('#experience-profile-experience');
+}
+
+function generateFunctionForm(nodeId) {
     var data;
     loadFirstFunctionForm(nodeId);
 
-    if(!$.isEmptyObject(nodeId)){
+    if (!$.isEmptyObject(nodeId)) {
         data = getUnitData(nodeId);
     }
     $('#function-general').append(generateFunctionGeneralForm(data));
@@ -214,8 +276,26 @@ function getEmployeeDeleteButton(obj) {
     return "<a title='ta bort person' onclick='deleteAlertEmployee(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
+function getFunctionDeleteButton(obj) {
+    return "<a title='ta bort funktion' onclick='deleteAlertFunction(" + obj.aData.function_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
+function getExperienceProfileDeleteButton(obj) {
+    return "<a title='ta bort kompetensprofil' onclick='deleteAlertExperienceProfile(" + obj.aData.id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
 function deleteAlertEmployee(id) {
     generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+        deleteRow, id);
+}
+
+function deleteAlertFunction(id) {
+    generateAlertDialog('Borttagning av funktion', 'Är du säker på att du vill ta bort funktionen?',
+        deleteRow, id);
+}
+
+function deleteAlertExperienceProfile(id) {
+    generateAlertDialog('Borttagning av kompetensprofil', 'Är du säker på att du vill ta bort kompetensprofilen?',
         deleteRow, id);
 }
 
@@ -266,14 +346,27 @@ function createEmployeeTab(data, newEmployee) {
     generateProfileForm(data.employee_id, newEmployee);
 }
 
-function createFunctionTab(data){
+function createExperienceProfileTab(data) {
+    var linkData = [
+        ['experience-profile-general','Kometensprofil'],
+        ['experience-profile-education', 'Utbildning'],
+        ['experience-profile-experience', 'Erfarenhet']
+    ];
+
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    bindExperienceProfileTabs();
+    generateExperienceProfileForm(data.id);
+    generateEducationExperienceForExperienceProfileForm(data.id);
+}
+
+function createFunctionTab(data) {
     var linkData = [
         ['function-general', 'Funktion'],
         ['function-task', 'Uppgifter']
     ];
 
     $('#popup-dialog').empty().append(generateTabs(linkData));
-    bindEmployeeTabs();
+    bindFunctionTabs();
     generateFunctionForm(data.function_id);
 }
 

@@ -383,6 +383,40 @@ function generateEmploymentCreationForm(data) {
     return form;
 }
 
+function generateExperienceProfileGeneralForm(data){
+    var properties = new Array();
+    var formId = 'new_experience_profile_form';
+    var fieldSet = $('<fieldset>');
+
+    if(!$.isEmptyObject(data)){
+        var experienceProfileId = data.node.id;
+        formId = 'experience_profile_form' + experienceProfileId;
+        var experienceProfileData = getUnitData(experienceProfileId);
+        fieldSet.append(hiddenField('_nodeId', experienceProfileData.node.id));
+        properties = experienceProfileData.node.properties;
+    }
+
+    var form = buildUpdateForm(formId);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'experienceProfile');
+
+    var name = textInputComponent('Titel', 'name', propValue(properties.name), formId, false);
+    var description = textAreaInputComponent('Beskrivning', 'description', propValue(properties.description), formId, false);
+
+    fieldSet.append(
+        hiddenField_type,
+        hiddenField_strict,
+        hiddenField_username,
+        hiddenField_nodeClass,
+        name,
+        description
+    );
+    form.append(fieldSet);
+    return form;
+}
+
 function generateFunctionGeneralForm(data){
     var properties =new Array();
     var formId = 'new_function_form';
@@ -392,9 +426,9 @@ function generateFunctionGeneralForm(data){
     if(!$.isEmptyObject(data)){
         var functionId = data.node.id;
         formId = 'function_form'+ functionId; //if the form isn't new, give it another formname to prevent a new relationship to be created
-        EmploymentData = getUnitData(functionId);
-        fieldSet.append(hiddenField('_nodeId', EmploymentData.node.id));
-        properties = EmploymentData.node.properties;
+        var employmentData = getUnitData(functionId);
+        fieldSet.append(hiddenField('_nodeId', employmentData.node.id));
+        properties = employmentData.node.properties;
     }
 
     var form = buildUpdateForm(formId);
@@ -640,7 +674,6 @@ function generateTaskForm(form_id, taskNode){
     var formId = form_id;
     var descriptionString = '';
     var timeString = '';
-    var timeUnit = '';
     var outputString = '';
     var outputUnit = '';
     var idString = '';
@@ -649,7 +682,6 @@ function generateTaskForm(form_id, taskNode){
         var properties = taskNode.properties;
         descriptionString = propValue(properties.description);
         timeString = propValue(properties.time);
-        timeUnit = propValue(properties.timeunit);
         outputString = propValue(properties.output);
         outputUnit = propValue(properties.outputunit);
         idString = taskNode.id;
@@ -664,17 +696,12 @@ function generateTaskForm(form_id, taskNode){
     var hiddenField_nodeClass = hiddenField('nodeclass', 'task');
 
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var timeComponent = textInputComponent('Tid', 'time', timeString, formId, false);
-    var timeUnitComponent = selectInputComponent('Tidsenhet', 'timeunit', 'timeunit-field', formId,false);
-    timeUnitComponent.children('#timeunit-field').append(generateOption('percent', timeUnit, '%'));
-    timeUnitComponent.children('#timeunit-field').append(generateOption('hoursperday', timeUnit, 'timmar per dag'));
-    timeUnitComponent.children('#timeunit-field').append(generateOption('hoursperweek', timeUnit, 'timmar per vecka'));
-    timeUnitComponent.children('#timeunit-field').append(generateOption('hourspermonth', timeUnit, 'timmar per månad'));
-    var outputComponent = textInputComponent('Output', 'output', outputString, formId, false);
+    var timeComponent = textInputComponent('Tid (procent av anställningstid)', 'time:int', timeString, formId, false);
+    var outputComponent = textInputComponent('Output', 'output:int', outputString, formId, false);
     var outputUnitComponent = typeaheadInputComponent('Outputenhet', 'outputunit', outputUnit, formId, OUTPUTUNIT_CATEGORY, false);
 
     form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
-        descriptionComponent, '<br />', timeComponent, timeUnitComponent, '<br />', outputComponent, outputUnitComponent);
+        descriptionComponent, '<br />', timeComponent, '<br />', outputComponent, outputUnitComponent);
     div.append(form);
     return div;
 }
@@ -936,6 +963,9 @@ function getRelationshipType(form){
             break;
         case "function":
             relationshipType = "ASSIGNED_FUNCTION";
+            break;
+        case "experience":
+            relationshipType = "HAS_EXPERIENCE_PROFILE"
             break;
         default:
             break;
