@@ -29,7 +29,7 @@
             $('.addnew').click(function() {
                 var data = new Array;
                 createExperienceProfileTab(data);
-                openExperienceProfileForm();
+                openExperienceProfileForm(data);
             });
             oTable = $('#datatable').dataTable({
                 "bProcessing": true,
@@ -41,33 +41,18 @@
                 "sAjaxSource": "fairview/ajax/datatables/get_experience_profile_data.do",
                 "aoColumns": [
                     { "mDataProp": "name"},
-                    { "mDataProp": "description" }/*,
-                     { "mDataProp": null,  "sWidth": 10,
-                     fnRender: function(obj) {
-                     if (hasRole('ROLE_ADMIN'))
-                     return getEmployeeDeleteButton(obj);
-                     else
-                     return '';
-                     }
-                     , "bSortable": false, "bSearchable": false  }*/
-
+                    { "mDataProp": "description" }
                 ],
                 "fnDrawCallback" : function() {
                     var datatable = this;
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
-                    /*$.each(tdNodes, function() {
-                     var data = datatable.fnGetData(this.parentNode);
-                     if (this.cellIndex == '3') {  //employee-cell
-                     initEmploymentCell(data, this);
-                     }
-                     else if (this.cellIndex == '2') { //unit-cell
-                     initUnitCell(data.unit_id, this);
-                     }
-                     else if (isEmployeeDataColumn(this.cellIndex)) {
-                     initEmployeeCell(data, this);
-                     }
-                     });*/
+                    $.each(tdNodes, function() {
+                        var data = datatable.fnGetData(this.parentNode);
+                        if (this.cellIndex == '0' || this.cellIndex == '1') {  //employee-cell
+                            intExperienceProfileCell(data, this, 0);
+                        }
+                    });
                     $('td', datatable.fnGetNodes()).hover(function() {
                         $('td').removeClass('cell_highlight');
                         $(this).addClass('cell_highlight');
@@ -76,9 +61,9 @@
             });
             fadeOutModalizer();
         });
-        function openExperienceProfileForm(data, popupIndex){
+        function openExperienceProfileForm(data, popupIndex) {
             $('#experience-profile-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
-            bindExperienceProfileTabs
+            bindExperienceProfileTabs();
             openPopupTab(popupIndex);
         }
     </script>
@@ -88,7 +73,7 @@
 <div id="main">
     <div id="content">
         <div class="addnew addnewtop"><img src="images/newperson.png"
-                                                 class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
+                                           class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
@@ -110,7 +95,7 @@
             </table>
         </div>
         <div class="addnew addnewtop"><img src="images/newperson.png"
-                                                 class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
+                                           class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
     </div>
 </div>

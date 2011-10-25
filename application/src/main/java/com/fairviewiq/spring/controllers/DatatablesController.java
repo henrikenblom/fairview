@@ -103,8 +103,10 @@ public class DatatablesController {
 
         for (Node experienceProfileNode : experienceProfileListGenerator.getExperienceProfiles()) {
             HashMap<String, String> row = new HashMap<String, String>();
+            row.put("name", experienceProfileNode.getProperty("name", "").toString());
+            row.put("description", experienceProfileNode.getProperty("description", "").toString());
+            row.put("id", String.valueOf(experienceProfileNode.getId()));
             aaData.add(row);
-
         }
         retval.put("aaData", aaData);
 

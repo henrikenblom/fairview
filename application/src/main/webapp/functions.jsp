@@ -50,6 +50,7 @@
                         , "bSortable": false, "bSearchable": false},
                     {"mDataProp": "name"},
                     {"mDataProp": "description"}
+
                 ],
                 "fnDrawCallback": function() {
                     var datatable = this;
@@ -107,8 +108,7 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="addnew addnewtop"><img src="images/newfunction.png"
-                                           class="helpbox-image"><span>Lägg till funktion</span></div>
+        <div class="addnew addnewtop"><img src="images/newfunction.png"class="helpbox-image"><span>Lägg till funktion</span></div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
