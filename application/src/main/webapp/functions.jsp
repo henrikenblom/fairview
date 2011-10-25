@@ -99,7 +99,7 @@
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
             sOut += '<tr><td><b>Uppgifter</b></td></td></tr>';
             $.each(aData.tasks, function(count, obj) {
-                sOut += '<tr><td> &#149; ' + obj.description + ', Tid: ' + obj.time + ' ' + obj.timeunit + ' Output: '
+                sOut += '<tr><td> &#149; ' + obj.description + '. Tid: ' + obj.time + '% Output: '
                         + obj.output + ' ' + obj.outputunit + '</td></tr>';
             });
             sOut += '</table>';
