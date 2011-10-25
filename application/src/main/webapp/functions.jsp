@@ -45,17 +45,7 @@
                 "aoColumns": [
                     {"mDataProp": "name"},
                     {"mDataProp": "description"}
-                    /*,
-                    {"mDataProp": null, "sWidth": 10,
-                        fnRender: function(obj){
-                            if(hasRole('ROLE_ADMIN'))
-                                return getFunctionDeleteButton();
-                            else
-                                return '';
-                        },
-                        "bSortable": false,
-                        "bSearchable": false
-                    }  */
+
                 ],
                 "fnDrawCallback": function(){
                     var datatable = this;
@@ -68,7 +58,6 @@
                         }
                         else if (this.cellIndex == '1'){
                             initFunctionCell(data, this, 0);
-                            //initTaskCell(data, this, this.cellIndex);
                         }
                     });
                     $('td', datatable.fnGetNodes()).hover(function(){
