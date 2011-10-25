@@ -40,6 +40,11 @@
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_experience_profile_data.do",
                 "aoColumns": [
+                    {"mDataProp": null,  "sWidth": 5,
+                        fnRender: function(obj) {
+                            return '<img src="/images/details_open.png" class="openbutton">';
+                        }
+                        , "bSortable": false, "bSearchable": false},
                     { "mDataProp": "name"},
                     { "mDataProp": "description" }
                 ],
@@ -49,7 +54,7 @@
                     var tdNodes = $(trNodes).children();
                     $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentNode);
-                        if (this.cellIndex == '0' || this.cellIndex == '1') {  //employee-cell
+                        if (this.cellIndex == '1' || this.cellIndex == '2') {  //employee-cell
                             intExperienceProfileCell(data, this, 0);
                         }
                     });
@@ -59,8 +64,28 @@
                     });
                 }
             });
+            $('#datatable tbody td .openbutton').live('click', function () {
+                var nTr = this.parentNode.parentNode;
+                if (this.src.match('details_close')) {
+                    /* This row is already open - close it */
+                    this.src = "/images/details_open.png";
+                    oTable.fnClose(nTr);
+                }
+                else {
+                    /* Open this row */
+                    this.src = "/images/details_close.png";
+                    oTable.fnOpen(nTr, getExperienceProfileDetails(oTable, nTr), 'details');
+                }
+            });
             fadeOutModalizer();
         });
+        function getExperienceProfileDetails(oTable, nTr) {
+            var aData = oTable.fnGetData(nTr);
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+            sOut += '<tr><td> &#149; ' + aData.name + ', '+ aData.description+'</td></tr>';
+            sOut += '</table>';
+            return sOut;
+        }
         function openExperienceProfileForm(data, popupIndex) {
             $('#experience-profile-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
             bindExperienceProfileTabs();
@@ -79,6 +104,7 @@
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>Namn</th>
                     <th>Beskrivning</th>
                 </tr>
@@ -88,6 +114,7 @@
                 </tbody>
                 <tfoot>
                 <tr>
+                    <th></th>
                     <th>Namn</th>
                     <th>Beskrivning</th>
                 </tr>

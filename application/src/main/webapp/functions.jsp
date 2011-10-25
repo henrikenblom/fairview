@@ -81,12 +81,12 @@
                 else {
                     /* Open this row */
                     this.src = "/images/details_close.png";
-                    oTable.fnOpen(nTr, fnFormatDetails(oTable, nTr), 'details');
+                    oTable.fnOpen(nTr, getFunctionDetails(oTable, nTr), 'details');
                 }
             });
             fadeOutModalizer();
         });
-        function fnFormatDetails(oTable, nTr) {
+        function getFunctionDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
             sOut += '<tr><td><b>Uppgifter</b></td></td></tr>';
