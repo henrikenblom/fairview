@@ -49,7 +49,15 @@
                         }
                         , "bSortable": false, "bSearchable": false},
                     {"mDataProp": "name"},
-                    {"mDataProp": "description"}
+                    {"mDataProp": "description"},
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj) {
+                            if (hasRole('ROLE_ADMIN'))
+                                return getFunctionDeleteButton(obj);
+                            else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
 
                 ],
                 "fnDrawCallback": function() {
@@ -90,9 +98,9 @@
             var aData = oTable.fnGetData(nTr);
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
             sOut += '<tr><td><b>Uppgifter</b></td></td></tr>';
-            $.each(aData.tasks, function(count, obj){
-            sOut += '<tr><td> &#149; ' + obj.description + ', Tid: '+ obj.time +' '+ obj.timeunit + ' Output: '
-                + obj.output + ' ' +obj.outputunit +'</td></tr>';
+            $.each(aData.tasks, function(count, obj) {
+                sOut += '<tr><td> &#149; ' + obj.description + ', Tid: ' + obj.time + ' ' + obj.timeunit + ' Output: '
+                        + obj.output + ' ' + obj.outputunit + '</td></tr>';
             });
             sOut += '</table>';
             return sOut;
@@ -108,7 +116,8 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="addnew addnewtop"><img src="images/newfunction.png"class="helpbox-image"><span>Lägg till funktion</span></div>
+        <div class="addnew addnewtop"><img src="images/newfunction.png"
+                                           class="helpbox-image"><span>Lägg till funktion</span></div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
@@ -116,6 +125,7 @@
                     <th></th>
                     <th>Funktion</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -126,6 +136,7 @@
                     <th></th>
                     <th>Funktion</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </tfoot>
             </table>

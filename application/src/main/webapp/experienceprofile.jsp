@@ -46,7 +46,15 @@
                         }
                         , "bSortable": false, "bSearchable": false},
                     { "mDataProp": "name"},
-                    { "mDataProp": "description" }
+                    { "mDataProp": "description" },
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj) {
+                            if (hasRole('ROLE_ADMIN'))
+                                return getExperienceProfileDeleteButton(obj);
+                            else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
                 ],
                 "fnDrawCallback" : function() {
                     var datatable = this;
@@ -82,7 +90,7 @@
         function getExperienceProfileDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
-            sOut += '<tr><td> &#149; ' + aData.name + ', '+ aData.description+'</td></tr>';
+            sOut += '<tr><td> &#149; ' + aData.name + ', ' + aData.description + '</td></tr>';
             sOut += '</table>';
             return sOut;
         }
@@ -107,6 +115,7 @@
                     <th></th>
                     <th>Namn</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -117,6 +126,7 @@
                     <th></th>
                     <th>Namn</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </tfoot>
             </table>

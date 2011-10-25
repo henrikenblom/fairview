@@ -276,8 +276,26 @@ function getEmployeeDeleteButton(obj) {
     return "<a title='ta bort person' onclick='deleteAlertEmployee(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
+function getFunctionDeleteButton(obj) {
+    return "<a title='ta bort funktion' onclick='deleteAlertFunction(" + obj.aData.function_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
+function getExperienceProfileDeleteButton(obj) {
+    return "<a title='ta bort kompetensprofil' onclick='deleteAlertExperienceProfile(" + obj.aData.id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
 function deleteAlertEmployee(id) {
     generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+        deleteRow, id);
+}
+
+function deleteAlertFunction(id) {
+    generateAlertDialog('Borttagning av funktion', 'Är du säker på att du vill ta bort funktionen?',
+        deleteRow, id);
+}
+
+function deleteAlertExperienceProfile(id) {
+    generateAlertDialog('Borttagning av kompetensprofil', 'Är du säker på att du vill ta bort kompetensprofilen?',
         deleteRow, id);
 }
 
