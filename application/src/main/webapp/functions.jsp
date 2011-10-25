@@ -26,7 +26,7 @@
     <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
     <script type="text/javascript">
         var oTable;
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('.addnew').click(function() {
                 var data = new Array;
                 var popupIndex = 0;
@@ -43,43 +43,60 @@
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_function_data.do",
                 "aoColumns": [
+                    {"mDataProp": null,  "sWidth": 5,
+                        fnRender: function(obj) {
+                            return '<img src="/images/details_open.png" class="openbutton">';
+                        }
+                        , "bSortable": false, "bSearchable": false},
                     {"mDataProp": "name"},
                     {"mDataProp": "description"}
-                    /*,
-                    {"mDataProp": null, "sWidth": 10,
-                        fnRender: function(obj){
-                            if(hasRole('ROLE_ADMIN'))
-                                return getFunctionDeleteButton();
-                            else
-                                return '';
-                        },
-                        "bSortable": false,
-                        "bSearchable": false
-                    }  */
                 ],
-                "fnDrawCallback": function(){
+                "fnDrawCallback": function() {
                     var datatable = this;
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
-                    $.each(tdNodes, function(){
+                    $.each(tdNodes, function() {
                         var data = datatable.fnGetData(this.parentNode);
-                        if(this.cellIndex == '0'){
+                        if (this.cellIndex == '1') {
                             initFunctionCell(data, this, 0);
                         }
-                        else if (this.cellIndex == '1'){
+                        else if (this.cellIndex == '2') {
                             initFunctionCell(data, this, 0);
-                            //initTaskCell(data, this, this.cellIndex);
                         }
                     });
-                    $('td', datatable.fnGetNodes()).hover(function(){
+                    $('td', datatable.fnGetNodes()).hover(function() {
                         $('td').removeClass('cell_highlight');
                         $(this).addClass('cell_highlight');
                     });
                 }
-            })
+            });
+            $('#datatable tbody td .openbutton').live('click', function () {
+                var nTr = this.parentNode.parentNode;
+                if (this.src.match('details_close')) {
+                    /* This row is already open - close it */
+                    this.src = "/images/details_open.png";
+                    oTable.fnClose(nTr);
+                }
+                else {
+                    /* Open this row */
+                    this.src = "/images/details_close.png";
+                    oTable.fnOpen(nTr, fnFormatDetails(oTable, nTr), 'details');
+                }
+            });
             fadeOutModalizer();
         });
-        function openFunctionForm(data, popupIndex){
+        function fnFormatDetails(oTable, nTr) {
+            var aData = oTable.fnGetData(nTr);
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+            sOut += '<tr><td><b>Uppgifter</b></td></td></tr>';
+            $.each(aData.tasks, function(count, obj){
+            sOut += '<tr><td> &#149; ' + obj.description + ', Tid: '+ obj.time +' '+ obj.timeunit + ' Output: '
+                + obj.output + ' ' +obj.outputunit +'</td></tr>';
+            });
+            sOut += '</table>';
+            return sOut;
+        }
+        function openFunctionForm(data, popupIndex) {
             $('#function-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
             bindFunctionTabs();
             openPopupTab(popupIndex);
@@ -90,14 +107,15 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="addnew addnewtop"><img src="images/newfunction.png"class="helpbox-image"><span>Lägg till funktion</span></div>
+        <div class="addnew addnewtop"><img src="images/newfunction.png"
+                                           class="helpbox-image"><span>Lägg till funktion</span></div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>Funktion</th>
                     <th>Beskrivning</th>
-                    <%--<th></th>--%>
                 </tr>
                 </thead>
                 <tbody>
@@ -105,9 +123,9 @@
                 </tbody>
                 <tfoot>
                 <tr>
+                    <th></th>
                     <th>Funktion</th>
                     <th>Beskrivning</th>
-                    <%--<th></th>--%>
                 </tr>
                 </tfoot>
             </table>

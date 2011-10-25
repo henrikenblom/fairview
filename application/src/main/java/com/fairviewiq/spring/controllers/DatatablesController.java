@@ -59,13 +59,29 @@ public class DatatablesController {
     @RequestMapping(value = {"/fairview/ajax/datatables/get_function_data.do"})
     public void getFunctionData(HttpServletResponse response, HttpSession httpSession) {
 
-        HashMap<String, ArrayList<HashMap<String, String>>> retval = new HashMap<String, ArrayList<HashMap<String, String>>>();
-        ArrayList<HashMap<String, String>> aaData = new ArrayList<HashMap<String, String>>();
+        HashMap<String, ArrayList<HashMap<String, Object>>> retval = new HashMap<String, ArrayList<HashMap<String, Object>>>();
+        ArrayList<HashMap<String, Object>> aaData = new ArrayList<HashMap<String, Object>>();
 
         for (Node functionNode : functionListGenerator.getSortedList(FunctionListGenerator.ALPHABETICAL, true)) {
 
-            HashMap<String, String> row = new HashMap<String, String>();
+            HashMap<String, Object> row = new HashMap<String, Object>();
+
             loadFunctionData(functionNode, row);
+
+            ArrayList<HashMap<String, String>> tasks = new ArrayList<HashMap<String, String>>();
+            for (Relationship taskRelationship : functionNode.getRelationships(new SimpleRelationshipType("HAS_TASK"))) {
+                HashMap<String, String> task = new HashMap<String, String>();
+                Node taskNode = taskRelationship.getEndNode();
+                task.put("id", String.valueOf(taskNode.getId()));
+                task.put("description", String.valueOf(taskNode.getProperty("description", "")));
+                task.put("time", String.valueOf(taskNode.getProperty("time", "")));
+                task.put("timeunit", String.valueOf(taskNode.getProperty("timeunit", "")));
+                task.put("output", String.valueOf(taskNode.getProperty("output", "")));
+                task.put("outputunit", String.valueOf(taskNode.getProperty("outputunit", "")));
+
+                tasks.add(task);
+            }
+            row.put("tasks", tasks);
             aaData.add(row);
         }
         retval.put("aaData", aaData);
@@ -87,8 +103,8 @@ public class DatatablesController {
 
         for (Node experienceProfileNode : experienceProfileListGenerator.getExperienceProfiles()) {
             HashMap<String, String> row = new HashMap<String, String>();
-            loadFunctionData(experienceProfileNode, row);
             aaData.add(row);
+
         }
         retval.put("aaData", aaData);
 
@@ -99,7 +115,7 @@ public class DatatablesController {
         }
     }
 
-    private void loadFunctionData(Node functionNode, HashMap<String, String> row) {
+    private void loadFunctionData(Node functionNode, HashMap<String, Object> row) {
         row.put("name", functionNode.getProperty("name", "").toString());
         row.put("description", functionNode.getProperty("description", "").toString());
         row.put("function_id", String.valueOf(functionNode.getId()));
