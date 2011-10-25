@@ -10,7 +10,7 @@
 
 <html>
 <head>
-    <title>Infero Quest - Personer</title>
+    <title>Infero Quest - Kompetensprofil</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
     <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
@@ -26,25 +26,30 @@
     <script type="text/javascript" src="js/plugins/spin.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-           oTable = $('#datatable').dataTable({
+            $('.addnew').click(function() {
+                var data = new Array;
+                createExperienceProfileTab(data);
+                openExperienceProfileForm();
+            });
+            oTable = $('#datatable').dataTable({
                 "bProcessing": true,
                 "bSortClasses": false,
                 "bStateSave": true,
                 "oLanguage": {
-                    "sEmptyTable": "Inga personer finns i databasen."
+                    "sEmptyTable": "Inga profiler finns i databasen."
                 },
-                "sAjaxSource": "fairview/ajax/datatables/get_experience_data.do",
+                "sAjaxSource": "fairview/ajax/datatables/get_experience_profile_data.do",
                 "aoColumns": [
                     { "mDataProp": "name"},
                     { "mDataProp": "description" }/*,
-                    { "mDataProp": null,  "sWidth": 10,
-                        fnRender: function(obj) {
-                            if (hasRole('ROLE_ADMIN'))
-                                return getEmployeeDeleteButton(obj);
-                            else
-                                return '';
-                        }
-                        , "bSortable": false, "bSearchable": false  }*/
+                     { "mDataProp": null,  "sWidth": 10,
+                     fnRender: function(obj) {
+                     if (hasRole('ROLE_ADMIN'))
+                     return getEmployeeDeleteButton(obj);
+                     else
+                     return '';
+                     }
+                     , "bSortable": false, "bSearchable": false  }*/
 
                 ],
                 "fnDrawCallback" : function() {
@@ -52,17 +57,17 @@
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
                     /*$.each(tdNodes, function() {
-                        var data = datatable.fnGetData(this.parentNode);
-                        if (this.cellIndex == '3') {  //employee-cell
-                            initEmploymentCell(data, this);
-                        }
-                        else if (this.cellIndex == '2') { //unit-cell
-                            initUnitCell(data.unit_id, this);
-                        }
-                        else if (isEmployeeDataColumn(this.cellIndex)) {
-                            initEmployeeCell(data, this);
-                        }
-                    });*/
+                     var data = datatable.fnGetData(this.parentNode);
+                     if (this.cellIndex == '3') {  //employee-cell
+                     initEmploymentCell(data, this);
+                     }
+                     else if (this.cellIndex == '2') { //unit-cell
+                     initUnitCell(data.unit_id, this);
+                     }
+                     else if (isEmployeeDataColumn(this.cellIndex)) {
+                     initEmployeeCell(data, this);
+                     }
+                     });*/
                     $('td', datatable.fnGetNodes()).hover(function() {
                         $('td').removeClass('cell_highlight');
                         $(this).addClass('cell_highlight');
@@ -71,12 +76,20 @@
             });
             fadeOutModalizer();
         });
+        function openExperienceProfileForm(data, popupIndex){
+            $('#experience-profile-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
+            bindExperienceProfileTabs
+            openPopupTab(popupIndex);
+        }
     </script>
 </head>
 <%@include file="WEB-INF/jspf/iqpageheader.jsp" %>
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
+        <div class="addnew addnewtop"><img src="images/newperson.png"
+                                                 class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
+        </div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
@@ -92,9 +105,12 @@
                 <tr>
                     <th>Namn</th>
                     <th>Beskrivning</th>
-                    </tr>
+                </tr>
                 </tfoot>
             </table>
+        </div>
+        <div class="addnew addnewtop"><img src="images/newperson.png"
+                                                 class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
     </div>
 </div>

@@ -76,7 +76,7 @@
             <div <%= request.getRequestURI().endsWith("/employees.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employees.jsp')" name="persons">Personer</div>
             <div <%= request.getRequestURI().endsWith("/employments.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employments.jsp')" name="company-functions">Anställningar</div>
             <div <%= request.getRequestURI().endsWith("/functions.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functions.jsp')" name="functions">Funktioner</div>
-            <div <%= request.getRequestURI().endsWith("/experience.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('experience.jsp')" name="experience">Kompetensprofil</div>
+            <div <%= request.getRequestURI().endsWith("/experienceprofile.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('experienceprofile.jsp')" name="experience">Kompetensprofil</div>
             <div <%= request.getRequestURI().endsWith("/search.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('search.jsp')" name="functions">S&ouml;k</div>
 
             <div class="inactivetab top-button" onclick="document.location.href = 'j_spring_security_logout'" name="logout"> Logga ut</div>

@@ -197,6 +197,10 @@ function generateProfileForm(nodeId, newEmployee) {
     });
 }
 
+function generateExperienceProfileForm(nodeId){
+
+}
+
 function generateFunctionForm(nodeId){
     var data;
     loadFirstFunctionForm(nodeId);
@@ -266,6 +270,17 @@ function createEmployeeTab(data, newEmployee) {
     generateProfileForm(data.employee_id, newEmployee);
 }
 
+function createExperienceProfileTab(data){
+    var linkData = [
+        ['experience-profile-general','Kometensprofil'],
+        ['experience-profile-education', 'Utbildning'],
+        ['experience-profile-experience', 'Erfarenhet']
+    ];
+
+    $('#popup-dialog').empty().append(generateTabs(linkData));
+    generateExperienceProfileForm(data.experience_profile_id);
+}
+
 function createFunctionTab(data){
     var linkData = [
         ['function-general', 'Funktion'],
@@ -273,7 +288,7 @@ function createFunctionTab(data){
     ];
 
     $('#popup-dialog').empty().append(generateTabs(linkData));
-    bindEmployeeTabs();
+    bindFunctionTabs();
     generateFunctionForm(data.function_id);
 }
 
