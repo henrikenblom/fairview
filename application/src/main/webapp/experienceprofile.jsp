@@ -105,7 +105,7 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="addnew addnewtop"><img src="images/newperson.png"
+        <div class="addnew addnewtop"><img src="images/newfunction.png"
                                            class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
         <div class="datatable">
@@ -131,7 +131,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="addnew addnewtop"><img src="images/newperson.png"
+        <div class="addnew addnewtop"><img src="images/newfunction.png"
                                            class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
     </div>
