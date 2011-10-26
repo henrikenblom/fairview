@@ -407,7 +407,7 @@ function generateExperienceProfileGeneralForm(data){
     var hiddenField_username = hiddenField('_username', 'admin');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'experienceProfile');
 
-    var name = textInputComponent('Titel', 'name', propValue(properties.name), formId, false);
+    var name = textInputComponent('Titel', 'name', propValue(properties.name), formId, true);
     var description = textAreaInputComponent('Beskrivning', 'description', propValue(properties.description), formId, false);
 
     fieldSet.append(
