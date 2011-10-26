@@ -20,6 +20,7 @@ var WORKEXPERIENCE_NAME_CATEGORY = 'workexperience_names';
 var WORKEXPERIENCE_COMPANY_CATEGORY = 'workexperience_companies';
 var WORKEXPERIENCE_TRADE_CATEGORY = 'workexperience_trades';
 var MILITARYSERVICE_NAME_CATEGORY = 'militaryservice_names';
+var OTHEREXPERIENCE_NAME_CATEGORY = 'otherexperience_names';
 var EMPLOYMENT_TITLE_CATEGORY = 'employment_titles';
 var EMPLOYMENT_COMPANYCAR_CATEGORY = 'employment_companycars';
 var EMPLOYMENT_PENSIONINSURANCE_CATEGORY = 'employment_pensioninsurances';
@@ -674,6 +675,37 @@ function generateMilitaryServiceForm(form_Id, militaryServiceNode) {
     div.append(form);
     return div;
 }
+
+function generateOtherExperienceForm(form_Id, otherExperienceNode) {
+    var formId = form_Id;
+
+    var nameString = '';
+    var descriptionString = '';
+    var idString;
+    if (!$.isEmptyObject(otherExperienceNode)) {
+        var properties = otherExperienceNode.properties;
+        nameString = propValue(properties.name);
+        descriptionString = propValue(properties.description);
+        idString = otherExperienceNode.id;
+    }
+
+    var form = buildUpdateForm(formId);
+    var div = $('<div>');
+    div.addClass('delimitedForm');
+
+    var hiddenField_id = hiddenField('_nodeId', idString);
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'otherexperience');
+
+    var nameComponent = typeaheadInputComponent('Annan erfarenhet', 'name', nameString, formId, OTHEREXPERIENCE_NAME_CATEGORY, false);
+    var descriptionComponent = textAreaInputComponent('Beskrivning', 'description', descriptionString, formId, 'description-field');
+
+    form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
+        nameComponent, '<br/>', descriptionComponent);
+    div.append(form);
+    return div;
+}
+
 function generateTaskForm(form_id, taskNode){
     var formId = form_id;
     var descriptionString = '';
@@ -760,7 +792,7 @@ function addMilitaryServiceButton(nodeId) {
     button.html('Lägg till Militärtjänst');
     button.click(function() {
         var formId = getFormId("HAS_MILITARY_SERVICE", 0);
-        generateMilitaryServiceForm(formId).insertBefore('#militaryServiceButton');
+        generateOtherExperienceForm(formId).insertBefore('#militaryServiceButton');
     });
     return button;
 }
@@ -860,6 +892,9 @@ function createNodeWithRelationship(form, nodeId, callback) {
                 });
                 break;
             case "HAS_TASK":
+                createRelationship(nodeId, data.node.id, formId, callback);
+            break;
+            case "HAS_OTHER_EXPERIENCE":
                 createRelationship(nodeId, data.node.id, formId, callback);
             break;
             default:
