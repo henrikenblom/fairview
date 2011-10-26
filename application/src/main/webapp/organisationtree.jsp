@@ -157,25 +157,6 @@
                         %>
                     </ul>
                 </div>
-                <%--<div class="tree-column" id="unit-tree-icons">
-                    &lt;%&ndash;<h3>
-                        <button class="imageonly-button" title="Lägg till underenhet"
-                                id="imageonly-buttonAddSubUnit"><img
-                                src="images/newunit.png" alt="Ny underenhet"></button>
-                    </h3>&ndash;%&gt;
-                    &lt;%&ndash;<%
-                        for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
-                    %>
-                   &lt;%&ndash; <jsp:include page="unittreecontrol.jsp">
-                        <jsp:param name="unitId" value="<%=entry.getEndNode().getId()%>"></jsp:param>
-                        <jsp:param name="parentId" value="<%=organization.getId()%>"></jsp:param>
-                    </jsp:include>&ndash;%&gt;
-                    <br>
-                    <br>
-                    <%
-                        }
-                    %>&ndash;%&gt;
-                </div>--%>
             </div>
             <div class="helpbox">
                 <div class="helpbox-header">Hjälpruta</div>
