@@ -315,7 +315,7 @@ function generateEmploymentCreationForm(data) {
 
     var formId = 'employment_form';
     if (employeeId != null && employmentId != null && employmentId != '')
-        formId = 'employment_form' + employeeId;
+        formId = employeeId;
 
     var form = buildUpdateForm(formId);
 
