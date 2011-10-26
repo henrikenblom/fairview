@@ -674,7 +674,6 @@ function generateTaskForm(form_id, taskNode){
     var formId = form_id;
     var descriptionString = '';
     var timeString = '';
-    var timeUnit = '';
     var outputString = '';
     var outputUnit = '';
     var idString = '';
@@ -683,7 +682,6 @@ function generateTaskForm(form_id, taskNode){
         var properties = taskNode.properties;
         descriptionString = propValue(properties.description);
         timeString = propValue(properties.time);
-        timeUnit = propValue(properties.timeunit);
         outputString = propValue(properties.output);
         outputUnit = propValue(properties.outputunit);
         idString = taskNode.id;
@@ -698,17 +696,12 @@ function generateTaskForm(form_id, taskNode){
     var hiddenField_nodeClass = hiddenField('nodeclass', 'task');
 
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var timeComponent = textInputComponent('Tid', 'time', timeString, formId, false);
-    var timeUnitComponent = selectInputComponent('Tidsenhet', 'timeunit', 'timeunit-field', formId,false);
-    timeUnitComponent.children('#timeunit-field').append(generateOption('percent', timeUnit, '%'));
-    timeUnitComponent.children('#timeunit-field').append(generateOption('hoursperday', timeUnit, 'timmar per dag'));
-    timeUnitComponent.children('#timeunit-field').append(generateOption('hoursperweek', timeUnit, 'timmar per vecka'));
-    timeUnitComponent.children('#timeunit-field').append(generateOption('hourspermonth', timeUnit, 'timmar per månad'));
-    var outputComponent = textInputComponent('Output', 'output', outputString, formId, false);
+    var timeComponent = textInputComponent('Tid (procent av anställningstid)', 'time:int', timeString, formId, false);
+    var outputComponent = textInputComponent('Output', 'output:int', outputString, formId, false);
     var outputUnitComponent = typeaheadInputComponent('Outputenhet', 'outputunit', outputUnit, formId, OUTPUTUNIT_CATEGORY, false);
 
     form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
-        descriptionComponent, '<br />', timeComponent, timeUnitComponent, '<br />', outputComponent, outputUnitComponent);
+        descriptionComponent, '<br />', timeComponent, '<br />', outputComponent, outputUnitComponent);
     div.append(form);
     return div;
 }
