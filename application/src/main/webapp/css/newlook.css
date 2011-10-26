@@ -222,6 +222,10 @@ input[type="radio"] {
     white-space: nowrap;
 }
 
+.pointer{
+    cursor: pointer;
+}
+
 #button-bar {
     white-space: nowrap;
     display: table-cell;
@@ -785,6 +789,13 @@ label.error {
     color: #585c95;
     cursor: pointer;
     line-height: 19px;
+}
+h3#unitsettings-general-tablink{
+    float: left;
+}
+
+#imageonly-buttonAddSubUnit {
+    height: 25px;
 }
 
 .link {

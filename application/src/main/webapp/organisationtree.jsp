@@ -133,9 +133,16 @@
         <div id="unit-list" class="list-body">
             <div class="tree-view">
                 <div id="unit-tree" class="tree-column">
+                    <div>
                     <h3 id="unitsettings-general-tablink"
                         name="unitsettings-general-tablink<%=organization.getId()%>"><%=organization.getProperty("name", "")%>
+                        &nbsp;
+
                     </h3>
+                    <button class="imageonly-button" title="Lägg till underenhet"
+                                id="imageonly-buttonAddSubUnit" ><img
+                                src="images/newunit.png" alt="Ny underenhet" /></button>
+                    </div>
                     <ul>
                         <%
                             for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
@@ -150,25 +157,25 @@
                         %>
                     </ul>
                 </div>
-                <div class="tree-column" id="unit-tree-icons">
-                    <h3>
+                <%--<div class="tree-column" id="unit-tree-icons">
+                    &lt;%&ndash;<h3>
                         <button class="imageonly-button" title="Lägg till underenhet"
                                 id="imageonly-buttonAddSubUnit"><img
                                 src="images/newunit.png" alt="Ny underenhet"></button>
-                    </h3>
-                    <%
+                    </h3>&ndash;%&gt;
+                    &lt;%&ndash;<%
                         for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_UNIT"))) {
                     %>
-                    <jsp:include page="unittreecontrol.jsp">
+                   &lt;%&ndash; <jsp:include page="unittreecontrol.jsp">
                         <jsp:param name="unitId" value="<%=entry.getEndNode().getId()%>"></jsp:param>
                         <jsp:param name="parentId" value="<%=organization.getId()%>"></jsp:param>
-                    </jsp:include>
+                    </jsp:include>&ndash;%&gt;
                     <br>
                     <br>
                     <%
                         }
-                    %>
-                </div>
+                    %>&ndash;%&gt;
+                </div>--%>
             </div>
             <div class="helpbox">
                 <div class="helpbox-header">Hjälpruta</div>
