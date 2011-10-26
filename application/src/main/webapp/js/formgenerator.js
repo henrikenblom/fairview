@@ -173,6 +173,7 @@ function generateImageForm(nodeId, hasImage) {
                     $("#imagePreview").spin(false);
                     if (response.success) {
                         img.attr('src', getImgUrl(nodeId, "medium_image"));
+                        $('#smallProfileImage').attr('src', getImgUrl(nodeId, "small_image"));
                     } else  {
                         generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
                         if (hasImage == 'true') {
