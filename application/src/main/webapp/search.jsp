@@ -26,15 +26,17 @@
     </style>
 
     <script id="template_undefined" type="x-tmpl-mustache">
+        <!--
         <div class="search_result">
             <p>ID: {{_id}}</p>
             <p>nodeclass: {{nodeclass}}</p>
         </div>
+        -->
     </script>
 
     <script id="template_employee" type="x-tmpl-mustache">
         <div class="search_result">
-            <p>{{firstname}} {{lastname}}</p>
+            <h2><a href="reports/cv.pdf?NODE_ID={{_id}}">{{firstname}} {{lastname}}</a></h2>
             <p><img src="/fairview/ajax/get_image.do?_nodeId={{_id}}&size=small_image&random={{_random}}" width="80" height="120"/></p>
             <p><a href="mailto:{{email}}">{{email}}</a></p>
         </div>
