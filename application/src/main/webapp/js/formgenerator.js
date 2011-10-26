@@ -281,7 +281,7 @@ function generateProfileGeneralForm(data) {
     var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
 
     var relativesNameDiv= textInputComponent('Anhörigs namn', 'relativesname', relativesNameString, formId, false);
-    var relativesContactInformationDiv = textInputComponent('Anhörigs kontaktuppgift', 'relativescontactinformation', relativesContactInformationString, formId, false);
+    var relativesContactInformationDiv = textAreaInputComponent('Anhörigs kontaktuppgift', 'relativescontactinformation', relativesContactInformationString, formId);
 
     var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', additionalInfoString, formId, 'additional_infoDiv');
 
