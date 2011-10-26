@@ -29,7 +29,7 @@
             $('.addnew').click(function() {
                 var data = new Array;
                 createExperienceProfileTab(data);
-                openExperienceProfileForm();
+                openExperienceProfileForm(data);
             });
             oTable = $('#datatable').dataTable({
                 "bProcessing": true,
@@ -40,45 +40,63 @@
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_experience_profile_data.do",
                 "aoColumns": [
+                    {"mDataProp": null,  "sWidth": 5,
+                        fnRender: function(obj) {
+                            return '<img src="/images/details_open.png" class="openbutton">';
+                        }
+                        , "bSortable": false, "bSearchable": false},
                     { "mDataProp": "name"},
-                    { "mDataProp": "description" }/*,
-                     { "mDataProp": null,  "sWidth": 10,
-                     fnRender: function(obj) {
-                     if (hasRole('ROLE_ADMIN'))
-                     return getEmployeeDeleteButton(obj);
-                     else
-                     return '';
-                     }
-                     , "bSortable": false, "bSearchable": false  }*/
-
+                    { "mDataProp": "description" },
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj) {
+                            if (hasRole('ROLE_ADMIN'))
+                                return getExperienceProfileDeleteButton(obj);
+                            else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
                 ],
                 "fnDrawCallback" : function() {
                     var datatable = this;
                     var trNodes = this.fnGetNodes();
                     var tdNodes = $(trNodes).children();
-                    /*$.each(tdNodes, function() {
-                     var data = datatable.fnGetData(this.parentNode);
-                     if (this.cellIndex == '3') {  //employee-cell
-                     initEmploymentCell(data, this);
-                     }
-                     else if (this.cellIndex == '2') { //unit-cell
-                     initUnitCell(data.unit_id, this);
-                     }
-                     else if (isEmployeeDataColumn(this.cellIndex)) {
-                     initEmployeeCell(data, this);
-                     }
-                     });*/
+                    $.each(tdNodes, function() {
+                        var data = datatable.fnGetData(this.parentNode);
+                        if (this.cellIndex == '1' || this.cellIndex == '2') {  //employee-cell
+                            intExperienceProfileCell(data, this, 0);
+                        }
+                    });
                     $('td', datatable.fnGetNodes()).hover(function() {
                         $('td').removeClass('cell_highlight');
                         $(this).addClass('cell_highlight');
                     });
                 }
             });
+            $('#datatable tbody td .openbutton').live('click', function () {
+                var nTr = this.parentNode.parentNode;
+                if (this.src.match('details_close')) {
+                    /* This row is already open - close it */
+                    this.src = "/images/details_open.png";
+                    oTable.fnClose(nTr);
+                }
+                else {
+                    /* Open this row */
+                    this.src = "/images/details_close.png";
+                    oTable.fnOpen(nTr, getExperienceProfileDetails(oTable, nTr), 'details');
+                }
+            });
             fadeOutModalizer();
         });
-        function openExperienceProfileForm(data, popupIndex){
+        function getExperienceProfileDetails(oTable, nTr) {
+            var aData = oTable.fnGetData(nTr);
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+            sOut += '<tr><td> &#149; ' + aData.name + ', ' + aData.description + '</td></tr>';
+            sOut += '</table>';
+            return sOut;
+        }
+        function openExperienceProfileForm(data, popupIndex) {
             $('#experience-profile-general').append(footerButtonsComponent(data.id, updateTableCallback(oTable)));
-            bindExperienceProfileTabs
+            bindExperienceProfileTabs();
             openPopupTab(popupIndex);
         }
     </script>
@@ -87,15 +105,17 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="addnew addnewtop"><img src="images/newperson.png"
-                                                 class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
+        <div class="addnew addnewtop"><img src="images/newfunction.png"
+                                           class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
         <div class="datatable">
             <table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>Namn</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -103,14 +123,16 @@
                 </tbody>
                 <tfoot>
                 <tr>
+                    <th></th>
                     <th>Namn</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </tfoot>
             </table>
         </div>
-        <div class="addnew addnewtop"><img src="images/newperson.png"
-                                                 class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
+        <div class="addnew addnewtop"><img src="images/newfunction.png"
+                                           class="helpbox-image"><span>Lägg till ny kompetensprofil</span>
         </div>
     </div>
 </div>

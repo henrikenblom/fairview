@@ -383,6 +383,40 @@ function generateEmploymentCreationForm(data) {
     return form;
 }
 
+function generateExperienceProfileGeneralForm(data){
+    var properties = new Array();
+    var formId = 'new_experience_profile_form';
+    var fieldSet = $('<fieldset>');
+
+    if(!$.isEmptyObject(data)){
+        var experienceProfileId = data.node.id;
+        formId = 'experience_profile_form' + experienceProfileId;
+        var experienceProfileData = getUnitData(experienceProfileId);
+        fieldSet.append(hiddenField('_nodeId', experienceProfileData.node.id));
+        properties = experienceProfileData.node.properties;
+    }
+
+    var form = buildUpdateForm(formId);
+    var hiddenField_type = hiddenField('_type', 'node');
+    var hiddenField_strict = hiddenField('_strict', 'false');
+    var hiddenField_username = hiddenField('_username', 'admin');
+    var hiddenField_nodeClass = hiddenField('nodeclass', 'experienceProfile');
+
+    var name = textInputComponent('Titel', 'name', propValue(properties.name), formId, false);
+    var description = textAreaInputComponent('Beskrivning', 'description', propValue(properties.description), formId, false);
+
+    fieldSet.append(
+        hiddenField_type,
+        hiddenField_strict,
+        hiddenField_username,
+        hiddenField_nodeClass,
+        name,
+        description
+    );
+    form.append(fieldSet);
+    return form;
+}
+
 function generateFunctionGeneralForm(data){
     var properties =new Array();
     var formId = 'new_function_form';
@@ -392,9 +426,9 @@ function generateFunctionGeneralForm(data){
     if(!$.isEmptyObject(data)){
         var functionId = data.node.id;
         formId = 'function_form'+ functionId; //if the form isn't new, give it another formname to prevent a new relationship to be created
-        EmploymentData = getUnitData(functionId);
-        fieldSet.append(hiddenField('_nodeId', EmploymentData.node.id));
-        properties = EmploymentData.node.properties;
+        var employmentData = getUnitData(functionId);
+        fieldSet.append(hiddenField('_nodeId', employmentData.node.id));
+        properties = employmentData.node.properties;
     }
 
     var form = buildUpdateForm(formId);
@@ -936,6 +970,9 @@ function getRelationshipType(form){
             break;
         case "function":
             relationshipType = "ASSIGNED_FUNCTION";
+            break;
+        case "experience":
+            relationshipType = "HAS_EXPERIENCE_PROFILE"
             break;
         default:
             break;

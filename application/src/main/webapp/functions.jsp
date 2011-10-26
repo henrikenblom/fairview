@@ -49,7 +49,16 @@
                         }
                         , "bSortable": false, "bSearchable": false},
                     {"mDataProp": "name"},
-                    {"mDataProp": "description"}
+                    {"mDataProp": "description"},
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj) {
+                            if (hasRole('ROLE_ADMIN'))
+                                return getFunctionDeleteButton(obj);
+                            else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
+
                 ],
                 "fnDrawCallback": function() {
                     var datatable = this;
@@ -80,18 +89,18 @@
                 else {
                     /* Open this row */
                     this.src = "/images/details_close.png";
-                    oTable.fnOpen(nTr, fnFormatDetails(oTable, nTr), 'details');
+                    oTable.fnOpen(nTr, getFunctionDetails(oTable, nTr), 'details');
                 }
             });
             fadeOutModalizer();
         });
-        function fnFormatDetails(oTable, nTr) {
+        function getFunctionDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
             sOut += '<tr><td><b>Uppgifter</b></td></td></tr>';
-            $.each(aData.tasks, function(count, obj){
-            sOut += '<tr><td> &#149; ' + obj.description + ', Tid: '+ obj.time +' '+ obj.timeunit + ' Output: '
-                + obj.output + ' ' +obj.outputunit +'</td></tr>';
+            $.each(aData.tasks, function(count, obj) {
+                sOut += '<tr><td> &#149; ' + obj.description + '. Tid: ' + obj.time + '% Output: '
+                        + obj.output + ' ' + obj.outputunit + '</td></tr>';
             });
             sOut += '</table>';
             return sOut;
@@ -116,6 +125,7 @@
                     <th></th>
                     <th>Funktion</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -126,6 +136,7 @@
                     <th></th>
                     <th>Funktion</th>
                     <th>Beskrivning</th>
+                    <th></th>
                 </tr>
                 </tfoot>
             </table>

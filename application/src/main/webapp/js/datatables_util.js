@@ -66,6 +66,15 @@ function initFunctionCell(data, cell, popupIndex) {
     });
 }
 
+function intExperienceProfileCell(data, cell, popupIndex){
+    $(cell).unbind();
+    $(cell).css('cursor', 'pointer');
+    $(cell).click(function(){
+        createExperienceProfileTab(data);
+        openExperienceProfileForm(data, popupIndex);
+    });
+}
+
 function initEmployeeCell(data, cell) {
     if (data.employee_id != "") {
         $(cell).unbind();
@@ -119,15 +128,25 @@ function getContainer(id, headerLabel) {
     container.append(headerDiv, formsDiv);
     return container;
 }
-function addFormContainers() {
+function getContainers() {
     var languageContainer = getContainer('languages', 'Språk');
     var certificateContainer = getContainer('certificates', 'Certifikat');
     var educationContainer = getContainer('educations', 'Utbildningar');
     var workExperienceContainer = getContainer('workexperiences', 'Tidigare befattningar');
     var militaryServiceContainer = getContainer('militaryservices', 'Militärtjänst');
+    return {languageContainer:languageContainer, certificateContainer:certificateContainer, educationContainer:educationContainer, workExperienceContainer:workExperienceContainer, militaryServiceContainer:militaryServiceContainer};
+}
+function addProfileFormContainers() {
+    var containers = getContainers();
+    $('#profile-education').append(containers.languageContainer, containers.certificateContainer, containers.educationContainer);
+    $('#profile-experience').append(containers.workExperienceContainer, containers.militaryServiceContainer);
+}
 
-    $('#profile-education').append(languageContainer, certificateContainer, educationContainer);
-    $('#profile-experience').append(workExperienceContainer, militaryServiceContainer);
+function addExperienceProfileFormContainers() {
+    var containers = getContainers();
+    
+    $('#experience-profile-education').append(containers.languageContainer, containers.certificateContainer, containers.educationContainer);
+    $('#experience-profile-experience').append(containers.workExperienceContainer, containers.militaryServiceContainer);
 }
 
 function loadFormValues(unitId) {
@@ -138,7 +157,7 @@ function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
 }
 
-function loadFirstFunctionForm(functionId) {
+function loadFirstFunctionForm(functionId){
     addExistingValuesOrCreateEmptyForms(functionId, 'HAS_TASK', generateTaskForm, '#function-task');
 }
 
@@ -174,7 +193,7 @@ function generateProfileForm(nodeId, newEmployee) {
         data = getUnitData(nodeId);
     }
     $.getJSON("fairview/ajax/has_image.do", {_nodeId: nodeId}, function(hasImage) {
-        addFormContainers();
+        addProfileFormContainers();
         loadFormValues(nodeId);
 
         $('#profile-general').append(generateProfileGeneralForm(data));
@@ -199,8 +218,35 @@ function generateProfileForm(nodeId, newEmployee) {
     });
 }
 
-function generateExperienceProfileForm(nodeId) {
+function generateEducationExperienceForExperienceProfileForm(nodeId) {
+    var data;
+    addExperienceProfileFormContainers();
+    loadFormValues(nodeId);
 
+    if (!$.isEmptyObject(nodeId)) {
+        data = getUnitData(nodeId);
+    }
+
+    $('#languages').append(addLanguageButton(nodeId));
+    $('#educations').append(addEducationButton(nodeId));
+    $('#certificates').append(addCertificateButton(nodeId));
+    $('#experience-profile-education').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
+
+
+    $('#workexperiences').append(addWorkExperienceButton(nodeId));
+    $('#militaryservices').append(addMilitaryServiceButton(nodeId));
+    $('#experience-profile-experience').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
+}
+
+function generateExperienceProfileForm(nodeId) {
+    var data;
+
+    if (!$.isEmptyObject(nodeId)) {
+        data = getUnitData(nodeId);
+    }
+    $('#experience-profile-general').append(generateExperienceProfileGeneralForm(data));
+    $('#experience-profile-education');
+    $('#experience-profile-experience');
 }
 
 function generateFunctionForm(nodeId) {
@@ -220,8 +266,26 @@ function getEmployeeDeleteButton(obj) {
     return "<a title='ta bort person' onclick='deleteAlertEmployee(" + obj.aData.employee_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
 }
 
+function getFunctionDeleteButton(obj) {
+    return "<a title='ta bort funktion' onclick='deleteAlertFunction(" + obj.aData.function_id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
+function getExperienceProfileDeleteButton(obj) {
+    return "<a title='ta bort kompetensprofil' onclick='deleteAlertExperienceProfile(" + obj.aData.id + ");' class='imageonly-button'><img src='images/delete.png'></a>";
+}
+
 function deleteAlertEmployee(id) {
     generateAlertDialog('Borttagning av person', 'Är du säker på att du vill ta bort personen?',
+        deleteRow, id);
+}
+
+function deleteAlertFunction(id) {
+    generateAlertDialog('Borttagning av funktion', 'Är du säker på att du vill ta bort funktionen?',
+        deleteRow, id);
+}
+
+function deleteAlertExperienceProfile(id) {
+    generateAlertDialog('Borttagning av kompetensprofil', 'Är du säker på att du vill ta bort kompetensprofilen?',
         deleteRow, id);
 }
 
@@ -274,13 +338,15 @@ function createEmployeeTab(data, newEmployee) {
 
 function createExperienceProfileTab(data) {
     var linkData = [
-        ['experience-profile-general','Kometensprofil'],
+        ['experience-profile-general','Kompetensprofil'],
         ['experience-profile-education', 'Utbildning'],
         ['experience-profile-experience', 'Erfarenhet']
     ];
 
     $('#popup-dialog').empty().append(generateTabs(linkData));
-    generateExperienceProfileForm(data.experience_profile_id);
+    bindExperienceProfileTabs();
+    generateExperienceProfileForm(data.id);
+    generateEducationExperienceForExperienceProfileForm(data.id);
 }
 
 function createFunctionTab(data) {
