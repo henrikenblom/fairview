@@ -894,9 +894,9 @@ label.error {
 
 #smallProfileImage {
     position: absolute;
-    bottom: 380px;
     left: 220px;
     cursor: pointer;
+    top: 71px;
 }
 
 
