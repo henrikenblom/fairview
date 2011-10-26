@@ -134,19 +134,22 @@ function getContainers() {
     var educationContainer = getContainer('educations', 'Utbildningar');
     var workExperienceContainer = getContainer('workexperiences', 'Tidigare befattningar');
     var militaryServiceContainer = getContainer('militaryservices', 'Militärtjänst');
-    return {languageContainer:languageContainer, certificateContainer:certificateContainer, educationContainer:educationContainer, workExperienceContainer:workExperienceContainer, militaryServiceContainer:militaryServiceContainer};
+    var otherExperiencesContainer = getContainer('otherexperiences', 'Annan Erfarenhet');
+    return {languageContainer:languageContainer, certificateContainer:certificateContainer,
+        educationContainer:educationContainer, workExperienceContainer:workExperienceContainer,
+        militaryServiceContainer:militaryServiceContainer, otherExperiencesContainer:otherExperiencesContainer};
 }
 function addProfileFormContainers() {
     var containers = getContainers();
     $('#profile-education').append(containers.languageContainer, containers.certificateContainer, containers.educationContainer);
-    $('#profile-experience').append(containers.workExperienceContainer, containers.militaryServiceContainer);
+    $('#profile-experience').append(containers.workExperienceContainer, containers.militaryServiceContainer, containers.otherExperiencesContainer);
 }
 
 function addExperienceProfileFormContainers() {
     var containers = getContainers();
     
     $('#experience-profile-education').append(containers.languageContainer, containers.certificateContainer, containers.educationContainer);
-    $('#experience-profile-experience').append(containers.workExperienceContainer, containers.militaryServiceContainer);
+    $('#experience-profile-experience').append(containers.workExperienceContainer, containers.militaryServiceContainer, containers.otherExperiencesContainer);
 }
 
 function loadFormValues(unitId) {
@@ -155,6 +158,7 @@ function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_CERTIFICATE', generateCertificateForm, '#certificates');
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_WORK_EXPERIENCE', generateWorkExperienceForm, '#workexperiences');
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_MILITARY_SERVICE', generateMilitaryServiceForm, '#militaryservices');
+    addExistingValuesOrCreateEmptyForms(unitId, 'HAS_OTHER_EXPERIENCE', generateOtherExperienceForm, '#otherexperiences');
 }
 
 function loadFirstFunctionForm(functionId){
@@ -212,6 +216,7 @@ function generateProfileForm(nodeId, newEmployee) {
 
         $('#workexperiences').append(addWorkExperienceButton(nodeId));
         $('#militaryservices').append(addMilitaryServiceButton(nodeId));
+        $('#otherexperiences').append(addOtherExperienceButton(nodeId));
         $('#profile-experience').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
 
         $('#profile-image').append(generateImageForm(nodeId, hasImage));
