@@ -786,6 +786,13 @@ label.error {
     cursor: pointer;
     line-height: 19px;
 }
+h3#unitsettings-general-tablink{
+    float: left;
+}
+
+#imageonly-buttonAddSubUnit {
+    height: 25px;
+}
 
 .link {
     color: #585C95;
