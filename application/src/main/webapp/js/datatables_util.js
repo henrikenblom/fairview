@@ -216,6 +216,7 @@ function generateProfileForm(nodeId, newEmployee) {
 
         $('#workexperiences').append(addWorkExperienceButton(nodeId));
         $('#militaryservices').append(addMilitaryServiceButton(nodeId));
+        $('#otherexperiences').append(addOtherExperienceButton(nodeId));
         $('#profile-experience').append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));
 
         $('#profile-image').append(generateImageForm(nodeId, hasImage));

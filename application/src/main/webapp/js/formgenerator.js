@@ -797,6 +797,17 @@ function addMilitaryServiceButton(nodeId) {
     return button;
 }
 
+function addOtherExperienceButton(nodeId) {
+    var button = $('<button>');
+    button.attr('id', 'otherExperienceButton')
+    button.html('Lägg till Annan Erfarenhet');
+    button.click(function() {
+        var formId = getFormId("HAS_OTHER_EXPERIENCE", 0);
+        generateOtherExperienceForm(formId).insertBefore('#otherExperienceButton');
+    });
+    return button;
+}
+
 function addTaskButton(nodeId){
     var button = $('<button>');
     button.attr('id', 'taskButton');
