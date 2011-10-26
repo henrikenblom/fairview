@@ -252,7 +252,7 @@ function generateExperienceProfileForm(nodeId) {
     var data;
 
     if (!$.isEmptyObject(nodeId)) {
-        data = getUnitData(node);
+        data = getUnitData(nodeId);
     }
     $('#experience-profile-general').append(generateExperienceProfileGeneralForm(data));
     $('#experience-profile-education');
@@ -355,8 +355,8 @@ function createExperienceProfileTab(data) {
 
     $('#popup-dialog').empty().append(generateTabs(linkData));
     bindExperienceProfileTabs();
-    generateExperienceProfileForm(data.experience_profile_id);
-    generateEducationExperienceForExperienceProfileForm(data.experience_profile_id);
+    generateExperienceProfileForm(data.id);
+    generateEducationExperienceForExperienceProfileForm(data.id);
 }
 
 function createFunctionTab(data) {
