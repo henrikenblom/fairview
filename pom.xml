@@ -107,6 +107,7 @@
     <modules>
         <module>application</module>
         <module>cloner</module>
+        <module>remapper</module>
     </modules>
 
 </project>
