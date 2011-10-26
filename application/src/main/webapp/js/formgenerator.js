@@ -24,6 +24,7 @@ var EMPLOYMENT_TITLE_CATEGORY = 'employment_titles';
 var EMPLOYMENT_COMPANYCAR_CATEGORY = 'employment_companycars';
 var EMPLOYMENT_PENSIONINSURANCE_CATEGORY = 'employment_pensioninsurances';
 var OUTPUTUNIT_CATEGORY = 'output_unit';
+var EMPLOYMETTYPE_CATEGORY = 'employmenttype';
 
 
 function generateBaseUnitEditForm(data, datatable) {
@@ -356,6 +357,8 @@ function generateEmploymentCreationForm(data) {
     var companyCarDiv = typeaheadInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, EMPLOYMENT_COMPANYCAR_CATEGORY, false);
     var fromDiv = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', propValue(properties.from), formId, false);
     var toDiv = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', propValue(properties.to), formId, false);
+    var employmentNumberDiv = textInputComponent('Anställningsnummer', 'employmentnumber', propValue(properties.employmentnumber), formId, false);
+    var employmentTypeDiv = typeaheadInputComponent('Anställningsform', 'emplymenttype', propValue(properties.emplymenttype), formId, EMPLOYMETTYPE_CATEGORY, false);
 
     var pensionInsurancesDiv = typeaheadInputComponent('Pension och försäkringar', 'pensioninsurances', propValue(properties.pensioninsurances), formId, EMPLOYMENT_PENSIONINSURANCE_CATEGORY, false);
     fieldSet.append(hiddenField_type,
@@ -364,6 +367,7 @@ function generateEmploymentCreationForm(data) {
         hiddenField_nodeClass,
         employedPersonDiv, '<br />',
         titleDiv, unitDiv, '<br />',
+        employmentNumberDiv, employmentTypeDiv, '<br />',
         fromDiv, toDiv, '<br />',
         workPhoneDiv,
         workingHoursDiv,
