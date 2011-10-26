@@ -222,6 +222,10 @@ input[type="radio"] {
     white-space: nowrap;
 }
 
+.pointer{
+    cursor: pointer;
+}
+
 #button-bar {
     white-space: nowrap;
     display: table-cell;
