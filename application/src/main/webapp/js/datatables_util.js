@@ -190,7 +190,7 @@ function generateEmploymentForm(data) {
 }
 
 function appendLanguageAndExperienceForms(nodeId, educationTabId, experienceTabId) {
-    $('#languages').append(anotherFormButton('languageButton', 'HAS_LANGUAGE', generateLanguageForm));
+    $('#languages').append(anotherFormButton('languageButton', 'HAS_LANGUAGESKILL', generateLanguageForm));
     $('#educations').append(anotherFormButton('educationButton', 'HAS_EDUCATION', generateEducationForm));
     $('#certificates').append(anotherFormButton('certificateButton', 'HAS_CERTIFICATE', generateCertificateForm));
     $(educationTabId).append(footerButtonsComponent(nodeId, updateTableCallback(oTable)));

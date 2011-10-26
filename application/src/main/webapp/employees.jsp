@@ -43,7 +43,7 @@
                 "sAjaxSource": "fairview/ajax/datatables/get_employee_data.do",
                 "aoColumns": [
                     { "mDataProp": "firstname"},
-                    { "mDataProp": "lastname" },
+                    { "mDataProp": "lastname", "asSorting": [ "desc" ]},
                     { "mDataProp": "unit_name" },
                     { "mDataProp": "employment_title" },
                     { "mDataProp": null,  "sWidth": 10,

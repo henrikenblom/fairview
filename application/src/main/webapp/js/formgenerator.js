@@ -16,6 +16,7 @@ var CERTIFICATE_GRADE_CATEGORY = 'certificate_grades';
 var EDUCATION_NAME_CATEGORY = 'education_names';
 var EDUCATION_DIRECTION_CATEGORY = 'education_directions';
 var EDUCATION_SCOPE_CATEGORY = 'education_scopes';
+var EDUCATION_LEVEL_CATEGORY = 'education_levels';
 var WORKEXPERIENCE_NAME_CATEGORY = 'workexperience_names';
 var WORKEXPERIENCE_COMPANY_CATEGORY = 'workexperience_companies';
 var WORKEXPERIENCE_TRADE_CATEGORY = 'workexperience_trades';
@@ -549,16 +550,7 @@ function generateEducationForm(form_Id, educationNode) {
     var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
-    var levelComponent = selectInputComponent('Utbildningsnivå', 'level', 'level-field', formId, false);
-    levelComponent.children('#level-field').append(generateOption('high_school', levelString, 'Gymnasieskola eller motsvarande'));
-    levelComponent.children('#level-field').append(generateOption('certified', levelString, 'Certifierad'));
-    levelComponent.children('#level-field').append(generateOption('vocational_education', levelString, 'Yrkesutbildad'));
-    levelComponent.children('#level-field').append(generateOption('individual_course', levelString, 'Enstaka kurs'));
-    levelComponent.children('#level-field').append(generateOption('post_highschool_course', levelString, 'Övrig eftergymnasial kurs'));
-    levelComponent.children('#level-field').append(generateOption('bachelor', levelString, 'Kandidatexamen'));
-    levelComponent.children('#level-field').append(generateOption('master', levelString, 'Magister eller civilingenjörsexamen'));
-    levelComponent.children('#level-field').append(generateOption('phd', levelString, 'Licentiat eller doktorsexamen'));
-    levelComponent.children('#level-field').append(generateOption('professional_license', levelString, 'Yrkeslicens'));
+    var levelComponent = typeaheadInputComponent('Utbildningsnivå', 'level', levelString, formId, EDUCATION_LEVEL_CATEGORY, false);
 
     educationForm.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass, nameComponent,
         levelComponent, directionComponent, scopeComponent, fromComponent, toComponent,
