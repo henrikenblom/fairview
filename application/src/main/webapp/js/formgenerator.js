@@ -750,81 +750,17 @@ function generateTaskForm(form_id, taskNode){
     return div;
 }
 
-function addEducationButton(nodeId) {
-    var button = $('<button>');
-    button.attr('id', 'educationButton')
-    button.html('Lägg till utbildning');
-    button.click(function() {
-        var formId = getFormId("HAS_EDUCATION", 0);
-        generateEducationForm(formId).insertBefore("#educationButton");
+function anotherFormButton(buttonId, sFormId, formGeneratingFunction){
+    var icon = $('<div>');
+    icon.attr('id', buttonId);
+    icon.addClass('pointer');
+    icon.attr('title', 'Lägg till ytterligare formulär')
+    icon.html('<img src="/images/details_open.png">');
+    icon.click(function() {
+        var formId = getFormId(sFormId, 0);
+        formGeneratingFunction(formId).insertBefore("#"+buttonId);
     });
-    return button;
-}
-
-function addCertificateButton(nodeId) {
-    var button = $('<button>');
-    button.attr('id', 'certificateButton')
-    button.html('Lägg till certifikat');
-    button.click(function() {
-        var formId = getFormId("HAS_CERTIFICATE", 0);
-        generateCertificateForm(formId).insertBefore('#certificateButton');
-    });
-    return button;
-}
-
-function addLanguageButton(nodeId) {
-    var button = $('<button>');
-    button.attr('id', 'languageButton')
-    button.html('Lägg till språk');
-    button.click(function() {
-        var formId = getFormId("HAS_LANGUAGESKILL", 0);
-        generateLanguageForm(formId).insertBefore('#languageButton');
-    });
-    return button;
-}
-
-function addWorkExperienceButton(nodeId) {
-    var button = $('<button>');
-    button.attr('id', 'workExperienceButton')
-    button.html('Lägg till tidigare befattning');
-    button.click(function() {
-        var formId = getFormId("HAS_WORK_EXPERIENCE", 0);
-        generateWorkExperienceForm(formId).insertBefore('#workExperienceButton');
-    });
-    return button;
-}
-
-function addMilitaryServiceButton(nodeId) {
-    var button = $('<button>');
-    button.attr('id', 'militaryServiceButton')
-    button.html('Lägg till Militärtjänst');
-    button.click(function() {
-        var formId = getFormId("HAS_MILITARY_SERVICE", 0);
-        generateOtherExperienceForm(formId).insertBefore('#militaryServiceButton');
-    });
-    return button;
-}
-
-function addOtherExperienceButton(nodeId) {
-    var button = $('<button>');
-    button.attr('id', 'otherExperienceButton')
-    button.html('Lägg till Annan Erfarenhet');
-    button.click(function() {
-        var formId = getFormId("HAS_OTHER_EXPERIENCE", 0);
-        generateOtherExperienceForm(formId).insertBefore('#otherExperienceButton');
-    });
-    return button;
-}
-
-function addTaskButton(nodeId){
-    var button = $('<button>');
-    button.attr('id', 'taskButton');
-    button.html('Lägg till uppgift');
-    button.click(function(){
-        var formId = getFormId("HAS_TASK", 0);
-        generateTaskForm(formId).insertBefore('#taskButton');
-    });
-    return button;
+    return icon;
 }
 
 function getFormId(formId, count) {
