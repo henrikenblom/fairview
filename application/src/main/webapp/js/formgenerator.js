@@ -228,6 +228,8 @@ function generateProfileGeneralForm(data) {
     var emailString = '';
     var additionalInfoString = '';
     var genderString = '';
+    var relativesNameString = '';
+    var relativesContactInformationString = '';
 
     if (!$.isEmptyObject(data)) {
         var properties = data.node.properties;
@@ -249,6 +251,8 @@ function generateProfileGeneralForm(data) {
         emailString = propValue(properties.email);
         additionalInfoString = propValue(properties.additional_info);
         genderString = propValue(properties.gender);
+        relativesNameString = propValue(properties.relativesname);
+        relativesContactInformationString = propValue(properties.relativescontactinformation);
     }
 
     var form = buildUpdateForm(formId);
@@ -274,6 +278,9 @@ function generateProfileGeneralForm(data) {
     var cellDiv = textInputComponent('Mobiltelefon', 'cell', cellString, formId, false);
     var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
 
+    var relativesNameDiv= textInputComponent('Anhörigs namn', 'relativesname', relativesNameString, formId, false);
+    var relativesContactInformationDiv = textInputComponent('Anhörigs kontaktuppgift', 'relativescontactinformation', relativesContactInformationString, formId, false);
+
     var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', additionalInfoString, formId, 'additional_infoDiv');
 
     var genderDiv = selectInputComponent('Kön', 'gender', 'genderDiv', formId, true);
@@ -281,7 +288,7 @@ function generateProfileGeneralForm(data) {
 
     fieldSet.append(hiddenField_id, hiddenField_strict, hiddenField_birthday, hiddenField_authorization, hiddenField_nodeClass,
         firstNameDiv, '<br/>', lastNameDiv, '<br/>', genderDiv, '<br/>', nationalityDiv, civicDiv, emailDiv, phoneDiv, cellDiv, '<br/>', addressDiv,
-        postalcodeDiv, cityDiv, countryDiv, '<br/>', additional_infoDiv, '<br/>');
+        postalcodeDiv, cityDiv, countryDiv, '<br/>', relativesNameDiv, relativesContactInformationDiv, '<br />', additional_infoDiv, '<br/>');
 
     form.append(fieldSet);
     form.validate();
