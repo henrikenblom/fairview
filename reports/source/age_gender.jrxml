@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="skeleton" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="NEO" class="org.neo4j.graphdb.GraphDatabaseService" isForPrompting="false"/>
+	<parameter name="NEO_SEARCH" class="se.codemate.neo4j.NeoSearch" isForPrompting="false"/>
+	<parameter name="NEO_URL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["http://svenskamassan.inferoquest.com"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_PROXY" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["http://svenskamassan.inferoquest.com"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_USERNAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEO_PASSWORD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["test"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="neo">
+		<![CDATA[nodeclass:employee]]>
+	</queryString>
+	<field name="TS_CREATED" class="java.lang.Long"/>
+	<field name="TS_MODIFIED" class="java.lang.Long"/>
+	<field name="UUID" class="java.lang.String"/>
+	<field name="_id" class="java.lang.Long"/>
+	<field name="_type" class="java.lang.String"/>
+	<field name="additional_info" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="birthday" class="java.util.Date"/>
+	<field name="cell" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="civic" class="java.lang.String"/>
+	<field name="country" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
+	<field name="nationality" class="java.lang.String"/>
+	<field name="nodeclass" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="postalcode" class="java.lang.String"/>
+	<sortField name="gender"/>
+	<sortField name="civic" order="Descending"/>
+	<variable name="Age" class="java.lang.Integer" resetType="None">
+		<variableExpression><![CDATA[se.codemate.reporting.jasperreports.ReportHelper.convertCivicToAge($F{civic})]]></variableExpression>
+	</variable>
+	<variable name="Age5" class="java.lang.Integer" resetType="None">
+		<variableExpression><![CDATA[new Integer(5 * ($V{Age}.intValue() / 5))]]></variableExpression>
+	</variable>
+	<variable name="RetireCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$V{Age}.intValue() >= 64 ? new Integer(1) : new Integer(0)]]></variableExpression>
+	</variable>
+	<filterExpression><![CDATA[$F{civic} != null]]></filterExpression>
+	<group name="GenderGroup">
+		<groupExpression><![CDATA[$F{gender}]]></groupExpression>
+	</group>
+	<group name="AgeGroup">
+		<groupExpression><![CDATA[$V{Age5}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51">
+			<staticText>
+				<reportElement x="0" y="0" width="455" height="50" forecolor="#003366"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Åldersfördelning]]></text>
+			</staticText>
+			<image>
+				<reportElement x="455" y="0" width="100" height="50"/>
+				<imageExpression><![CDATA["http://www.svenskamassan.se/PageFiles/1672/logo-swefair.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="36">
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="0" y="0" width="555" height="35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="373" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="314" width="555" height="51" forecolor="#003366"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{RetireCount} + " anställda kommer att uppnå pensionsåldern inom 12 månader"]]></textFieldExpression>
+			</textField>
+			<barChart>
+				<chart>
+					<reportElement x="0" y="0" width="555" height="314"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{gender}.equals("F") ? "Kvinna" : "Man"]]></seriesExpression>
+						<categoryExpression><![CDATA[$V{Age5} + "-" + new Integer($V{Age5}.intValue() + 4)]]></categoryExpression>
+						<valueExpression><![CDATA[$V{AgeGroup_COUNT}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+</jasperReport>
