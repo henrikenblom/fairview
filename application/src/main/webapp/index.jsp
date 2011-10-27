@@ -43,6 +43,10 @@
                         <%=organization.getProperty("postalcode", "")%> <%=organization.getProperty("city", "")%><br>
                         Tel: <%=organization.getProperty("phone", "")%><br>
                         Fax: <%=organization.getProperty("fax", "")%><br>
+                        <hr>
+                        <h3>Rapporter</h3>
+                        <p><a href="/reports/personallista.pdf">Personallista</a></p>
+                        <p><a href="/reports/age_gender.pdf">&Aring;ldersf&ouml;rdelning</a></p>
                     </div>
                 </div>
             </div>

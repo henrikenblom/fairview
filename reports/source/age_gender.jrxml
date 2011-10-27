@@ -6,10 +6,7 @@
 	<parameter name="NEO" class="org.neo4j.graphdb.GraphDatabaseService" isForPrompting="false"/>
 	<parameter name="NEO_SEARCH" class="se.codemate.neo4j.NeoSearch" isForPrompting="false"/>
 	<parameter name="NEO_URL" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["http://svenskamassan.inferoquest.com"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="NEO_PROXY" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["http://svenskamassan.inferoquest.com"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["http://localhost:8080"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="NEO_USERNAME" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>

@@ -45,6 +45,7 @@
 
     <bean id="jasperReportController" class="com.fairviewiq.spring.controllers.FairviewReportController">
         <property name="reportRoot" value="${report.root}"/>
+        <property name="swapRoot" value="${swap.root}"/>
         <property name="imageServletPath" value="/report-images"/>
         <property name="indexViewName" value="/reports/index"/>
     </bean>
