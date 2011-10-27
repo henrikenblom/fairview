@@ -301,8 +301,7 @@ function getEmploymentDeleteButton(obj) {
 
 function createEmploymentTab(data) {
     var linkData = [
-        ['employment-general', 'Anställningsvillkor'],
-        ['employment-requirements','Krav']
+        ['employment-general', 'Anställningsvillkor']
     ];
     $('#popup-dialog').empty().append(generateTabs(linkData));
     bindEmployeeTabs();
