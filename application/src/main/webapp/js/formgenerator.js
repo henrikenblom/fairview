@@ -166,8 +166,8 @@ function generateImageForm(nodeId, hasImage) {
 
         form.ajaxSubmit(
             {dataType: 'json',
-                beforeSubmit:function(){
-                     $("#imagePreview").show().spin(opts);
+                beforeSubmit:function() {
+                    $("#imagePreview").show().spin(opts);
                 },
                 success: function(response) {
                     console.log(response);
@@ -175,7 +175,7 @@ function generateImageForm(nodeId, hasImage) {
                     if (response.success) {
                         img.attr('src', getImgUrl(nodeId, "medium_image"));
                         $('#smallProfileImage').attr('src', getImgUrl(nodeId, "small_image"));
-                    } else  {
+                    } else {
                         generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att du använt ett giltigt bildformat.');
                         if (hasImage == 'true') {
                             img.attr('src', getImgUrl(nodeId, "medium_image"));
@@ -281,7 +281,7 @@ function generateProfileGeneralForm(data) {
     var cellDiv = textInputComponent('Mobiltelefon', 'cell', cellString, formId, false);
     var emailDiv = textInputComponent('E-post', 'email', emailString, formId, false);
 
-    var relativesNameDiv= textInputComponent('Anhörigs namn', 'relativesname', relativesNameString, formId, false);
+    var relativesNameDiv = textInputComponent('Anhörigs namn', 'relativesname', relativesNameString, formId, false);
     var relativesContactInformationDiv = textAreaInputComponent('Anhörigs kontaktuppgift', 'relativescontactinformation', relativesContactInformationString, formId);
 
     var additional_infoDiv = textAreaInputComponent('Övrigt', 'additional_info', additionalInfoString, formId, 'additional_infoDiv');
@@ -315,7 +315,7 @@ function generateEmploymentCreationForm(data) {
 
     var formId = 'employment_form';
     if (employeeId != null && employmentId != null && employmentId != '')
-        formId = 'employment_form' + employeeId;
+        formId = employeeId;
 
     var form = buildUpdateForm(formId);
 
@@ -349,24 +349,24 @@ function generateEmploymentCreationForm(data) {
         ['authorizationright', 'Attesträtt', boolPropValue(properties.authorizationright)]
     ];
     var responsibilityDiv = checkboxInputComponent('Ansvar/Befogenheter', formId, responsibilitys);
-    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationamount:int', propValue(properties.authorizationamount), formId, false);
+    var attestationRightsDiv = textInputComponent('Attesträtt belopp', 'authorizationamount:int', propValue(properties.authorizationamount), formId, false, 'number');
 
     var paymentFormDiv = selectInputComponent('Löneform', 'paymentform', 'paymentFormDiv', formId, false);
     addPaymentFormOption(properties.paymentform, paymentFormDiv.children('#paymentform-field'));
 
     var unitDiv = createUnitSelect('Enhet', 'BELONGS_TO:relationship', 'unitDiv', formId, false, unitId);
 
-    var salaryDiv = textInputComponent('Aktuell lön', 'salary:int', propValue(properties.salary), formId, false);
+    var salaryDiv = textInputComponent('Aktuell lön', 'salary:int', propValue(properties.salary), formId, false, 'number');
     var overtimeCompensationDiv = radioButtonInputComponent('Övertidsersättning', 'overtimecompensation:boolean', formId, yesNo(), propValue(properties.overtimecompensation));
     var travelCompensationDiv = radioButtonInputComponent('Reseersättning', 'travelcompensation:boolean', formId, yesNo(), propValue(properties.travelcompensation));
     var vacationDaysDiv = textInputComponent('Semesterrätt', 'vacationdays', propValue(properties.vacationdays), formId, false);
-    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee:int', 'dismissalPeriodEmployeeDiv', formId, false);
+    var dismissalPeriodEmployeeDiv = selectInputComponent('Uppsägningstid (anställd)', 'dismissalperiodemployee:int', 'dismissalPeriodEmployeeDiv', formId, false, 'number');
     addDismissalPeriod(properties.dismissalperiodemployee, dismissalPeriodEmployeeDiv.children('#dismissalperiodemployee-field'));
-    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false);
+    var dismissalPeriodEmployerDiv = selectInputComponent('Uppsägningstid (företag)', 'dismissalperiodemployer:int', 'dismissalPeriodEmployerDiv', formId, false, 'number');
     addDismissalPeriod(properties.dismissalperiodemployer, dismissalPeriodEmployerDiv.children('#dismissalperiodemployer-field'));
     var companyCarDiv = typeaheadInputComponent('Tjänstebil', 'companycar', propValue(properties.companycar), formId, EMPLOYMENT_COMPANYCAR_CATEGORY, false);
-    var fromDiv = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', propValue(properties.from), formId, false);
-    var toDiv = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', propValue(properties.to), formId, false);
+    var fromDiv = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', propValue(properties.from), formId, false, 'dateISO');
+    var toDiv = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', propValue(properties.to), formId, false, 'dateISO');
     var employmentNumberDiv = textInputComponent('Anställningsnummer', 'employmentnumber', propValue(properties.employmentnumber), formId, false);
     var employmentTypeDiv = typeaheadInputComponent('Anställningsform', 'emplymenttype', propValue(properties.emplymenttype), formId, EMPLOYMETTYPE_CATEGORY, false);
 
@@ -397,12 +397,12 @@ function generateEmploymentCreationForm(data) {
     return form;
 }
 
-function generateExperienceProfileGeneralForm(data){
+function generateExperienceProfileGeneralForm(data) {
     var properties = new Array();
     var formId = 'new_experience_profile_form';
     var fieldSet = $('<fieldset>');
 
-    if(!$.isEmptyObject(data)){
+    if (!$.isEmptyObject(data)) {
         var experienceProfileId = data.node.id;
         formId = 'experience_profile_form' + experienceProfileId;
         var experienceProfileData = getUnitData(experienceProfileId);
@@ -431,15 +431,15 @@ function generateExperienceProfileGeneralForm(data){
     return form;
 }
 
-function generateFunctionGeneralForm(data){
-    var properties =new Array();
+function generateFunctionGeneralForm(data) {
+    var properties = new Array();
     var formId = 'new_function_form';
     var fieldSet = $('<fieldset>');
 
 
-    if(!$.isEmptyObject(data)){
+    if (!$.isEmptyObject(data)) {
         var functionId = data.node.id;
-        formId = 'function_form'+ functionId; //if the form isn't new, give it another formname to prevent a new relationship to be created
+        formId = 'function_form' + functionId; //if the form isn't new, give it another formname to prevent a new relationship to be created
         var employmentData = getUnitData(functionId);
         fieldSet.append(hiddenField('_nodeId', employmentData.node.id));
         properties = employmentData.node.properties;
@@ -545,8 +545,8 @@ function generateEducationForm(form_Id, educationNode) {
     var nameComponent = typeaheadInputComponent('Benämning', 'name', nameString, formId, EDUCATION_NAME_CATEGORY, false);
     var directionComponent = typeaheadInputComponent('Inriktning', 'direction', directionString, formId, EDUCATION_DIRECTION_CATEGORY, false);
     var scopeComponent = typeaheadInputComponent('Omfattning', 'scope', scopeString, formId, EDUCATION_SCOPE_CATEGORY, false);
-    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false, 'dateISO');
+    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false, 'dateISO');
     var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
 
@@ -588,8 +588,8 @@ function generateCertificateForm(form_Id, certificateNode) {
 
     var nameComponent = typeaheadInputComponent('Namn', 'name', nameString, formId, CERTIFICATE_NAME_CATEGORY, false);
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false, 'dateISO');
+    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false, 'dateISO');
     var gradeComponent = typeaheadInputComponent('Betyg', 'grade', gradeString, formId, CERTIFICATE_GRADE_CATEGORY, false);
 
     certificateForm.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
@@ -635,8 +635,8 @@ function generateWorkExperienceForm(form_Id, workExperienceNode) {
     var companyComponent = typeaheadInputComponent('Företag', 'company', companyString, formId, WORKEXPERIENCE_COMPANY_CATEGORY, false);
     var tradeComponent = typeaheadInputComponent('Bransch', 'trade', tradeString, formId, WORKEXPERIENCE_TRADE_CATEGORY, false);
     var countryComponent = typeaheadInputComponent('Land', 'country', countryString, formId, COUNTRY_CATEGORY, false);
-    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false);
-    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false);
+    var fromComponent = dateInputComponent('Från och med', 'from:date:yyyy-MM-dd', fromString, formId, false, 'dateISO');
+    var toComponent = dateInputComponent('Till och med', 'to:date:yyyy-MM-dd', toString, formId, false, 'dateISO');
     var assignmentComponent = textAreaInputComponent('Uppgifter', 'assignment', assignmentsString, formId, 'assignment-field');
 
     form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
@@ -706,7 +706,7 @@ function generateOtherExperienceForm(form_Id, otherExperienceNode) {
     return div;
 }
 
-function generateTaskForm(form_id, taskNode){
+function generateTaskForm(form_id, taskNode) {
     var formId = form_id;
     var descriptionString = '';
     var timeString = '';
@@ -714,7 +714,7 @@ function generateTaskForm(form_id, taskNode){
     var outputUnit = '';
     var idString = '';
 
-    if(!$.isEmptyObject(taskNode)){
+    if (!$.isEmptyObject(taskNode)) {
         var properties = taskNode.properties;
         descriptionString = propValue(properties.description);
         timeString = propValue(properties.time);
@@ -728,12 +728,12 @@ function generateTaskForm(form_id, taskNode){
     div.addClass('delimitedForm');
 
     var hiddenField_id = hiddenField('_nodeId', idString);
-    var hiddenField_strict = hiddenField('_strict','false');
+    var hiddenField_strict = hiddenField('_strict', 'false');
     var hiddenField_nodeClass = hiddenField('nodeclass', 'task');
 
     var descriptionComponent = textInputComponent('Beskrivning', 'description', descriptionString, formId, false);
-    var timeComponent = textInputComponent('Tid (procent av anställningstid)', 'time:int', timeString, formId, false);
-    var outputComponent = textInputComponent('Output', 'output:int', outputString, formId, false);
+    var timeComponent = textInputComponent('Tid (procent av anställningstid)', 'time:int', timeString, formId, false, 'number');
+    var outputComponent = textInputComponent('Output', 'output:int', outputString, formId, false, 'number');
     var outputUnitComponent = typeaheadInputComponent('Outputenhet', 'outputunit', outputUnit, formId, OUTPUTUNIT_CATEGORY, false);
 
     form.append(hiddenField_id, hiddenField_strict, hiddenField_nodeClass,
@@ -742,7 +742,7 @@ function generateTaskForm(form_id, taskNode){
     return div;
 }
 
-function anotherFormButton(buttonId, sFormId, formGeneratingFunction){
+function anotherFormButton(buttonId, sFormId, formGeneratingFunction) {
     var icon = $('<div>');
     icon.attr('id', buttonId);
     icon.addClass('pointer');
@@ -750,7 +750,7 @@ function anotherFormButton(buttonId, sFormId, formGeneratingFunction){
     icon.html('<img src="/images/details_open.png">');
     icon.click(function() {
         var formId = getFormId(sFormId, 0);
-        formGeneratingFunction(formId).insertBefore("#"+buttonId);
+        formGeneratingFunction(formId).insertBefore("#" + buttonId);
     });
     return icon;
 }
@@ -835,15 +835,15 @@ function createNodeWithRelationship(form, nodeId, callback) {
                 break;
             case "new_function_form":
                 $.getJSON("/fairview/ajax/get_organization_node.do", function(organizationNode) {
-                        createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
+                    createRelationship(organizationNode.node.id, data.node.id, 'ASSIGNED_FUNCTION', callback);
                 });
                 break;
             case "HAS_TASK":
                 createRelationship(nodeId, data.node.id, formId, callback);
-            break;
+                break;
             case "HAS_OTHER_EXPERIENCE":
                 createRelationship(nodeId, data.node.id, formId, callback);
-            break;
+                break;
             default:
                 if (typeof(callback) == 'function')
                     callback.call();
@@ -910,8 +910,8 @@ function generateSaveButton(nodeId, callback) {
 
         var editedForms = $('form:data(edited=true)');
         var dependantForm = existsDependantForm(editedForms);
-       /* dependant forms are forms that need another node to be created first.
-        Ex) the educationform when creating a new employee needs the employee to exist first*/
+        /* dependant forms are forms that need another node to be created first.
+         Ex) the educationform when creating a new employee needs the employee to exist first*/
 
         if (dependantForm == true) {
             var relationshipType = getRelationshipType(editedForms);
@@ -939,11 +939,11 @@ function existsDependantForm(forms) {
     return newObject;
 }
 
-function getRelationshipType(form){
+function getRelationshipType(form) {
     var formIdArray = $(form).attr('id').split('_');
     var formType = formIdArray[1];
     var relationshipType;
-    switch(formType){
+    switch (formType) {
         case "person":
             relationshipType = "HAS_EMPLOYEE";
             break;
@@ -1237,12 +1237,13 @@ function makeInputRequired(label, input) {
     label.append(' *');
     input.addClass('required');
 }
-function textInputComponent(labelText, inputName, value, formId, required) {
+function textInputComponent(labelText, inputName, value, formId, required, inputClass) {
     var inputDiv = fieldBox();
     var inputLabel = fieldLabelBox();
     inputLabel.append(labelText);
     var textInput = $('<input type="text">');
     textInput.addClass("text-field");
+    textInput.addClass(inputClass); //used for form validation
     textInput.attr("id", inputName + "-field");
     textInput.attr("name", inputName);
     textInput.val(value);
@@ -1330,12 +1331,13 @@ function typeaheadInputComponent(labelText, inputName, value, formId, category, 
     return inputDiv;
 }
 
-function dateInputComponent(labelText, inputName, value, formId, required) {
+function dateInputComponent(labelText, inputName, value, formId, required, inputClass) {
     var inputDiv = fieldBox();
     var inputLabel = fieldLabelBox();
     inputLabel.append(labelText);
     var textInput = $('<input type="text">');
     textInput.addClass("datepicker");
+    textInput.addClass(inputClass); //used for form validation
     textInput.attr("id", inputName + "_" + formId);
     textInput.attr("name", inputName);
     textInput.val(value.split(' ')[0]);

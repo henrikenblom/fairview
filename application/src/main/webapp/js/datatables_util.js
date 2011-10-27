@@ -161,32 +161,13 @@ function loadFormValues(unitId) {
     addExistingValuesOrCreateEmptyForms(unitId, 'HAS_OTHER_EXPERIENCE', generateOtherExperienceForm, '#otherexperiences');
 }
 
-function loadFirstFunctionForm(functionId){
+function loadFunctionForm(functionId){
     addExistingValuesOrCreateEmptyForms(functionId, 'HAS_TASK', generateTaskForm, '#function-task');
 }
 
-function addTypeValidation() {
-    var intInputs = $('input[name*=":int"]');
-
-    $.each(intInputs, function(count, object) {
-        $(object).rules("add", {
-            number: true
-        });
-    });
-
-    var dateInputs = $('input[name*=":date"]');
-
-    $.each(dateInputs, function(count, object) {
-        $(object).rules("add", {
-            dateISO: true
-        });
-    });
-}
 function generateEmploymentForm(data) {
     $('#employment-general').empty().append(generateEmploymentCreationForm(data));
     $('#employment-general').append(footerButtonsComponent(data.employee_id, updateTableCallback(oTable)));
-    addTypeValidation();
-    /*typeValidation was placed here rather than at input-creation level because that caused errors for some reason*/
 }
 
 function appendLanguageAndExperienceForms(nodeId, educationTabId, experienceTabId) {
@@ -246,7 +227,7 @@ function generateExperienceProfileForm(nodeId) {
 
 function generateFunctionForm(nodeId) {
     var data;
-    loadFirstFunctionForm(nodeId);
+    loadFunctionForm(nodeId);
 
     if (!$.isEmptyObject(nodeId)) {
         data = getUnitData(nodeId);
