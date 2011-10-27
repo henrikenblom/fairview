@@ -78,7 +78,7 @@
 			<textField pattern="yyyy-MM-dd">
 				<reportElement x="0" y="0" width="555" height="35"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Verdana" size="11"/>
+					<font fontName="SansSerif" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
@@ -89,7 +89,7 @@
 			<textField>
 				<reportElement x="0" y="314" width="555" height="51" forecolor="#003366"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Verdana" size="12"/>
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{RetireCount} + " anställda kommer att uppnå pensionsåldern inom 12 månader"]]></textFieldExpression>
 			</textField>
