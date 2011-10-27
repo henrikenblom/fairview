@@ -183,7 +183,12 @@ function generateImageForm(nodeId, hasImage) {
                             img.attr('src', '/images/default_person_image.png');
                         }
                     }
-                }});
+                },
+                error: function(response){
+                    $("#imagePreview").spin(false);
+                    generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att bildens storlek inte överstiger 10MB.');
+                }
+            });
     });
 
     imageUploadContainer.append(form, uploadButton, generateCancelButton());
