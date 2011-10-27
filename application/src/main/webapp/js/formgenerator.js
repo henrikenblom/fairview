@@ -138,7 +138,6 @@ function generateImageForm(nodeId, hasImage) {
     uploadButton.addClass('personalImageButton')
     uploadButton.html('Ladda upp bild');
     uploadButton.click(function() {
-        //img.attr('src', '/images/loading.gif');
         $.fn.spin = function(opts) {
             this.each(function() {
                 var $this = $(this),

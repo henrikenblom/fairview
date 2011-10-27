@@ -44,6 +44,12 @@ import java.util.Map;
 @Controller
 public class ProfileImageUploadController {
 
+    public static final String SMALL_IMAGE = "small_image";
+    public static final String MEDIUM_IMAGE = "medium_image";
+    public static final String LARGE_IMAGE = "large_image";
+    public static final String RAW_IMAGE = "raw_image";
+    public static final String RAW_IMAGE_MIMETYPE = "raw_image_mimetype";
+
     @Resource
     private GraphDatabaseService neo;
 
@@ -95,11 +101,11 @@ public class ProfileImageUploadController {
                 ByteArrayOutputStream rawImageStream = new ByteArrayOutputStream();
                 ImageIO.write(originalImage, "png", rawImageStream);
 
-                imageNode.setProperty("small_image", smallStream.toByteArray());
-                imageNode.setProperty("medium_image", mediumStream.toByteArray());
-                imageNode.setProperty("large_image", largeStream.toByteArray());
-                imageNode.setProperty("raw_image", rawImageStream.toByteArray());
-                imageNode.setProperty("raw_image_mimetype", f.getContentType());
+                imageNode.setProperty(SMALL_IMAGE, smallStream.toByteArray());
+                imageNode.setProperty(MEDIUM_IMAGE, mediumStream.toByteArray());
+                imageNode.setProperty(LARGE_IMAGE, largeStream.toByteArray());
+                imageNode.setProperty(RAW_IMAGE, rawImageStream.toByteArray());
+                imageNode.setProperty(RAW_IMAGE_MIMETYPE, f.getContentType());
 
                 response.getWriter().print("<textarea>{\"success\":true}</textarea>");
             } catch (Exception e) {
@@ -119,7 +125,10 @@ public class ProfileImageUploadController {
             Node employeeNode = dbUtility.getNode(nodeId);
             Relationship imageRelationship = employeeNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING);
             if (imageRelationship == null) {
-                response.sendRedirect("/images/default_person_image.png");
+                if(size.equals(MEDIUM_IMAGE))
+                    response.sendRedirect("/images/default_person_image.png");
+                else if (size.equals(SMALL_IMAGE))
+                    response.sendRedirect("/images/default_person_image_small.png");                    
             } else {
                 Node imageNode = imageRelationship.getEndNode();
                 response.setContentType("image/png");
