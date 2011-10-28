@@ -118,13 +118,11 @@ public class ProfileImageUploadController {
                 smallImage = null;
 
                 imageNode.setProperty(IMAGE_NAME, f.getOriginalFilename());
-
                 response.getWriter().print("<textarea>{\"success\":true}</textarea>");
             } catch (Exception e) {
                 e.printStackTrace();
                 response.getWriter().print("<textarea>{\"success\":false}</textarea>");
             }
-            response.getWriter().close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -144,7 +142,6 @@ public class ProfileImageUploadController {
                     response.sendRedirect("/images/default_person_image_small.png");
             } else {
                 Node imageNode = imageRelationship.getEndNode();
-//                System.out.println(imageNode.getProperty("name")); BUG-tracking purposes
                 response.setContentType("image/png");
                 byte[] imageData = (byte[]) imageNode.getProperty(size);
                 response.getOutputStream().write(imageData);
