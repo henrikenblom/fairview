@@ -184,9 +184,12 @@ function generateImageForm(nodeId, hasImage) {
                         }
                     }
                 },
-                error: function(response){
+                error: function(response) {
                     $("#imagePreview").spin(false);
-                    generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att bildens storlek inte överstiger 10MB.');
+                    if (response.error == "Invalid JSON: Java heap space")
+                        generateWarningDialog('Uppladdning misslyckades.', 'Teknisk störning. Var god försök igen.');
+                    else
+                        generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att bildens storlek inte överstiger 10MB.');
                 }
             });
     });
