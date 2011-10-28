@@ -27,6 +27,7 @@
     <script type="text/javascript" src="js/plugins/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.validate.js"></script>
     <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
+    <script type="text/javascript" src="js/plugins/spin.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.imageonly-button').qtip({
@@ -41,6 +42,7 @@
             bindEmployeeTabs();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
+                generateMainOrganizationTabs();
                 generateMainOrganizationPopup(unitId);
                 openPopupTab(0);
             });
@@ -53,11 +55,24 @@
 
             if (<%=organization.getProperty("name", "").equals("")%>) {
                 var data = getUnitData(unitId);
+                $('#modalizer').fadeIn(100);
+                generateMainOrganizationTabs();
                 generateMainOrganizationEditForm(data);
                 $('#popup-tabs li a[href="#unitsettings-subunits"]').hide();
+                $('#popup-tabs li a[href="#unitsettings-image"]').hide();
                 openPopupTab(0);
             }
         });
+
+        function generateMainOrganizationTabs(){
+            var linkData = [
+                        ['unitsettings-general', 'Avdelningsinställningar'],
+                        ['unitsettings-subunits', 'Lägg till Underavdelning'],
+                        ['unitsettings-image', 'Logotyp']
+                ];
+                $('#popup-dialog').empty().append(generateTabs(linkData));
+                $('#popup-tabs').tabs();
+        }
 
         function generateMainOrganizationPopup(unitId) {
             var data = getUnitData(unitId);
@@ -67,6 +82,12 @@
 
         function generateSubunitPopup(unitId) {
             var data = getUnitData(unitId);
+            var linkData = [
+                        ['unitsettings-general', 'Avdelningsinställningar'],
+                        ['unitsettings-subunits', 'Lägg till Underavdelning']
+                ];
+                $('#popup-dialog').empty().append(generateTabs(linkData));
+                $('#popup-tabs').tabs();
             generateSubunitEditForm(data);
             generateSubunitCreationTab(data);
         }
@@ -95,20 +116,6 @@
 
         function reloadPage() {
             location.reload();
-        }
-
-        function generateMainOrganizationEditForm(data) {
-            $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
-            var saveButton = footerButtonsComponent();
-            saveButton.children('.saveButton').click(function() {
-                editTreeNamesOnChange($('#name-field').val(), data.node.id);
-                $('#header-organization-name').html($('#name-field').val());
-            });
-            $('#unitsettings-general').append(saveButton);
-            generateOrgNrDiv(data).insertAfter("#descriptionDiv");
-            generateImageUrlDiv(data).insertAfter("#descriptionDiv");
-            generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
-            addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
         }
 
         function generateSubunitEditForm(data) {
@@ -140,7 +147,7 @@
 
                     </h3>
                     <button class="imageonly-button" title="Lägg till underenhet"
-                                id="imageonly-buttonAddSubUnit" ><img
+                                id="imageonly-buttonAddSubUnit" onclick="javascript:generateMainOrganizationTabs()"><img
                                 src="images/newunit.png" alt="Ny underenhet" /></button>
                     </div>
                     <ul>
@@ -176,15 +183,6 @@
 </div>
 <div id="modalizer">&nbsp;</div>
 <div id="popup-dialog" style="display: none;">
-    <div id="popup-tabs">
-        <ul>
-            <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
-            <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
-        </ul>
-        <div class="unitsettings" id="unitsettings-general"></div>
-        <div class="unitsettings" id="unitsettings-subunits">
-        </div>
-    </div>
 </div>
 </body>
 </html>

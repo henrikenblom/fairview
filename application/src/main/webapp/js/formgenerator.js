@@ -1599,16 +1599,6 @@ function generateOrgNrDiv(data) {
     return orgnrDiv;
 }
 
-function generateImageUrlDiv(data) {
-    var properties = data.node.properties;
-    var imageurlString = '';
-    if (properties != null) {
-        imageurlString = propValue(properties.imageurl);
-    }
-    var imageUrlDiv = textInputComponent('Länk till företagslogotyp', 'imageurl', imageurlString, getOrganizationFormId());
-    return imageUrlDiv;
-}
-
 function generateSingleAddressComponent(data) {
     var properties = data.node.properties;
 
@@ -1672,4 +1662,32 @@ function translatePseudoCheckbox(event, form_name) {
 
     $('#' + form_name).ajaxSubmit();
 
+}
+
+function generateMainOrganizationEditForm(data) {
+    $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data));
+    var saveButton = footerButtonsComponent();
+    saveButton.children('.saveButton').click(function() {
+        editTreeNamesOnChange($('#name-field').val(), data.node.id);
+        $('#header-organization-name').html($('#name-field').val());
+    });
+    $.getJSON("fairview/ajax/has_image.do", {_nodeId: data.node.id}, function(hasImage) {
+        $('#unitsettings-image').append(generateImageForm(data.node.id, hasImage));
+    });
+    $('#unitsettings-general').append(saveButton);
+    generateOrgNrDiv(data).insertAfter("#descriptionDiv");
+    generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
+    addManager(getOrganizationFormId(), data.node.id).appendTo("#descriptionDiv");
+}
+
+function generateLogoMediumImage(organisationId){
+    $.getJSON("/fairview/ajax/has_image.do", {_nodeId: organisationId}, function(hasImage) {
+        if (hasImage != 'false') {
+            var img = $('<img>');
+            var imgUrl = getImgUrl(organisationId, "medium_image");
+            img.attr('src', imgUrl);
+            img.attr('alt', 'Logotyp')
+            $('#frontpage-image-box').empty().append(img);
+        }
+    });
 }

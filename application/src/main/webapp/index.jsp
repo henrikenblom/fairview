@@ -1,3 +1,4 @@
+<%@ page import="org.neo4j.kernel.impl.batchinsert.SimpleRelationship" %>
 <%--
     Document   : index
     Created on : 2010-okt-28, 13:08:39
