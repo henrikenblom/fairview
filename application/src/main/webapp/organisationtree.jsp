@@ -42,13 +42,7 @@
             bindEmployeeTabs();
 
             $('#unitsettings-general-tablink[name=unitsettings-general-tablink' + unitId + ']').click(function() {
-                var linkData = [
-                        ['unitsettings-general', 'Avdelningsinställningar'],
-                        ['unitsettings-subunits', 'Lägg till Underavdelning'],
-                        ['unitsettings-image', 'Bild']
-                ];
-                $('#popup-dialog').empty().append(generateTabs(linkData));
-                $('#popup-tabs').tabs();
+                generateMainOrganizationTabs();
                 generateMainOrganizationPopup(unitId);
                 openPopupTab(0);
             });
@@ -61,11 +55,24 @@
 
             if (<%=organization.getProperty("name", "").equals("")%>) {
                 var data = getUnitData(unitId);
+                $('#modalizer').fadeIn(100);
+                generateMainOrganizationTabs();
                 generateMainOrganizationEditForm(data);
                 $('#popup-tabs li a[href="#unitsettings-subunits"]').hide();
+                $('#popup-tabs li a[href="#unitsettings-image"]').hide();
                 openPopupTab(0);
             }
         });
+
+        function generateMainOrganizationTabs(){
+            var linkData = [
+                        ['unitsettings-general', 'Avdelningsinställningar'],
+                        ['unitsettings-subunits', 'Lägg till Underavdelning'],
+                        ['unitsettings-image', 'Logotyp']
+                ];
+                $('#popup-dialog').empty().append(generateTabs(linkData));
+                $('#popup-tabs').tabs();
+        }
 
         function generateMainOrganizationPopup(unitId) {
             var data = getUnitData(unitId);
@@ -140,7 +147,7 @@
 
                     </h3>
                     <button class="imageonly-button" title="Lägg till underenhet"
-                                id="imageonly-buttonAddSubUnit" ><img
+                                id="imageonly-buttonAddSubUnit" onclick="javascript:generateMainOrganizationTabs()"><img
                                 src="images/newunit.png" alt="Ny underenhet" /></button>
                     </div>
                     <ul>
@@ -176,15 +183,6 @@
 </div>
 <div id="modalizer">&nbsp;</div>
 <div id="popup-dialog" style="display: none;">
-    <%--<div id="popup-tabs">
-        <ul>
-            <li><a href="#unitsettings-general">Avdelningsinställningar</a></li>
-            <li><a href="#unitsettings-subunits">Lägg till Underavdelning</a></li>
-        </ul>
-        <div class="unitsettings" id="unitsettings-general"></div>
-        <div class="unitsettings" id="unitsettings-subunits">
-        </div>
-    </div>--%>
 </div>
 </body>
 </html>
