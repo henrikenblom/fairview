@@ -44,6 +44,11 @@ import java.util.Map;
 @Controller
 public class ProfileImageUploadController {
 
+    public static final String SMALL_IMAGE = "small_image";
+    public static final String MEDIUM_IMAGE = "medium_image";
+    public static final String LARGE_IMAGE = "large_image";
+    public static final String IMAGE_NAME = "name";
+
     @Resource
     private GraphDatabaseService neo;
 
@@ -76,36 +81,48 @@ public class ProfileImageUploadController {
             Node imageNode = null;
             response.setContentType("text/html");
             try {
-                InputStream image = new ByteArrayInputStream(f.getBytes());
-                BufferedImage originalImage = ImageIO.read(image);
-                BufferedImage normalizedImage = scaleImage(originalImage, NORMALIZED_IMAGE_WIDTH, NORMALIZED_IMAGE_HEIGHT);
-                BufferedImage largeImage = scaleImage(normalizedImage, LARGE_IMAGE_WIDTH, LARGE_IMAGE_HEIGHT);
-                BufferedImage mediumImage = scaleImage(blurImage(normalizedImage), MEDIUM_IMAGE_WIDTH, MEDIUM_IMAGE_HEIGHT);
-                BufferedImage smallImage = scaleImage(blurImage(largeImage), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
-
                 Relationship imageRelationship = dbUtility.getOrCreateRelationship(nodeId, "HAS_IMAGE");
                 imageNode = imageRelationship.getEndNode();
 
-                ByteArrayOutputStream smallStream = new ByteArrayOutputStream();
-                ImageIO.write(smallImage, "png", smallStream);
-                ByteArrayOutputStream mediumStream = new ByteArrayOutputStream();
-                ImageIO.write(mediumImage, "png", mediumStream);
+                InputStream image = new ByteArrayInputStream(f.getBytes());
+                BufferedImage originalImage = ImageIO.read(image);
+
+                BufferedImage normalizedImage = scaleImage(originalImage, NORMALIZED_IMAGE_WIDTH, NORMALIZED_IMAGE_HEIGHT);
+
+                originalImage = null;
+
+                BufferedImage largeImage = scaleImage(normalizedImage, LARGE_IMAGE_WIDTH, LARGE_IMAGE_HEIGHT);
                 ByteArrayOutputStream largeStream = new ByteArrayOutputStream();
                 ImageIO.write(largeImage, "png", largeStream);
-                ByteArrayOutputStream rawImageStream = new ByteArrayOutputStream();
-                ImageIO.write(originalImage, "png", rawImageStream);
+                imageNode.setProperty(LARGE_IMAGE, largeStream.toByteArray());
+                largeStream.close();
+                largeStream = null;
 
-                imageNode.setProperty("small_image", smallStream.toByteArray());
-                imageNode.setProperty("medium_image", mediumStream.toByteArray());
-                imageNode.setProperty("large_image", largeStream.toByteArray());
-                imageNode.setProperty("raw_image", rawImageStream.toByteArray());
-                imageNode.setProperty("raw_image_mimetype", f.getContentType());
+                BufferedImage mediumImage = scaleImage(blurImage(normalizedImage), MEDIUM_IMAGE_WIDTH, MEDIUM_IMAGE_HEIGHT);
+                ByteArrayOutputStream mediumStream = new ByteArrayOutputStream();
+                ImageIO.write(mediumImage, "png", mediumStream);
+                imageNode.setProperty(MEDIUM_IMAGE, mediumStream.toByteArray());
+                mediumStream.close();
+                mediumImage = null;
+                mediumStream = null;
 
+                normalizedImage = null;
+
+                BufferedImage smallImage = scaleImage(blurImage(largeImage), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+                largeImage = null;
+                ByteArrayOutputStream smallStream = new ByteArrayOutputStream();
+                ImageIO.write(smallImage, "png", smallStream);
+                imageNode.setProperty(SMALL_IMAGE, smallStream.toByteArray());
+                smallStream.close();
+                smallStream = null;
+                smallImage = null;
+
+                imageNode.setProperty(IMAGE_NAME, f.getOriginalFilename());
                 response.getWriter().print("<textarea>{\"success\":true}</textarea>");
             } catch (Exception e) {
+                e.printStackTrace();
                 response.getWriter().print("<textarea>{\"success\":false}</textarea>");
             }
-            response.getWriter().close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -119,7 +136,10 @@ public class ProfileImageUploadController {
             Node employeeNode = dbUtility.getNode(nodeId);
             Relationship imageRelationship = employeeNode.getSingleRelationship(new SimpleRelationshipType("HAS_IMAGE"), Direction.OUTGOING);
             if (imageRelationship == null) {
-                response.sendRedirect("/images/default_person_image.png");
+                if (size.equals(MEDIUM_IMAGE))
+                    response.sendRedirect("/images/default_person_image.png");
+                else if (size.equals(SMALL_IMAGE))
+                    response.sendRedirect("/images/default_person_image_small.png");
             } else {
                 Node imageNode = imageRelationship.getEndNode();
                 response.setContentType("image/png");

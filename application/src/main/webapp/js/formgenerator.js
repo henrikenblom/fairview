@@ -138,7 +138,6 @@ function generateImageForm(nodeId, hasImage) {
     uploadButton.addClass('personalImageButton')
     uploadButton.html('Ladda upp bild');
     uploadButton.click(function() {
-        //img.attr('src', '/images/loading.gif');
         $.fn.spin = function(opts) {
             this.each(function() {
                 var $this = $(this),
@@ -184,7 +183,12 @@ function generateImageForm(nodeId, hasImage) {
                             img.attr('src', '/images/default_person_image.png');
                         }
                     }
-                }});
+                },
+                error: function(response){
+                    $("#imagePreview").spin(false);
+                    generateWarningDialog('Uppladdning misslyckades.', 'Vänligen kontrollera att bildens storlek inte överstiger 10MB.');
+                }
+            });
     });
 
     imageUploadContainer.append(form, uploadButton, generateCancelButton());
