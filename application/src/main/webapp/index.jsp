@@ -27,6 +27,7 @@
             adjustViewPort();
             $('#modalizer').fadeOut(500);
             generateLogoMediumImage(organisationId);
+            //test
         });
     </script>
 </head>
