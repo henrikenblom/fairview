@@ -19,10 +19,6 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class EmploymentListGenerator {
-
-    public static final int UNORDERED = 0;
-    public static final int ALPHABETICAL = 1;
-
     private EmbeddedGraphDatabase neo;
 
     public EmploymentListGenerator(EmbeddedGraphDatabase neo){
@@ -30,8 +26,7 @@ public class EmploymentListGenerator {
         this.neo = neo;
 
     }
-
-    public ArrayList<Node> getSortList (int sortOrder, boolean descending){
+    public ArrayList<Node> getEmployments(){
 
         ArrayList<Node> retval = new ArrayList<Node>();
 

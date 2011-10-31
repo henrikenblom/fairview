@@ -1,6 +1,9 @@
 *.iws
 *.iml
 *.ipr
+*.jasper
 target
 .DS_STORE
 .idea
+messages.log
+

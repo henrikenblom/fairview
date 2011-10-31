@@ -7,7 +7,9 @@
 <%@ page import="se.codemate.spring.security.NeoUserDetailsService" %>
 <%@ page import="se.codemate.neo4j.NeoSearch" %>
 <%@ page import="com.fairviewiq.utils.UnitListGenerator" %>
-
+<%@ page import="org.springframework.security.core.userdetails.User" %>
+<%@ page import="org.springframework.security.core.GrantedAuthority" %>
+<%@page import="org.springframework.security.core.context.SecurityContextHolder" %>
 <%
     EmbeddedGraphDatabase neo = (EmbeddedGraphDatabase) WebApplicationContextUtils.getWebApplicationContext(application).getBean("neo");
     NeoSearch neoSearch = (NeoSearch) WebApplicationContextUtils.getWebApplicationContext(application).getBean("neoSearch");
@@ -35,4 +37,20 @@
 
     }
 
+    StringBuilder jsAuthorityString = new StringBuilder();
+    boolean firstEntry = true;
+    for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities())  {
+
+        if (!firstEntry) {
+            jsAuthorityString.append(",");
+        }
+        jsAuthorityString.append("'").append(authority.getAuthority()).append("'");
+        firstEntry = false;
+
+    }
+
 %>
+
+<script type="text/javascript">
+    var ROLELIST = [<%=jsAuthorityString%>];
+</script>

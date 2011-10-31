@@ -13,21 +13,23 @@
     <title>Infero Quest - Personer</title>
     <link rel="stylesheet" href="css/newlook.css" type="text/css" media="screen" charset="utf-8"/>
     <link rel="stylesheet" href="css/demo_table.css" type="text/css" media="screen" charset="utf-8"/>
-    <link type="text/css" href="css/flick/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
-    <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" src="js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="popupControls.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
-    <script type="text/javascript" src="formgenerator.js"></script>
-    <script type="text/javascript" src="js/jquery-plugins/jquery.form.js"></script>
+    <link type="text/css" href="css/jquery-ui/jquery-ui-1.8.13.custom.css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/plugins/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="js/popupControls.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="js/formgenerator.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.form.js"></script>
     <script type="text/javascript" src="js/datatables_util.js"></script>
-    <script type="text/javascript" src="js/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.dataSelector.js"></script>
+    <script type="text/javascript" src="js/plugins/spin.min.js"></script>
     <script type="text/javascript">
         var oTable;
         $(document).ready(function() {
-            $('.newperson').click(function() {
+            $('.addnew').click(function() {
                 var data = new Array;
-                createEmployeeTab(data);
+                createEmployeeTab(data, true);
                 openEmployeeForm();
             });
 
@@ -36,17 +38,22 @@
                 "bSortClasses": false,
                 "bStateSave": true,
                 "oLanguage": {
-                    "sSearch": "Sök:",
-                    "sInfo": "Visar _START_ - _END_ av totalt _TOTAL_ rader",
-                    "sLengthMenu": "Visa _MENU_ rader"
+                    "sEmptyTable": "Inga personer finns i databasen."
                 },
                 "sAjaxSource": "fairview/ajax/datatables/get_employee_data.do",
                 "aoColumns": [
                     { "mDataProp": "firstname"},
-                    { "mDataProp": "lastname" },
+                    { "mDataProp": "lastname", "asSorting": [ "desc" ]},
                     { "mDataProp": "unit_name" },
                     { "mDataProp": "employment_title" },
-                    { "mDataProp": null,  "sWidth": 10, fnRender: getDeleteIcon, "bSortable": false, "bSearchable": false  }
+                    { "mDataProp": null,  "sWidth": 10,
+                        fnRender: function(obj) {
+                            if (hasRole('ROLE_ADMIN'))
+                                return getEmployeeDeleteButton(obj);
+                            else
+                                return '';
+                        }
+                        , "bSortable": false, "bSearchable": false  }
 
                 ],
                 "fnDrawCallback" : function() {
@@ -81,28 +88,15 @@
                 return false;
         }
 
-        function createEmployeeTab(data) {
-
-            var linkData = [
-                ['profile-general', 'Personuppgifter'],
-                ['profile-education', 'Utbildning'],
-                ['profile-experience', 'Erfarenhet'],
-                ['employment-general', 'Anställningsvillkor']
-            ];
-            $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
-            generateProfileForm(data.employee_id);
-            generateEmploymentForm(data);
-        }
-
         function openEmployeeForm() {
             openPopupTab(0);
         }
         function openUnitForm(unitId) {
             var linkData = [
-                ['unitsettings-general', 'Avdelningsinställningar']];
+                ['unitsettings-general', 'Avdelningsinställningar']
+            ];
             $('#popup-dialog').empty().append(generateTabs(linkData));
-            bindTabs();
+            bindEmployeeTabs();
             var data = getUnitData(unitId);
             $('#unitsettings-general').empty().append(generateBaseUnitEditForm(data, oTable));
             generateSingleAddressComponent(data).insertAfter($('#web-field').parent());
@@ -118,7 +112,7 @@
 <body class="ex_highlight_row">
 <div id="main">
     <div id="content">
-        <div class="newperson newpersontop"><img src="images/newperson.png"
+        <div class="addnew addnewtop"><img src="images/newperson.png"
                                                  class="helpbox-image"><span>Lägg till person</span>
         </div>
         <div class="datatable">
@@ -146,7 +140,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="newperson newpersonbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
+        <div class="addnew addnewbottom"><img src="images/newperson.png" class="helpbox-image"><span>Lägg till person</span>
         </div>
     </div>
 </div>

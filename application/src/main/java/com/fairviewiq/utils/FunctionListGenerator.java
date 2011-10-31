@@ -39,7 +39,7 @@ public class FunctionListGenerator {
 
         Node organization = ((Iterable<Relationship>) neo.getReferenceNode().getRelationships(SimpleRelationshipType.withName("HAS_ORGANIZATION"), Direction.OUTGOING)).iterator().next().getEndNode();
 
-        for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("HAS_FUNCTION"), Direction.OUTGOING)) {
+        for (Relationship entry : organization.getRelationships(SimpleRelationshipType.withName("ASSIGNED_FUNCTION"), Direction.OUTGOING)) {
 
             if (!entry.getEndNode().getProperty("name", "").equals("")) {
 
@@ -53,25 +53,6 @@ public class FunctionListGenerator {
             }
 
         }
-
-        //Transaction tx = neo.beginTx();
-
-        //try {
-
-        //   for (Node zombie : zombieNodes) {
-
-        //        zombie.delete();
-
-        //    }
-
-        //    tx.success();
-
-        //} catch (Exception ex) {
-
-        //    tx.finish();
-        //    tx = null;
-
-        //}
 
         if (sortOrder == ALPHABETICAL) {
 

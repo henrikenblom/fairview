@@ -4,6 +4,12 @@
     Author     : henrik
 */
 
+h3{
+    font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+}
+
 .hidden {
     display: none;
 }
@@ -48,7 +54,8 @@ button {
 form {
     margin-bottom: 1em;
 }
-table{
+
+table {
     white-space: nowrap;
 }
 
@@ -123,7 +130,7 @@ fieldset {
     padding: 0;
 }
 
-input[type="radio"]{
+input[type="radio"] {
     margin-left: 3px;
     margin-right: 3px;
 }
@@ -157,6 +164,11 @@ input[type="radio"]{
     -webkit-border-radius: 7px 7px 0px 0px;
     -moz-border-radius: 7px 7px 0px 0px;
     border-radius: 7px 7px 0px 0px;
+}
+
+.education-header{
+    border-bottom: 1px solid #DDD;
+    margin-top: 10px;
 }
 
 .helpbox-content {
@@ -208,6 +220,10 @@ input[type="radio"]{
     border-bottom: 1px solid #404040;
     text-align: left;
     white-space: nowrap;
+}
+
+.pointer{
+    cursor: pointer;
 }
 
 #button-bar {
@@ -418,11 +434,11 @@ input[type="radio"]{
     /*width: 468px;*/
 }
 
-.checkbox{
-    text-indent: 20px;
-    width: 200px;
+label.checkbox {
+    margin-left: 5px;
 }
-.radiobutton{
+
+.radiobutton {
     text-indent: 20px;
 }
 
@@ -729,16 +745,16 @@ label.error {
     padding-left: 0;
     font-size: 1.1em;
     height: 24px;
-    min-width: 46px;
     float: left;
     line-height: 28px;
-    margin-right: 35px;
+    margin-right: 15px;
 }
-.activetab{
+
+.activetab {
     font-weight: bold;
 }
 
-.inactivetab{
+.inactivetab {
     cursor: pointer;
     font-weight: normal;
 }
@@ -773,6 +789,13 @@ label.error {
     cursor: pointer;
     line-height: 19px;
 }
+h3#unitsettings-general-tablink{
+    float: left;
+}
+
+#imageonly-buttonAddSubUnit {
+    height: 25px;
+}
 
 .link {
     color: #585C95;
@@ -788,15 +811,15 @@ label.error {
 
 }
 
-.newperson{
+.addnew{
    cursor: pointer;
 }
 
-.newpersontop {
+.addnewtop {
     margin-bottom: 10px;
 }
 
-.newpersonbottom {
+.addnewbottom {
     margin-top: 25px;
 }
 
@@ -850,11 +873,40 @@ label.error {
     float: left;
 }
 
-.delimitedForm{
+.delimitedForm {
 }
 
-.groupedFormsContainer{
+.groupedFormsContainer {
     border-bottom: 1px solid #DDD;
+}
+
+#imagePreview {
+    height: 210px;
+    width: 140px;
+}
+
+#imgUploadContainer {
+    margin-left: 150px;
+}
+.personalImageInput{
+    margin-left: -15px;
+    margin-top: 10px;
+}
+
+.personalImageButton{
+    margin-left: -15px;
+}
+
+.loading {
+    background-image: url('/images/loading.gif');
+    background-repeat: no-repeat;
+}
+
+#smallProfileImage {
+    position: absolute;
+    left: 220px;
+    cursor: pointer;
+    top: 71px;
 }
 
 

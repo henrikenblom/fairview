@@ -1,8 +1,8 @@
 <%@page import="java.util.*"%>
 <%@page import="java.text.*"%>
 <%@ page import="org.springframework.web.servlet.support.RequestContext" %>
-<%@ page import="org.springframework.security.context.SecurityContextHolder" %>
-<%@ page import="org.springframework.security.userdetails.UserDetails" %>
+<%@ page import="org.springframework.security.core.context.SecurityContextHolder" %>
+<%@ page import="org.springframework.security.core.userdetails.UserDetails" %>
 <%@ page import="org.apache.lucene.search.Query" %>
 <%@ page import="org.apache.lucene.search.TermQuery" %>
 <%@ page import="org.apache.lucene.index.Term" %>
@@ -12,6 +12,7 @@
 <head>
     <link type="text/css" href="formalizeme/css/formalize.css" rel="stylesheet"/>
     <script type="text/javascript" src="formalizeme/js/jquery.formalize.js"></script>
+    <link type="text/css" href="css/jquery-ui/jquery-ui-override.css" rel="stylesheet"/>
 </head>
 
 
@@ -69,17 +70,15 @@
                  %>
 
             <div <%= request.getRequestURI().endsWith("/index.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%>  onclick="changeView('index.jsp')" name="navigate-home">Startsida</div>
-            <sec:authorize ifAnyGranted="ROLE_MANAGER">
+            <sec:authorize ifAnyGranted="ROLE_ADMIN, ROLE_HR">
                 <div <%= request.getRequestURI().endsWith("/organisationtree.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%>  onclick="changeView('organisationtree.jsp')" name="organisation">Organisation</div>
             </sec:authorize>
-            <sec:authorize ifNotGranted="ROLE_MANAGER">
-                <div <%= request.getRequestURI().endsWith("/organisationinfo.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('organisationinfo.jsp')" name="organisationinfo">Organisation</div>
-            </sec:authorize>
             <div <%= request.getRequestURI().endsWith("/employees.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employees.jsp')" name="persons">Personer</div>
-            <div <%= request.getRequestURI().endsWith("/functionlist.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functionlist.jsp')" name="company-functions">Anställningar</div>
-            <%--<sec:authorize ifAnyGranted="ROLE_MANAGER">--%>
-                <%--<div <%= request.getRequestURI().endsWith("/users.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('users.jsp')" name="company-functions">Systemanvändare</div>--%>
-            <%--</sec:authorize>--%>
+            <div <%= request.getRequestURI().endsWith("/employments.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('employments.jsp')" name="company-functions">Anställningar</div>
+            <div <%= request.getRequestURI().endsWith("/functions.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('functions.jsp')" name="functions">Funktioner</div>
+            <div <%= request.getRequestURI().endsWith("/experienceprofile.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('experienceprofile.jsp')" name="experience">Kompetensprofil</div>
+            <div <%= request.getRequestURI().endsWith("/search.jsp") ? "class=\"activetab top-button\"" : "class=\"inactivetab top-button\""%> onclick="changeView('search.jsp')" name="functions">S&ouml;k</div>
+
             <div class="inactivetab top-button" onclick="document.location.href = 'j_spring_security_logout'" name="logout"> Logga ut</div>
 
         </div>
