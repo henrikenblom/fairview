@@ -7,7 +7,7 @@
 
     <groupId>com.fairviewiq</groupId>
     <artifactId>fairview</artifactId>
-    <version>11.1.1</version>
+    <version>11.2</version>
     <name>Fairview POM</name>
     <url>http://www.fairviewiq.com</url>
     <packaging>pom</packaging>
